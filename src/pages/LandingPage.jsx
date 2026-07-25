@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Sprout, 
   Scan, 
@@ -7,247 +8,437 @@ import {
   ShoppingBag, 
   Award, 
   ArrowRight, 
+  Play, 
   CheckCircle2, 
   Sparkles, 
-  ShieldCheck, 
-  Cpu, 
-  Satellite, 
-  TrendingUp, 
-  Map, 
-  Play, 
   ChevronRight, 
-  Leaf, 
-  Users, 
-  BarChart3 
+  ShieldCheck, 
+  Zap, 
+  MapPin, 
+  TrendingUp, 
+  Activity, 
+  Globe, 
+  Mail, 
+  Phone, 
+  Github, 
+  Linkedin, 
+  Twitter 
 } from 'lucide-react';
-import Footer from '../components/Footer';
 
 export default function LandingPage({ onNavigate, onLoginDemo }) {
-  const [activeTab, setActiveTab] = useState('disease');
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const statsList = [
-    { number: '10+', label: 'AI Features', desc: 'Neural Vision & Simulations' },
-    { number: '50+', label: 'Supported Crops', desc: 'Paddy, Sugarcane, Keerai & Spices' },
-    { number: '24/7', label: 'AI Assistant', desc: 'Uzhavar AI Q&A Engine' },
-    { number: '100+', label: 'Smart Recommendations', desc: 'Location-Aware Telemetry' },
-    { number: 'Karur TN', label: 'Location Aware', desc: 'District Micro-Climate' }
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const techStack = [
+    { name: 'React', icon: '⚛️' },
+    { name: 'Spring Boot', icon: '🍃' },
+    { name: 'Gemini AI', icon: '✨' },
+    { name: 'MySQL', icon: '🐬' },
+    { name: 'Leaflet', icon: '🗺️' },
+    { name: 'Chart.js', icon: '📊' },
+    { name: 'Framer Motion', icon: '🎬' }
   ];
 
-  const whyChooseCards = [
-    {
-      icon: Bot,
-      title: 'AI Farming Assistant',
-      desc: 'Bilingual Q&A assistant for instant crop solutions, yellow leaf remedies, and NPK dosage advice.'
-    },
+  const featureCards = [
     {
       icon: Sprout,
-      title: 'Crop Recommendation',
-      desc: 'Location-aware crop suitability engine based on soil type, rainfall, season, and land size.'
+      title: 'Smart Crop Recommendation',
+      desc: 'Recommends high-yielding crops based on local soil type, rainfall, season, and land acreage.'
     },
     {
       icon: Scan,
       title: 'Disease Detection',
-      desc: 'Neural plant classifier & disease scanner with organic remedies and chemical dosages.'
+      desc: 'Instant neural leaf scanner identifying pathogens with organic remedies & chemical dosages.'
     },
     {
       icon: CloudSun,
       title: 'Weather Intelligence',
-      desc: 'Micro-climate Karur forecast telemetry with daily farming activity recommendations.'
+      desc: 'Micro-climate weather forecasts integrated with daily agricultural task advisories.'
+    },
+    {
+      icon: Bot,
+      title: 'AI Assistant',
+      desc: 'Uzhavar AI chatbot delivering instant answers for yellow leaf cures and NPK fertilizing.'
     },
     {
       icon: ShoppingBag,
       title: 'Market Insights',
-      desc: 'Real-time mandi price trends, custom net profit calculator, and local trader submissions.'
+      desc: 'Real-time mandi price tracking, net profit calculator, and trader price submissions.'
     },
     {
       icon: Award,
       title: 'Government Schemes',
-      desc: 'Personalized eligibility match for PM-KISAN, Kuruvai package, and TNAU subsidies.'
+      desc: 'Personalized eligibility matching for PM-KISAN, Kuruvai package, and TNAU subsidies.'
     }
   ];
 
-  const timelineSteps = [
-    { step: '01', title: 'Register Farm', desc: 'Enter land acreage, soil type, and primary crops.' },
-    { step: '02', title: 'Detect Location', desc: 'Auto-detect GPS or select Karur village & taluk.' },
-    { step: '03', title: 'AI Analysis', desc: 'Digital Twin simulates soil moisture, NDVI, and weather.' },
-    { step: '04', title: 'Receive Recommendations', desc: 'Get exact fertilizer schedules, pest alerts, and pricing.' },
-    { step: '05', title: 'Improve Yield', desc: 'Maximize crop yield, revenue, and sustainability score.' }
+  const stepsList = [
+    { number: '1', title: 'Enter Farm Details', desc: 'Enter land acreage, soil type, and primary crop preferences.' },
+    { number: '2', title: 'AI Analysis', desc: 'Digital Twin simulates soil moisture, weather, and NDVI parameters.' },
+    { number: '3', title: 'Receive Smart Recommendations', desc: 'Get tailored fertilizer schedules, pest alerts, and pricing.' },
+    { number: '4', title: 'Improve Productivity', desc: 'Boost crop yield, optimize input costs, and maximize revenue.' }
+  ];
+
+  const whyChooseUsList = [
+    {
+      title: 'Accurate AI Recommendations',
+      desc: 'Engineered using TNAU agronomic research datasets and local soil telemetry.'
+    },
+    {
+      title: 'Location Based Insights',
+      desc: 'Auto-adapts to Karur district micro-climate, village weather, and mandi prices.'
+    },
+    {
+      title: 'Easy To Use',
+      desc: 'Designed with high accessibility, large readable fonts, and bilingual support.'
+    },
+    {
+      title: 'Fast Decision Support',
+      desc: 'Real-time diagnosis, instant yield forecasts, and quick action checklists.'
+    }
   ];
 
   return (
-    <div style={{ background: 'var(--bg-slate)', minHeight: '100vh' }}>
+    <div style={{ background: '#F8FAFC', color: '#111827', fontFamily: 'Inter, sans-serif', overflowX: 'hidden' }}>
       
-      {/* Landing Sticky Glass Nav */}
-      <header className="glass-nav" style={{ padding: '1rem 3rem' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      {/* ------------------------------------------------- */}
+      {/* STICKY GLASS NAVBAR */}
+      {/* ------------------------------------------------- */}
+      <header 
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          background: 'rgba(255, 255, 255, 0.85)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderBottom: '1px solid #E5E7EB',
+          padding: isScrolled ? '0.65rem 3rem' : '1.1rem 3rem',
+          transition: 'all 0.3s ease'
+        }}
+      >
+        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-            <div style={{
-              width: '42px',
-              height: '42px',
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)'
-            }}>
-              <Leaf size={22} />
-            </div>
-            <div>
-              <h1 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-main)' }}>
-                AgriSahay <span style={{ color: 'var(--primary-600)' }}>AI</span>
-              </h1>
-              <p style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Smart Farming. Smarter Decisions.</p>
-            </div>
+          {/* Logo */}
+          <div 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
+            style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', cursor: 'pointer' }}
+          >
+            <span style={{ fontSize: '1.6rem' }}>🌾</span>
+            <span style={{ fontSize: '1.3rem', fontWeight: 800, color: '#14532D', letterSpacing: '-0.02em', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              AgriSahay <span style={{ color: '#16A34A' }}>AI</span>
+            </span>
           </div>
 
+          {/* Navigation Links */}
+          <nav style={{ display: 'flex', gap: '2rem', fontSize: '0.9rem', fontWeight: 600, color: '#374151' }}>
+            <span onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>Home</span>
+            <span onClick={() => scrollToSection('features')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>Features</span>
+            <span onClick={() => scrollToSection('how-it-works')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>How It Works</span>
+            <span onClick={() => scrollToSection('about')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>About</span>
+            <span onClick={() => scrollToSection('contact')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>Contact</span>
+          </nav>
+
+          {/* Action Buttons */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <button onClick={() => onNavigate('login')} className="btn-outline">
-              Sign In
+            <button 
+              onClick={() => onNavigate('login')}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#374151',
+                fontWeight: 600,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                padding: '0.5rem 0.85rem'
+              }}
+            >
+              Login
             </button>
-            <button onClick={onLoginDemo} className="btn-primary">
-              Launch Demo Platform <ArrowRight size={16} />
+            <button 
+              onClick={onLoginDemo}
+              style={{
+                background: 'linear-gradient(135deg, #16A34A 0%, #14532D 100%)',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                padding: '0.65rem 1.35rem',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(22, 163, 74, 0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Get Started <ArrowRight size={16} />
             </button>
           </div>
 
         </div>
       </header>
 
+      {/* ------------------------------------------------- */}
       {/* HERO SECTION */}
-      <section style={{
-        position: 'relative',
-        padding: '6rem 2rem 5rem',
-        background: 'linear-gradient(180deg, #ECFDF5 0%, #F8FAFC 100%)',
-        overflow: 'hidden'
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
+      {/* ------------------------------------------------- */}
+      <section 
+        style={{
+          position: 'relative',
+          minHeight: '100vh',
+          paddingTop: '6.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          background: `linear-gradient(rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.78)), url("https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80")`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: '#FFFFFF'
+        }}
+      >
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 2rem', width: '100%', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3.5rem', alignItems: 'center' }}>
           
-          <div className="badge badge-green" style={{ margin: '0 auto 1.5rem', padding: '0.35rem 0.85rem', fontSize: '0.825rem' }}>
-            <Sparkles size={14} /> Smart Farming Powered by Artificial Intelligence
-          </div>
+          {/* Left Column Content */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {/* Small Badge */}
+            <div 
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                background: 'rgba(22, 163, 74, 0.25)',
+                border: '1px solid rgba(34, 197, 94, 0.4)',
+                color: '#4ADE80',
+                padding: '0.4rem 0.9rem',
+                borderRadius: '9999px',
+                fontSize: '0.825rem',
+                fontWeight: 700,
+                marginBottom: '1.5rem',
+                backdropFilter: 'blur(8px)'
+              }}
+            >
+              <Sparkles size={14} color="#F59E0B" /> ✨ AI Powered Agriculture Platform
+            </div>
 
-          <h1 style={{
-            fontSize: '3.6rem',
-            fontWeight: 800,
-            lineHeight: 1.12,
-            color: 'var(--primary-900)',
-            marginBottom: '1.25rem',
-            fontFamily: 'var(--font-heading)',
-            letterSpacing: '-0.03em'
-          }}>
-            Make Better Farming Decisions <br />
-            <span style={{
-              background: 'linear-gradient(135deg, #059669 0%, #d97706 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              Using AI Decision Intelligence
-            </span>
-          </h1>
+            {/* Large Heading */}
+            <h1 
+              style={{
+                fontSize: '3.4rem',
+                fontWeight: 800,
+                lineHeight: 1.12,
+                letterSpacing: '-0.03em',
+                marginBottom: '1.25rem',
+                fontFamily: 'Plus Jakarta Sans, sans-serif'
+              }}
+            >
+              Smart Farming Powered by <br />
+              <span style={{ color: '#4ADE80' }}>Artificial Intelligence</span>
+            </h1>
 
-          <p style={{
-            fontSize: '1.15rem',
-            color: 'var(--text-muted)',
-            maxWidth: '780px',
-            margin: '0 auto 2.5rem',
-            lineHeight: 1.6
-          }}>
-            Transform your agricultural operations with real-time AI digital twin simulation, satellite crop monitoring, plant disease neural scanning, weather intelligence, and mandi market forecasting.
-          </p>
+            {/* Subheading */}
+            <p style={{ fontSize: '1.1rem', color: '#D1D5DB', lineHeight: 1.6, marginBottom: '2rem', maxWidth: '580px' }}>
+              Make better farming decisions using AI-powered crop recommendations, disease detection, weather intelligence, market insights, and intelligent farming assistance.
+            </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-            <button onClick={onLoginDemo} className="btn-primary" style={{ padding: '0.85rem 2rem', fontSize: '1rem' }}>
-              Get Started Free <ArrowRight size={18} />
-            </button>
-            <button onClick={() => onNavigate('dashboard')} className="btn-outline" style={{ padding: '0.85rem 2rem', fontSize: '1rem' }}>
-              <Play size={16} color="var(--primary-600)" /> Watch Interactive Demo
-            </button>
-          </div>
+            {/* Buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginBottom: '2.5rem' }}>
+              <button 
+                onClick={onLoginDemo}
+                style={{
+                  background: '#16A34A',
+                  color: '#FFFFFF',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  padding: '0.85rem 1.85rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(22, 163, 74, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                Get Started <ArrowRight size={18} />
+              </button>
 
-          {/* Hero Banner Preview */}
-          <div style={{ marginTop: '4rem', position: 'relative' }}>
-            <div className="card-glass" style={{
-              padding: '0.75rem',
-              borderRadius: 'var(--radius-xl)',
-              boxShadow: 'var(--shadow-xl)',
-              background: '#FFFFFF',
-              border: '1px solid var(--border-light)'
-            }}>
+              <button 
+                onClick={() => onNavigate('dashboard')}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  color: '#FFFFFF',
+                  fontWeight: 600,
+                  fontSize: '1rem',
+                  padding: '0.85rem 1.85rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  backdropFilter: 'blur(8px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                <Play size={16} color="#F59E0B" /> Watch Demo
+              </button>
+            </div>
+
+            {/* Tech Stack Badges Below Buttons */}
+            <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.15)', paddingTop: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.825rem', color: '#9CA3AF' }}>
+              <span style={{ fontWeight: 700, color: '#E5E7EB' }}>Tech Architecture:</span>
+              <span style={{ color: '#4ADE80', fontWeight: 600 }}>React</span> • 
+              <span style={{ color: '#6EE7B7', fontWeight: 600 }}>Spring Boot</span> • 
+              <span style={{ color: '#FCD34D', fontWeight: 600 }}>Gemini AI</span> • 
+              <span style={{ color: '#60A5FA', fontWeight: 600 }}>MySQL</span>
+            </div>
+          </motion.div>
+
+          {/* Right Column: Floating Dashboard Mockup */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+            transition={{ 
+              opacity: { duration: 0.6 },
+              scale: { duration: 0.6 },
+              y: { duration: 4, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }
+            }}
+            style={{ position: 'relative' }}
+          >
+            {/* Device Laptop Frame */}
+            <div 
+              style={{
+                background: '#1E293B',
+                borderRadius: '16px',
+                padding: '12px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                border: '1px solid rgba(255, 255, 255, 0.2)'
+              }}
+            >
+              <div style={{ display: 'flex', gap: '6px', marginBottom: '8px', paddingLeft: '4px' }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#EF4444' }}></span>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#F59E0B' }}></span>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10B981' }}></span>
+              </div>
+              
               <img 
-                src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=80" 
-                alt="AgriSahay Smart Farming AI Platform" 
-                style={{ width: '100%', height: '480px', objectFit: 'cover', borderRadius: 'var(--radius-lg)' }} 
+                src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1000&q=80" 
+                alt="AgriSahay AI Dashboard Preview" 
+                style={{ width: '100%', height: '360px', objectFit: 'cover', borderRadius: '10px' }} 
               />
             </div>
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* ------------------------------------------------- */}
+      {/* TRUST SECTION */}
+      {/* ------------------------------------------------- */}
+      <section style={{ padding: '3.5rem 2rem', background: '#FFFFFF', borderBottom: '1px solid #E5E7EB' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.85rem', fontWeight: 800, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1.75rem' }}>
+            Built with Modern Production Technologies
+          </p>
+
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: '2rem' }}>
+            {techStack.map((tech, i) => (
+              <div 
+                key={i}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  background: '#F8FAFC',
+                  border: '1px solid #E5E7EB',
+                  padding: '0.6rem 1.2rem',
+                  borderRadius: '9999px',
+                  fontSize: '0.875rem',
+                  fontWeight: 700,
+                  color: '#1F2937'
+                }}
+              >
+                <span>{tech.icon}</span>
+                <span>{tech.name}</span>
+              </div>
+            ))}
           </div>
-
         </div>
       </section>
 
-      {/* ANIMATED STATISTICS COUNTER BAR */}
-      <section style={{ padding: '3.5rem 2rem', background: '#FFFFFF', borderY: '1px solid var(--border-light)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', textAlign: 'center' }}>
-          {statsList.map((st, i) => (
-            <div key={i} style={{ padding: '1rem' }}>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary-700)', fontFamily: 'var(--font-heading)' }}>
-                {st.number}
-              </div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '2px' }}>
-                {st.label}
-              </div>
-              <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                {st.desc}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* WHY CHOOSE AGRISAHAY AI - 6 CARD GRID */}
-      <section style={{ padding: '5rem 2rem', background: 'var(--bg-slate)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      {/* ------------------------------------------------- */}
+      {/* FEATURES SECTION */}
+      {/* ------------------------------------------------- */}
+      <section id="features" style={{ padding: '5.5rem 2rem', background: '#F8FAFC' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <div className="badge badge-amber" style={{ marginBottom: '0.5rem' }}>
-              AI Decision Features
-            </div>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--primary-900)' }}>
-              Why Choose AgriSahay AI?
+            <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Comprehensive Platform Capabilities
+            </span>
+            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#111827', marginTop: '0.35rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              Everything Farmers Need in One Platform
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginTop: '0.35rem' }}>
-              Integrated precision modules built specifically for Tamil Nadu regional agriculture.
-            </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.75rem' }}>
-            {whyChooseCards.map((card, idx) => {
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.75rem' }}>
+            {featureCards.map((card, idx) => {
               const IconComponent = card.icon;
               return (
-                <div key={idx} className="card-glass card-hover-lift" style={{ display: 'flex', gap: '1.25rem' }}>
-                  <div style={{
-                    width: '52px',
-                    height: '52px',
-                    borderRadius: '14px',
-                    background: 'var(--primary-50)',
-                    border: '1px solid var(--primary-100)',
-                    color: 'var(--primary-700)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
+                <div 
+                  key={idx}
+                  style={{
+                    background: '#FFFFFF',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '16px',
+                    padding: '2rem',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                    transition: 'all 0.25s ease',
+                    cursor: 'pointer'
+                  }}
+                  onMouseOver={e => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(22, 163, 74, 0.15)';
+                    e.currentTarget.style.borderColor = '#16A34A';
+                  }}
+                  onMouseOut={e => {
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+                    e.currentTarget.style.borderColor = '#E5E7EB';
+                  }}
+                >
+                  <div style={{ width: '50px', height: '50px', borderRadius: '12px', background: '#DCFCE7', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
                     <IconComponent size={26} />
                   </div>
-                  <div>
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
-                      {card.title}
-                    </h3>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                      {card.desc}
-                    </p>
-                  </div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                    {card.title}
+                  </h3>
+                  <p style={{ fontSize: '0.9rem', color: '#4B5563', lineHeight: 1.5 }}>
+                    {card.desc}
+                  </p>
                 </div>
               );
             })}
@@ -256,42 +447,42 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
         </div>
       </section>
 
-      {/* HOW IT WORKS TIMELINE */}
-      <section style={{ padding: '5rem 2rem', background: '#FFFFFF', borderTop: '1px solid var(--border-light)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      {/* ------------------------------------------------- */}
+      {/* HOW IT WORKS */}
+      {/* ------------------------------------------------- */}
+      <section id="how-it-works" style={{ padding: '5.5rem 2rem', background: '#FFFFFF', borderTop: '1px solid #E5E7EB' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <div className="badge badge-green" style={{ marginBottom: '0.5rem' }}>
-              Simple 5-Step Workflow
-            </div>
-            <h2 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--primary-900)' }}>
+            <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Step-by-Step Workflow
+            </span>
+            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#111827', marginTop: '0.35rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
               How AgriSahay AI Works
             </h2>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', position: 'relative' }}>
-            {timelineSteps.map((stp, idx) => (
-              <div key={idx} className="card-glass" style={{ textAlign: 'center', borderTop: '4px solid var(--primary-600)' }}>
-                <div style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '50%',
-                  background: 'var(--primary-600)',
-                  color: '#FFFFFF',
-                  fontWeight: 800,
-                  fontSize: '1rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 1rem'
-                }}>
-                  {stp.step}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', position: 'relative' }}>
+            {stepsList.map((step, idx) => (
+              <div 
+                key={idx}
+                style={{
+                  background: '#F8FAFC',
+                  border: '1px solid #E5E7EB',
+                  borderRadius: '16px',
+                  padding: '2rem 1.5rem',
+                  textAlign: 'center',
+                  position: 'relative'
+                }}
+              >
+                <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#16A34A', color: '#FFFFFF', fontWeight: 800, fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+                  {step.number}
                 </div>
-                <h4 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
-                  {stp.title}
-                </h4>
-                <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
-                  {stp.desc}
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  {step.title}
+                </h3>
+                <p style={{ fontSize: '0.85rem', color: '#6B7280', lineHeight: 1.5 }}>
+                  {step.desc}
                 </p>
               </div>
             ))}
@@ -300,7 +491,190 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
         </div>
       </section>
 
-      <Footer onNavigate={onNavigate} />
+      {/* ------------------------------------------------- */}
+      {/* DASHBOARD PREVIEW */}
+      {/* ------------------------------------------------- */}
+      <section style={{ padding: '5.5rem 2rem', background: '#F8FAFC' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+            <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Real-Time Decision Intelligence
+            </span>
+            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#111827', marginTop: '0.35rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              Powerful Analytics Dashboard
+            </h2>
+          </div>
+
+          <div style={{ position: 'relative', maxWidth: '1000px', margin: '0 auto' }}>
+            {/* Main Preview Image */}
+            <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '16px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1)', border: '1px solid #E5E7EB' }}>
+              <img 
+                src="https://images.unsplash.com/photo-1595838729984-24b5840d0505?auto=format&fit=crop&w=1200&q=80" 
+                alt="Analytics Dashboard Preview" 
+                style={{ width: '100%', height: '440px', objectFit: 'cover', borderRadius: '12px' }} 
+              />
+            </div>
+
+            {/* Floating Mini Cards */}
+            <div style={{ position: 'absolute', top: '15%', left: '-30px', background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '12px', padding: '0.85rem 1.25rem', boxShadow: '0 10px 25px rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <CloudSun size={20} color="#F59E0B" />
+              <div>
+                <span style={{ fontSize: '0.7rem', color: '#6B7280', display: 'block' }}>Today's Weather</span>
+                <span style={{ fontSize: '0.9rem', fontWeight: 800 }}>33°C Sunny (Karur)</span>
+              </div>
+            </div>
+
+            <div style={{ position: 'absolute', bottom: '15%', right: '-30px', background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '12px', padding: '0.85rem 1.25rem', boxShadow: '0 10px 25px rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <Activity size={20} color="#16A34A" />
+              <div>
+                <span style={{ fontSize: '0.7rem', color: '#6B7280', display: 'block' }}>Farm Health Score</span>
+                <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#16A34A' }}>92 / 100 Optimal</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ------------------------------------------------- */}
+      {/* WHY CHOOSE US */}
+      {/* ------------------------------------------------- */}
+      <section style={{ padding: '5.5rem 2rem', background: '#FFFFFF', borderTop: '1px solid #E5E7EB' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+            <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Proven Agricultural Impact
+            </span>
+            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#111827', marginTop: '0.35rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              Why Farmers Choose AgriSahay AI
+            </h2>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.75rem' }}>
+            {whyChooseUsList.map((item, idx) => (
+              <div key={idx} style={{ background: '#F8FAFC', border: '1px solid #E5E7EB', borderRadius: '16px', padding: '2rem' }}>
+                <CheckCircle2 size={28} color="#16A34A" style={{ marginBottom: '1rem' }} />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  {item.title}
+                </h3>
+                <p style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: 1.5 }}>
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* ------------------------------------------------- */}
+      {/* CALL TO ACTION */}
+      {/* ------------------------------------------------- */}
+      <section style={{ padding: '6rem 2rem', background: 'linear-gradient(135deg, #14532D 0%, #16A34A 100%)', color: '#FFFFFF', textAlign: 'center' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '2.8rem', fontWeight: 800, marginBottom: '1rem', fontFamily: 'Plus Jakarta Sans, sans-serif', letterSpacing: '-0.02em' }}>
+            Ready to Transform Your Farming?
+          </h2>
+          <p style={{ fontSize: '1.15rem', color: '#DCFCE7', marginBottom: '2.5rem', opacity: 0.9 }}>
+            Join the future of agriculture with AI-powered decision support.
+          </p>
+
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+            <button 
+              onClick={onLoginDemo}
+              style={{
+                background: '#FFFFFF',
+                color: '#14532D',
+                fontWeight: 800,
+                fontSize: '1rem',
+                padding: '0.9rem 2.25rem',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(0,0,0,0.15)'
+              }}
+            >
+              Get Started
+            </button>
+            <button 
+              onClick={() => scrollToSection('contact')}
+              style={{
+                background: 'transparent',
+                border: '2px solid rgba(255, 255, 255, 0.4)',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                fontSize: '1rem',
+                padding: '0.9rem 2.25rem',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
+              Contact Us
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------- */}
+      {/* FOOTER */}
+      {/* ------------------------------------------------- */}
+      <footer id="contact" style={{ background: '#1E293B', color: '#94A3B8', padding: '4rem 2rem 2rem' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1.5fr', gap: '3rem', marginBottom: '3.5rem' }}>
+            
+            {/* Column 1: Brand */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: '#FFFFFF', fontSize: '1.3rem', fontWeight: 800, marginBottom: '1rem' }}>
+                <span>🌾</span> AgriSahay AI
+              </div>
+              <p style={{ fontSize: '0.875rem', lineHeight: 1.6, maxWidth: '300px' }}>
+                Next-generation intelligent agriculture decision support platform for farmers in Karur District, Tamil Nadu.
+              </p>
+            </div>
+
+            {/* Column 2: Quick Links */}
+            <div>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '1rem' }}>Quick Links</h4>
+              <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.875rem' }}>
+                <li style={{ cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Home</li>
+                <li style={{ cursor: 'pointer' }} onClick={() => scrollToSection('features')}>Features</li>
+                <li style={{ cursor: 'pointer' }} onClick={() => scrollToSection('how-it-works')}>How It Works</li>
+                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('login')}>Login</li>
+              </ul>
+            </div>
+
+            {/* Column 3: Resources */}
+            <div>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '1rem' }}>Resources</h4>
+              <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.875rem' }}>
+                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('recommend')}>Crop Suitability</li>
+                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('disease')}>Disease Diagnosis</li>
+                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('schemes')}>Govt Subsidies</li>
+                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('weather')}>Weather Alerts</li>
+              </ul>
+            </div>
+
+            {/* Column 4: Contact & Social */}
+            <div>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '1rem' }}>Contact & Support</h4>
+              <p style={{ fontSize: '0.875rem', marginBottom: '0.5rem' }}>📍 Karur District, Tamil Nadu</p>
+              <p style={{ fontSize: '0.875rem', marginBottom: '0.5rem' }}>📞 Kisan Call Center: 1800-180-1551</p>
+              <p style={{ fontSize: '0.875rem' }}>✉️ support@agrisahay.in</p>
+            </div>
+
+          </div>
+
+          {/* Bottom Bar */}
+          <div style={{ borderTop: '1px solid #334155', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', fontSize: '0.85rem' }}>
+            <div>© 2026 AgriSahay AI. All rights reserved.</div>
+            <div style={{ color: '#F59E0B', fontWeight: 700 }}>Built by Vignesh S</div>
+          </div>
+
+        </div>
+      </footer>
 
     </div>
   );
