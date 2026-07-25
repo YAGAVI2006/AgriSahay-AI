@@ -37,8 +37,8 @@ export default function CalendarView({ farmerProfile }) {
       {/* Header Title & Extra Innovation Highlight */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <div className="badge" style={{ background: '#f3e8ff', color: '#7e22ce', marginBottom: '0.35rem' }}>
-            <Sparkles size={12} /> ⭐ Extra Innovation Feature (Phase 1)
+          <div className="badge badge-purple" style={{ marginBottom: '0.35rem' }}>
+            <Sparkles size={12} /> ⭐ Seasonal Farming Roadmap
           </div>
           <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>🌾 AI Seasonal Farming Calendar</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>

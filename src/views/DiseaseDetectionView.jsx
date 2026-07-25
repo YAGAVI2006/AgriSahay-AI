@@ -15,7 +15,19 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
   const handleSelectSample = (sample) => {
     setSelectedSample(sample);
     setCustomImage(null);
-    startDiagnosis(sample.id, null);
+    // Extract crop ID from sample.id (e.g. sample-coriander -> coriander)
+    const cropId = sample.id.replace('sample-', '');
+    setSelectedCropTarget(cropId);
+    startDiagnosis(sample.id, cropId);
+  };
+
+  const handleCropTargetChange = (cropId) => {
+    setSelectedCropTarget(cropId);
+    // Re-run diagnosis for current custom image or sample if available
+    const input = customImage || (selectedSample ? selectedSample.id : null);
+    if (input) {
+      startDiagnosis(input, cropId);
+    }
   };
 
   const handleFileUpload = (e) => {
@@ -66,15 +78,15 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
         {/* Left Column: Upload & Sample Gallery */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           
-          {/* Target Plant Selector (For custom upload) */}
-          <div className="card-glass" style={{ padding: '1rem' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.35rem', color: 'var(--primary-800)' }}>
-              Select Plant / Crop Type (Before Uploading Photo):
+          {/* Target Plant Selector */}
+          <div className="card-glass" style={{ padding: '1rem', border: '2px solid var(--primary-500)', background: 'linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%)' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, marginBottom: '0.35rem', color: 'var(--primary-900)' }}>
+              Step 1: Select Plant / Crop Type:
             </label>
             <select 
               value={selectedCropTarget} 
-              onChange={(e) => setSelectedCropTarget(e.target.value)}
-              style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', border: '1px solid var(--border-light)', background: 'var(--bg-main)', color: 'var(--text-main)', fontSize: '0.875rem', fontWeight: 600 }}
+              onChange={(e) => handleCropTargetChange(e.target.value)}
+              style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid var(--border-light)', background: '#ffffff', color: 'var(--primary-900)', fontSize: '0.95rem', fontWeight: 700 }}
             >
               {CROP_LIST.map(cr => (
                 <option key={cr.id} value={cr.id}>{cr.icon} {cr.name}</option>
@@ -90,14 +102,14 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
                   <div className="scanner-line"></div>
                   <div className="scanner-overlay"></div>
                   <img 
-                    src={selectedSample ? selectedSample.imageUrl : customImage} 
+                    src={customImage || (selectedSample ? selectedSample.imageUrl : 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=600&q=80')} 
                     alt="Scanning" 
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                   />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary-600)', fontWeight: 700 }}>
                   <RefreshCw className="animate-spin" size={18} />
-                  <span>Identifying plant species & analyzing leaf venation...</span>
+                  <span>Analyzing plant species & leaf symptoms for {selectedCropTarget.toUpperCase()}...</span>
                 </div>
               </div>
             ) : (
@@ -176,16 +188,23 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
           {scanResult ? (
             <div className="card-glass" style={{ borderLeft: '4px solid var(--primary-600)', animation: 'fadeIn 0.3s ease-out' }}>
               
-              {/* Plant Identification Banner (Fix for User Issue #1) */}
-              <div style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#ffffff', padding: '1rem 1.25rem', borderRadius: 'var(--radius-md)', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <span style={{ fontSize: '0.725rem', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.05em' }}>AI Plant Identification</span>
-                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '2px 0 0 0', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                    <span>{scanResult.cropIcon}</span> {scanResult.identifiedPlant || scanResult.cropName}
-                  </h3>
-                  <p style={{ fontSize: '0.8rem', opacity: 0.85, fontStyle: 'italic', margin: '2px 0 0 0' }}>
-                    Botanical Name: {scanResult.botanicalName || 'Oryza sativa'} ({scanResult.cropType || 'Crop Plant'})
-                  </p>
+              {/* Plant Identification Banner */}
+              <div style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#ffffff', padding: '1.25rem', borderRadius: 'var(--radius-md)', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <img 
+                    src={scanResult.imageUrl} 
+                    alt="Analyzed Leaf" 
+                    style={{ width: '64px', height: '64px', borderRadius: '12px', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.4)', flexShrink: 0 }} 
+                  />
+                  <div>
+                    <span style={{ fontSize: '0.725rem', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.05em' }}>AI Plant Identification</span>
+                    <h3 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '2px 0 0 0', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <span>{scanResult.cropIcon}</span> {scanResult.identifiedPlant || scanResult.cropName}
+                    </h3>
+                    <p style={{ fontSize: '0.8rem', opacity: 0.85, fontStyle: 'italic', margin: '2px 0 0 0' }}>
+                      Botanical: {scanResult.botanicalName} ({scanResult.cropType})
+                    </p>
+                  </div>
                 </div>
 
                 <div style={{ textAlign: 'right' }}>
@@ -198,12 +217,12 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
 
               {/* Disease Name & Scientific Details */}
               <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '0.85rem', marginBottom: '1rem' }}>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Detected Pathon/Disease</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Detected Pathogen / Disease</span>
                 <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#dc2626', marginTop: '2px' }}>
                   🦠 {scanResult.diseaseName}
                 </h3>
                 <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                  Pathogen: {scanResult.scientificName}
+                  Scientific Name: {scanResult.scientificName}
                 </p>
               </div>
 
@@ -312,7 +331,7 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
               <Leaf size={48} style={{ opacity: 0.3, margin: '0 auto 1rem' }} />
               <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>No Leaf Image Analyzed Yet</h3>
               <p style={{ fontSize: '0.875rem', marginTop: '0.4rem', maxWidth: '360px', margin: '0.4rem auto 0' }}>
-                Select a crop from the demo gallery or upload a leaf photo to trigger instant AI Plant Identification & Disease Scanning.
+                Select a crop from the dropdown or click a sample leaf in the gallery to trigger instant AI Plant Identification & Disease Scanning.
               </p>
             </div>
           )}

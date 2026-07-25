@@ -60,7 +60,7 @@ export default function Footer({ onNavigate }) {
       </div>
 
       <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1.25rem', textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto', flexWrap: 'wrap', gap: '0.5rem' }}>
-        <p>© 2026 AgriSahay AI. All rights reserved. Built for Phase 1 MVP.</p>
+        <p>© 2026 AgriSahay AI. All rights reserved. Empowering Farmers with AI Precision.</p>
         <p style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
           Crafted with <Heart size={14} color="#dc2626" fill="#dc2626" /> for Indian Farmers
         </p>

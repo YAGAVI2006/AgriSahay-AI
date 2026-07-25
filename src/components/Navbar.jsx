@@ -73,7 +73,7 @@ export default function Navbar({
         </div>
         <div>
           <h1 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--primary-700)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            AgriSahay <span style={{ color: 'var(--accent-amber)', fontSize: '0.75rem', background: 'var(--accent-amber-light)', padding: '2px 6px', borderRadius: '6px' }}>AI Phase 2</span>
+            AgriSahay <span style={{ color: 'var(--accent-amber)', fontSize: '0.75rem', background: 'var(--accent-amber-light)', padding: '2px 6px', borderRadius: '6px' }}>AI Platform</span>
           </h1>
           <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Location-Aware Smart Decision System</p>
         </div>

@@ -44,7 +44,7 @@ export default function Sidebar({ currentView, setCurrentView, onLogout, activeR
       <div>
         <div style={{ padding: '0 0.5rem 0.75rem 0.5rem', borderBottom: '1px solid var(--border-light)', marginBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <p style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary-700)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-            Phase 3 AI Platform
+            AI Decision Platform
           </p>
           <span className="badge badge-amber" style={{ fontSize: '0.6rem' }}>
             Role: {activeRole.toUpperCase()}

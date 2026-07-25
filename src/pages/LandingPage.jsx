@@ -150,7 +150,7 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
       }}>
         <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
           <div className="badge badge-amber" style={{ margin: '0 auto 1.25rem', display: 'inline-flex' }}>
-            <Sparkles size={14} /> 🚀 Phase 1 MVP – Intelligent Agriculture Platform
+            <Sparkles size={14} /> 🚀 Intelligent Agriculture Decision Platform
           </div>
 
           <h1 style={{ fontSize: '3.2rem', fontWeight: 800, lineHeight: 1.15, marginBottom: '1.25rem', fontFamily: 'var(--font-heading)' }}>
@@ -228,7 +228,7 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
       <section id="features" style={{ padding: '5rem 3rem', background: 'var(--card-bg)', borderTop: '1px solid var(--border-light)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <div className="badge badge-amber" style={{ marginBottom: '0.5rem' }}>Phase 1 Core Modules</div>
+            <div className="badge badge-amber" style={{ marginBottom: '0.5rem' }}>Core Platform Modules</div>
             <h2 style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--primary-900)' }}>
               Integrated AI Modules for Precision Agriculture
             </h2>

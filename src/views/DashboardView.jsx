@@ -92,7 +92,7 @@ export default function DashboardView({
             <div className="stat-value" style={{ fontSize: '1.15rem', color: '#7e22ce' }}>
               Tillering & Fert.
             </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Phase 3 of 5 (Month: August)</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Active Stage (Month: August)</p>
           </div>
         </div>
 

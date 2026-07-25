@@ -102,7 +102,7 @@ export default function DashboardPage({
             <div className="stat-value" style={{ fontSize: '1.15rem', color: '#7e22ce' }}>
               Kuruvai / Aadi
             </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Phase 2 (SRI Transplanting)</p>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SRI Transplanting Stage</p>
           </div>
         </div>
 

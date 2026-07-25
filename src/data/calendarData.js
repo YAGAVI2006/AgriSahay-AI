@@ -6,7 +6,7 @@ export const CROP_CALENDARS = {
     months: [
       {
         monthName: "Days 1 - 10 (Sowing & Germination)",
-        stageTitle: "Phase 1: Seed Preparation & Bed Sowing",
+        stageTitle: "Stage 1: Seed Preparation & Bed Sowing",
         status: "Sowing / Sprouting",
         icon: "🌱",
         description: "Split coriander seeds into halves, soak for 12 hours, treat with Trichoderma viride and sow in raised beds.",
@@ -20,7 +20,7 @@ export const CROP_CALENDARS = {
       },
       {
         monthName: "Days 11 - 25 (Vegetative Growth & Bio-Nutrition)",
-        stageTitle: "Phase 2: Foliar Boost & Weeding",
+        stageTitle: "Stage 2: Foliar Boost & Weeding",
         status: "Vegetative",
         icon: "🌿",
         description: "Rapid leaf expansion and bio-stimulant foliar spray.",
@@ -33,7 +33,7 @@ export const CROP_CALENDARS = {
       },
       {
         monthName: "Days 26 - 35 (Harvesting & Mandi Transport)",
-        stageTitle: "Phase 3: Uprooting & Bundle Packing",
+        stageTitle: "Stage 3: Uprooting & Bundle Packing",
         status: "Harvesting",
         icon: "🧺",
         description: "Uproot tender green coriander plants with roots intact, wash, bundle and transport to market.",
@@ -54,7 +54,7 @@ export const CROP_CALENDARS = {
     months: [
       {
         monthName: "Month 1 (Sucker Planting & Establishment)",
-        stageTitle: "Phase 1: Root Sucker Planting & Irrigation",
+        stageTitle: "Stage 1: Root Sucker Planting & Irrigation",
         status: "Planting",
         icon: "🌱",
         description: "Planting root suckers 15cm x 15cm on raised beds with organic vermicompost.",
@@ -67,7 +67,7 @@ export const CROP_CALENDARS = {
       },
       {
         monthName: "Month 2 onwards (Harvest & Multi-Cutting)",
-        stageTitle: "Phase 2: Ratoon Harvesting & Nitrogen Top Dressing",
+        stageTitle: "Stage 2: Ratoon Harvesting & Nitrogen Top Dressing",
         status: "Harvesting",
         icon: "✂️",
         description: "Harvest mature leafy stems leaving 2cm root stubble; top dress with Urea.",
@@ -87,7 +87,7 @@ export const CROP_CALENDARS = {
     months: [
       {
         monthName: "June - July (Kuruvai / Aadi Sowing)",
-        stageTitle: "Phase 1: Nursery Raising & Cauvery Land Prep",
+        stageTitle: "Stage 1: Nursery Raising & Cauvery Land Prep",
         status: "Sowing / Nursery",
         icon: "🌱",
         description: "Prepare Mat Nursery (பாய் நாற்றாங்கால்) or wet nursery bed, seed treatment with Azospirillum & Phosphobacteria.",
@@ -101,7 +101,7 @@ export const CROP_CALENDARS = {
       },
       {
         monthName: "August (Avani)",
-        stageTitle: "Phase 2: System of Rice Intensification (SRI) & Transplanting",
+        stageTitle: "Stage 2: System of Rice Intensification (SRI) & Transplanting",
         status: "Transplanting",
         icon: "🌾",
         description: "Transplant 14-to-18 day young seedlings with single seedling per hill.",
@@ -122,7 +122,7 @@ export const CROP_CALENDARS = {
     months: [
       {
         monthName: "Month 1 (Planting)",
-        stageTitle: "Phase 1: Sett Planting & Trench Irrigation",
+        stageTitle: "Stage 1: Sett Planting & Trench Irrigation",
         status: "Planting",
         icon: "🎋",
         description: "Planting two-eyed sugarcane setts treated with Carbendazim in deep trenches.",
@@ -142,7 +142,7 @@ export const CROP_CALENDARS = {
     months: [
       {
         monthName: "Month 1-3",
-        stageTitle: "Phase 1: Pit Preparation & Drip Fertigation",
+        stageTitle: "Stage 1: Pit Preparation & Drip Fertigation",
         status: "Planting",
         icon: "🍌",
         description: "Digging 1.5ft x 1.5ft pits, sucker planting, drip lateral layout.",
