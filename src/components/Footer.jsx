@@ -1,69 +1,119 @@
 import React from 'react';
-import { Sprout, Heart, Github, Mail, Phone, MapPin } from 'lucide-react';
+import { Leaf, Heart, Shield, Sparkles, Globe, Mail, Phone } from 'lucide-react';
 
 export default function Footer({ onNavigate }) {
   return (
     <footer style={{
       background: 'var(--card-bg)',
       borderTop: '1px solid var(--border-light)',
-      padding: '3rem 2rem 1.5rem',
-      marginTop: 'auto'
+      padding: '3.5rem 2rem 2rem',
+      marginTop: '4rem',
+      color: 'var(--text-main)'
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'var(--primary-600)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Sprout size={20} />
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '2fr 1fr 1fr 1fr',
+          gap: '2.5rem',
+          marginBottom: '3rem'
+        }}>
+          {/* Column 1: Brand Info */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1rem' }}>
+              <div style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
+                background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Leaf size={20} />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                AgriSahay <span style={{ color: 'var(--primary-600)' }}>AI</span>
+              </h3>
             </div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--primary-700)' }}>AgriSahay AI</h3>
-          </div>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.5, maxWidth: '320px' }}>
-            An Intelligent Agriculture Decision Support System powered by AI. Empowering farmers with precision crop care, weather intelligence, government scheme recommendations, and seasonal activity calendars.
-          </p>
-        </div>
 
-        <div>
-          <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-main)' }}>Platform Modules</h4>
-          <ul style={{ listStyleType: 'none', paddingLeft: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            <li style={{ cursor: 'pointer' }} onClick={() => onNavigate && onNavigate('disease')}>🌿 AI Disease Scanner</li>
-            <li style={{ cursor: 'pointer' }} onClick={() => onNavigate && onNavigate('assistant')}>🤖 AI Agri Assistant</li>
-            <li style={{ cursor: 'pointer' }} onClick={() => onNavigate && onNavigate('weather')}>🌦 Smart Weather</li>
-            <li style={{ cursor: 'pointer' }} onClick={() => onNavigate && onNavigate('schemes')}>🏛 Government Schemes</li>
-            <li style={{ cursor: 'pointer' }} onClick={() => onNavigate && onNavigate('calendar')}>🌾 AI Seasonal Calendar</li>
-          </ul>
-        </div>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.25rem', maxWidth: '320px' }}>
+              Next-Generation AI Agriculture Decision Support Platform designed for farmers in Karur District and Tamil Nadu.
+            </p>
 
-        <div>
-          <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-main)' }}>Government Portals</h4>
-          <ul style={{ listStyleType: 'none', paddingLeft: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            <li><a href="https://pmkisan.gov.in" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>PM-KISAN Portal</a></li>
-            <li><a href="https://pmfby.gov.in" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>PM Fasal Bima Yojana</a></li>
-            <li><a href="https://soilhealth.dac.gov.in" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Soil Health Card</a></li>
-            <li><a href="https://agrimachinery.nic.in" target="_blank" rel="noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>SMAM Machinery Subsidy</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '1rem', color: 'var(--text-main)' }}>Support & Helpline</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Phone size={14} color="var(--primary-600)" /> 1800-180-1551 (Kisan Call Center)
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Mail size={14} color="var(--primary-600)" /> support@agrisahay.in
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <MapPin size={14} color="var(--primary-600)" /> New Delhi, India
+            <div style={{ display: 'flex', gap: '0.75rem', color: 'var(--text-muted)', fontSize: '0.825rem' }}>
+              <span>📍 Karur, Tamil Nadu</span>
+              <span>•</span>
+              <span>📞 Kisan Helpline 1800-180-1551</span>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1.25rem', textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto', flexWrap: 'wrap', gap: '0.5rem' }}>
-        <p>© 2026 AgriSahay AI. All rights reserved. Empowering Farmers with AI Precision.</p>
-        <p style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-          Crafted with <Heart size={14} color="#dc2626" fill="#dc2626" /> for Indian Farmers
-        </p>
+          {/* Column 2: Quick Links */}
+          <div>
+            <h4 style={{ fontSize: '0.9rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--primary-800)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Platform Views
+            </h4>
+            <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.85rem' }}>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('dashboard')}>Dashboard</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('recommend')}>Crop Recommendation</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('disease')}>AI Disease Detector</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('weather')}>Weather Intelligence</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('market')}>Market Prices</li>
+            </ul>
+          </div>
+
+          {/* Column 3: AI Capabilities */}
+          <div>
+            <h4 style={{ fontSize: '0.9rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--primary-800)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              AI Intelligence
+            </h4>
+            <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.85rem' }}>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('digital_twin')}>Farm Digital Twin</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('satellite')}>Satellite NDVI Monitoring</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('pest')}>Pest Outbreak Prediction</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('yield')}>Yield Forecaster</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('assistant')}>AgriBot AI Q&A</li>
+            </ul>
+          </div>
+
+          {/* Column 4: Resources & Credits */}
+          <div>
+            <h4 style={{ fontSize: '0.9rem', fontWeight: 800, marginBottom: '1rem', color: 'var(--primary-800)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              District & Support
+            </h4>
+            <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.85rem' }}>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('schemes')}>Govt Subsidies & Schemes</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('community')}>Uzhavar Mandram Hub</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('emergency')}>Emergency Contacts</li>
+              <li style={{ cursor: 'pointer', color: 'var(--text-muted)' }} onClick={() => onNavigate && onNavigate('vault')}>Farmer Document Vault</li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom Bar with Built By Vignesh S */}
+        <div style={{
+          borderTop: '1px solid var(--border-light)',
+          paddingTop: '1.5rem',
+          display: 'flex',
+          justify: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          fontSize: '0.825rem',
+          color: 'var(--text-muted)'
+        }}>
+          <div>
+            © 2026 AgriSahay AI. All rights reserved. Smart Farming. Smarter Decisions.
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, color: 'var(--primary-700)' }}>
+            <Sparkles size={16} color="var(--primary-600)" />
+            <span>Built by <strong>Vignesh S</strong></span>
+          </div>
+        </div>
+
       </div>
     </footer>
   );

@@ -1,117 +1,175 @@
 import React from 'react';
-import { LayoutDashboard, Leaf, Bot, CloudSun, Landmark, CalendarDays, User, LogOut, Sprout, TrendingUp, Droplets, MapPin, FileText, Sparkles, Cpu, Layers, Bug, Activity, Users, ShieldAlert, Phone, BarChart2, Building2 } from 'lucide-react';
+import { 
+  LayoutDashboard, 
+  Cpu, 
+  Satellite, 
+  Bug, 
+  TrendingUp, 
+  Map, 
+  Sprout, 
+  Scan, 
+  Bot, 
+  Users, 
+  CloudSun, 
+  ShoppingBag, 
+  Award, 
+  Droplet, 
+  Zap, 
+  Leaf, 
+  Calendar, 
+  ShieldCheck, 
+  Compass, 
+  PhoneCall, 
+  BarChart3, 
+  UserCheck 
+} from 'lucide-react';
 
-export default function Sidebar({ currentView, setCurrentView, onLogout, activeRole }) {
-  const navItems = [
-    { id: 'dashboard', label: 'Farmer Dashboard', icon: LayoutDashboard, badge: 'Overview' },
-    { id: 'digital_twin', label: 'AI Digital Twin', icon: Cpu, badge: 'Flagship ⭐' },
-    { id: 'satellite', label: 'Satellite NDVI Hub', icon: Layers, badge: 'Sentinel' },
-    { id: 'pest', label: 'AI Pest Risk Predictor', icon: Bug, badge: 'Predict' },
-    { id: 'yield', label: 'AI Yield Forecaster', icon: Activity, badge: 'Forecast' },
-    { id: 'outbreak', label: 'Disease Outbreak Map', icon: ShieldAlert, badge: 'GIS Heat' },
-    { id: 'recommend', label: 'Crop Recommender', icon: Sprout, badge: 'AI Match' },
-    { id: 'disease', label: 'AI Disease Detector', icon: Leaf, badge: 'AI Scan' },
-    { id: 'assistant', label: 'AI Agri Assistant', icon: Bot, badge: 'Voice/Q&A' },
-    { id: 'community', label: 'Farmer Community', icon: Users, badge: 'Forum' },
-    { id: 'weather', label: 'Smart Weather', icon: CloudSun, badge: '7-Day' },
-    { id: 'market', label: 'Market Prices (Mandi)', icon: TrendingUp, badge: 'Live Board' },
-    { id: 'schemes', label: 'Government Schemes', icon: Landmark, badge: 'Matched' },
-    { id: 'irrigation', label: 'Irrigation Planner', icon: Droplets, badge: 'Water' },
-    { id: 'fertilizer', label: 'AI Fertilizer Guide', icon: Sparkles, badge: 'NPK' },
-    { id: 'sustainability', label: 'Carbon & Sustainability', icon: Leaf, badge: 'ESG' },
-    { id: 'calendar', label: 'AI Seasonal Calendar', icon: CalendarDays, badge: 'Timeline' },
-    { id: 'vault', label: 'Document Vault', icon: FileText, badge: 'Secure' },
-    { id: 'map', label: 'Interactive GIS Map', icon: MapPin, badge: 'Map' },
-    { id: 'emergency', label: 'Emergency Support', icon: Phone, badge: '24/7' },
-    { id: 'analytics', label: 'Advanced Analytics', icon: BarChart2, badge: 'Reports' },
-    { id: 'admin', label: 'Admin & Officer Panel', icon: Building2, badge: 'RBAC' },
-    { id: 'profile', label: 'Farmer Profile', icon: User, badge: 'Settings' }
+export default function Sidebar({ currentView, setCurrentView, onLogout, activeRole = 'farmer' }) {
+
+  const menuSections = [
+    {
+      title: 'CORE PLATFORM',
+      items: [
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'digital_twin', label: 'AI Digital Twin', icon: Cpu, badge: 'AI' },
+        { id: 'satellite', label: 'Satellite NDVI', icon: Satellite },
+        { id: 'pest', label: 'AI Pest Risk', icon: Bug },
+        { id: 'yield', label: 'Yield Forecaster', icon: TrendingUp },
+        { id: 'outbreak', label: 'Outbreak Heatmap', icon: Map }
+      ]
+    },
+    {
+      title: 'FARMING DECISION MODULES',
+      items: [
+        { id: 'recommend', label: 'Crop Recommend', icon: Sprout },
+        { id: 'disease', label: 'AI Disease Detector', icon: Scan, badge: 'VISION' },
+        { id: 'assistant', label: 'AgriBot AI Q&A', icon: Bot },
+        { id: 'community', label: 'Uzhavar Mandram', icon: Users },
+        { id: 'weather', label: 'Weather Intelligence', icon: CloudSun },
+        { id: 'market', label: 'Market Prices', icon: ShoppingBag },
+        { id: 'schemes', label: 'Govt Schemes', icon: Award }
+      ]
+    },
+    {
+      title: 'MANAGEMENT & ANALYTICS',
+      items: [
+        { id: 'irrigation', label: 'Irrigation Planner', icon: Droplet },
+        { id: 'fertilizer', label: 'Fertilizer Guide', icon: Zap },
+        { id: 'sustainability', label: 'Carbon & Eco Score', icon: Leaf },
+        { id: 'calendar', label: 'Crop Calendar', icon: Calendar },
+        { id: 'vault', label: 'Document Vault', icon: ShieldCheck },
+        { id: 'map', label: 'Farm Map GIS', icon: Compass },
+        { id: 'emergency', label: 'Emergency Support', icon: PhoneCall },
+        { id: 'analytics', label: 'Analytics Report', icon: BarChart3 },
+        { id: 'admin', label: 'Admin & Officer Panel', icon: UserCheck }
+      ]
+    }
   ];
 
   return (
     <aside style={{
-      width: '265px',
+      width: '260px',
       background: 'var(--card-bg)',
       borderRight: '1px solid var(--border-light)',
+      padding: '1.25rem 0.85rem',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
-      padding: '1.25rem 0.85rem',
-      flexShrink: 0,
-      maxHeight: '100vh',
-      overflowY: 'auto'
+      position: 'sticky',
+      top: 0,
+      height: '100vh',
+      overflowY: 'auto',
+      flexShrink: 0
     }}>
       <div>
-        <div style={{ padding: '0 0.5rem 0.75rem 0.5rem', borderBottom: '1px solid var(--border-light)', marginBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <p style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary-700)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-            AI Decision Platform
-          </p>
-          <span className="badge badge-amber" style={{ fontSize: '0.6rem' }}>
-            Role: {activeRole.toUpperCase()}
-          </span>
+        {/* Active Role Selector Pill */}
+        <div style={{
+          padding: '0.65rem 0.85rem',
+          borderRadius: 'var(--radius-md)',
+          background: 'var(--primary-50)',
+          border: '1px solid var(--primary-100)',
+          marginBottom: '1.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div>
+            <span style={{ fontSize: '0.65rem', color: 'var(--primary-700)', fontWeight: 800, textTransform: 'uppercase', display: 'block' }}>
+              ACTIVE ROLE
+            </span>
+            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary-900)' }}>
+              {activeRole.toUpperCase()} USER
+            </span>
+          </div>
+          <span className="badge badge-amber" style={{ fontSize: '0.6rem' }}>ONLINE</span>
         </div>
 
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentView === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setCurrentView(item.id)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  padding: '0.6rem 0.75rem',
-                  borderRadius: 'var(--radius-md)',
-                  border: 'none',
-                  background: isActive ? 'linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%)' : 'transparent',
-                  color: isActive ? '#ffffff' : 'var(--text-main)',
-                  fontWeight: isActive ? 700 : 500,
-                  fontSize: '0.825rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <Icon size={17} color={isActive ? '#ffffff' : 'var(--primary-600)'} />
-                  <span>{item.label}</span>
-                </div>
-                {item.badge && (
-                  <span style={{
-                    fontSize: '0.625rem',
-                    padding: '2px 5px',
-                    borderRadius: '4px',
-                    background: isActive ? 'rgba(255,255,255,0.2)' : 'var(--primary-50)',
-                    color: isActive ? '#ffffff' : 'var(--primary-700)',
-                    fontWeight: 700
-                  }}>
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </nav>
+        {/* Menu Sections Stream */}
+        {menuSections.map((section, sIdx) => (
+          <div key={sIdx} style={{ marginBottom: '1.25rem' }}>
+            <p style={{
+              fontSize: '0.65rem',
+              fontWeight: 800,
+              color: 'var(--text-light)',
+              letterSpacing: '0.08em',
+              padding: '0 0.65rem 0.5rem',
+              textTransform: 'uppercase'
+            }}>
+              {section.title}
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+              {section.items.map((item) => {
+                const IconComp = item.icon;
+                const isActive = currentView === item.id;
+
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setCurrentView(item.id)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0.55rem 0.75rem',
+                      borderRadius: 'var(--radius-md)',
+                      cursor: 'pointer',
+                      fontSize: '0.825rem',
+                      fontWeight: isActive ? 700 : 600,
+                      color: isActive ? 'var(--primary-700)' : 'var(--text-main)',
+                      background: isActive ? 'var(--primary-50)' : 'transparent',
+                      borderLeft: isActive ? '3px solid var(--primary-600)' : '3px solid transparent',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <IconComp size={18} color={isActive ? 'var(--primary-600)' : 'var(--text-muted)'} />
+                      <span>{item.label}</span>
+                    </div>
+
+                    {item.badge && (
+                      <span className="badge badge-amber" style={{ fontSize: '0.575rem', padding: '1px 5px' }}>
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Logout & Session Info */}
+      {/* Sidebar Footer Info */}
       <div style={{
-        background: 'var(--bg-main)',
-        border: '1px solid var(--border-light)',
-        borderRadius: 'var(--radius-md)',
-        padding: '0.85rem',
-        marginTop: '1rem'
+        borderTop: '1px solid var(--border-light)',
+        paddingTop: '0.85rem',
+        fontSize: '0.725rem',
+        color: 'var(--text-muted)',
+        textAlign: 'center'
       }}>
-        <button 
-          onClick={onLogout}
-          className="btn-outline"
-          style={{ width: '100%', fontSize: '0.8rem', padding: '0.4rem', color: '#dc2626', borderColor: '#fca5a5' }}
-        >
-          <LogOut size={14} /> Logout Session
-        </button>
+        <p style={{ fontWeight: 700 }}>AgriSahay AI v2.4 Pro</p>
+        <p style={{ fontSize: '0.675rem', color: 'var(--text-light)', marginTop: '2px' }}>Karur District, Tamil Nadu</p>
       </div>
     </aside>
   );

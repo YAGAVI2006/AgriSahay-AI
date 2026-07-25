@@ -1,234 +1,258 @@
 import React from 'react';
-import { Leaf, CloudSun, Landmark, CalendarDays, ArrowRight, ShieldAlert, Sparkles, CheckCircle2, TrendingUp, AlertTriangle, Activity, BarChart2 } from 'lucide-react';
-import CropHealthChart from '../components/CropHealthChart';
-import WeatherSummaryChart from '../components/WeatherSummaryChart';
+import { 
+  Sprout, 
+  Scan, 
+  Bot, 
+  CloudSun, 
+  ShoppingBag, 
+  Award, 
+  TrendingUp, 
+  AlertTriangle, 
+  CheckCircle2, 
+  ArrowRight, 
+  Sparkles, 
+  MapPin, 
+  Activity, 
+  Calendar, 
+  Droplet, 
+  Zap, 
+  Cpu, 
+  Shield 
+} from 'lucide-react';
+import FarmHealthGauge from '../components/FarmHealthGauge';
 
-export default function DashboardPage({ 
-  farmerProfile, 
-  activeWeather, 
-  matchedSchemes, 
-  onNavigate, 
-  recentScans 
+export default function DashboardPage({
+  farmerProfile,
+  activeWeather,
+  matchedSchemes,
+  onNavigate,
+  recentScans
 }) {
+  const farmHealthScore = 92;
+
+  const todayTasks = [
+    { id: 1, text: 'Apply Panchagavya 3% foliar spray on coriander plot', done: false, category: 'Fertilizer' },
+    { id: 2, text: 'Inspect paddy tillers for Stem Borer dead hearts', done: true, category: 'Pest Scouting' },
+    { id: 3, text: 'Check Cauvery canal drip fertigation filter pressure', done: false, category: 'Irrigation' }
+  ];
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       
-      {/* Hero Welcome Banner */}
-      <div className="card-hero">
-        <div style={{ maxWidth: '780px', position: 'relative', zIndex: 2 }}>
-          <div className="badge badge-amber" style={{ marginBottom: '0.75rem' }}>
-            <Sparkles size={12} /> Powered by AI Decision Support Engine
+      {/* Dashboard Top Header Bar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <div className="badge badge-green" style={{ marginBottom: '0.35rem' }}>
+            <Sparkles size={12} /> AI Precision Agriculture System
           </div>
-          <h2 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem', lineHeight: 1.2 }}>
-            Welcome back, {farmerProfile.name || 'Farmer'}! 👋
+          <h2 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--primary-900)' }}>
+            Welcome Back, {farmerProfile.name || 'Farmer'}! 👋
           </h2>
-          <p style={{ fontSize: '1rem', opacity: 0.9, marginBottom: '1.25rem', lineHeight: 1.5 }}>
-            Managing <strong style={{ color: '#fef08a' }}>{farmerProfile.landSizeAcres || 4.5} Acres</strong> of <strong style={{ color: '#fef08a' }}>{farmerProfile.primaryCrop ? farmerProfile.primaryCrop.toUpperCase() : 'PADDY'}</strong> in <strong>{farmerProfile.village ? `${farmerProfile.village}, ` : ''}{farmerProfile.district || 'Karur'}, {farmerProfile.state || 'Tamil Nadu'}</strong>. Overall crop health status is currently <strong>Optimal (94%)</strong>.
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+            Karur District, Tamil Nadu • Land Size: {farmerProfile.landSizeAcres || 4.5} Acres ({farmerProfile.soilType || 'Red Soil'})
           </p>
+        </div>
 
-          {/* Quick Action Buttons Row */}
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <button onClick={() => onNavigate('disease')} className="btn-accent" style={{ borderRadius: '9999px', fontSize: '0.85rem' }}>
-              <Leaf size={16} /> Detect Disease
-            </button>
-            <button onClick={() => onNavigate('assistant')} className="btn-secondary" style={{ borderRadius: '9999px', fontSize: '0.85rem' }}>
-              <Sparkles size={16} /> Ask AI Assistant
-            </button>
-            <button onClick={() => onNavigate('weather')} className="btn-secondary" style={{ borderRadius: '9999px', fontSize: '0.85rem' }}>
-              <CloudSun size={16} /> Weather Advisories
-            </button>
-            <button onClick={() => onNavigate('schemes')} className="btn-secondary" style={{ borderRadius: '9999px', fontSize: '0.85rem' }}>
-              <Landmark size={16} /> Government Schemes
-            </button>
-            <button onClick={() => onNavigate('calendar')} className="btn-secondary" style={{ borderRadius: '9999px', fontSize: '0.85rem' }}>
-              <CalendarDays size={16} /> Seasonal Calendar
-            </button>
-          </div>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <button onClick={() => onNavigate('disease')} className="btn-primary">
+            <Scan size={16} /> Scan Leaf Disease
+          </button>
+          <button onClick={() => onNavigate('digital_twin')} className="btn-outline">
+            <Cpu size={16} /> View Digital Twin
+          </button>
         </div>
       </div>
 
-      {/* Key Metric Cards Row */}
-      <div className="stats-grid">
+      {/* Top 4 Metric Telemetry Cards (Vercel Style) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
         
-        {/* Crop Health Card */}
-        <div className="stat-card card-glass">
-          <div className="stat-icon" style={{ background: '#d1fae5', color: '#047857' }}>
-            <Leaf size={26} />
+        {/* Weather Card */}
+        <div className="card-glass" style={{ borderLeft: '4px solid var(--primary-600)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+              Micro-Climate Weather
+            </span>
+            <span style={{ fontSize: '1.5rem' }}>{activeWeather.icon || '☀️'}</span>
           </div>
-          <div className="stat-info">
-            <span className="stat-label">Crop Health Index</span>
-            <div className="stat-value" style={{ color: '#047857', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-              94% <span style={{ fontSize: '0.75rem', color: '#059669', background: '#ecfdf5', padding: '2px 6px', borderRadius: '4px' }}>Optimal</span>
-            </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Scanned 2 days ago</p>
+          <div style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--primary-900)' }}>
+            {activeWeather.temp || 33}°C
           </div>
+          <p style={{ fontSize: '0.8rem', color: 'var(--primary-700)', fontWeight: 600, marginTop: '2px' }}>
+            {activeWeather.condition || 'Warm & Clear'} • {farmerProfile.district || 'Karur'}
+          </p>
         </div>
 
-        {/* Active Weather Status */}
-        <div className="stat-card card-glass">
-          <div className="stat-icon" style={{ background: '#e0f2fe', color: '#0284c7' }}>
-            <CloudSun size={26} />
+        {/* Farm Health Meter */}
+        <div className="card-glass" style={{ borderLeft: '4px solid #10B981' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+              Farm Health Score
+            </span>
+            <Activity size={20} color="#10B981" />
           </div>
-          <div className="stat-info">
-            <span className="stat-label">Local Weather</span>
-            <div className="stat-value" style={{ color: '#0284c7' }}>
-              {activeWeather.temp}°C
-            </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{activeWeather.condition}</p>
+          <div style={{ fontSize: '1.65rem', fontWeight: 800, color: '#047857' }}>
+            {farmHealthScore} / 100
           </div>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+            Optimal Moisture & Chlorophyll
+          </p>
         </div>
 
-        {/* Eligible Government Schemes */}
-        <div className="stat-card card-glass">
-          <div className="stat-icon" style={{ background: '#fef3c7', color: '#d97706' }}>
-            <Landmark size={26} />
+        {/* Mandi Price Card */}
+        <div className="card-glass" style={{ borderLeft: '4px solid #F59E0B' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+              Paddy Mandi Price
+            </span>
+            <TrendingUp size={20} color="#D97706" />
           </div>
-          <div className="stat-info">
-            <span className="stat-label">Eligible Govt Schemes</span>
-            <div className="stat-value" style={{ color: '#d97706' }}>
-              {matchedSchemes.length} Active
-            </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Up to ₹60,000+ support</p>
+          <div style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--accent-amber-dark)' }}>
+            ₹2,280 <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>/ Quintal</span>
           </div>
+          <p style={{ fontSize: '0.8rem', color: '#D97706', fontWeight: 600, marginTop: '2px' }}>
+            +4.2% Karur Uzhavar Sandhai
+          </p>
         </div>
 
-        {/* AI Seasonal Phase */}
-        <div className="stat-card card-glass">
-          <div className="stat-icon" style={{ background: '#f3e8ff', color: '#7e22ce' }}>
-            <CalendarDays size={26} />
+        {/* Active Crop Card */}
+        <div className="card-glass" style={{ borderLeft: '4px solid #8B5CF6' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+              Primary Crop
+            </span>
+            <Sprout size={20} color="#7E22CE" />
           </div>
-          <div className="stat-info">
-            <span className="stat-label">Current Season Phase</span>
-            <div className="stat-value" style={{ fontSize: '1.15rem', color: '#7e22ce' }}>
-              Kuruvai / Aadi
-            </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SRI Transplanting Stage</p>
+          <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#6B21A8' }}>
+            Paddy & Greens
           </div>
-        </div>
-
-      </div>
-
-      {/* Weather Warning Banner */}
-      {activeWeather.alerts && activeWeather.alerts.length > 0 && (
-        <div style={{
-          background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)',
-          border: '1px solid #fed7aa',
-          borderRadius: 'var(--radius-lg)',
-          padding: '1.25rem 1.5rem',
-          display: 'flex',
-          gap: '1rem',
-          alignItems: 'flex-start'
-        }}>
-          <AlertTriangle size={26} color="#ea580c" style={{ flexShrink: 0, marginTop: '2px' }} />
-          <div>
-            <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#c2410c', marginBottom: '0.25rem' }}>
-              {activeWeather.alerts[0].title}
-            </h4>
-            <p style={{ fontSize: '0.875rem', color: '#9a3412', lineHeight: 1.5 }}>
-              {activeWeather.alerts[0].message}
-            </p>
-            <button 
-              onClick={() => onNavigate('weather')} 
-              style={{ background: 'transparent', border: 'none', color: '#c2410c', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', marginTop: '0.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}
-            >
-              View Full 7-Day Forecast <ArrowRight size={14} />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Analytics Charts Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-        
-        {/* Monthly Crop Health Trend Chart */}
-        <div className="card-glass">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Activity size={18} color="var(--primary-600)" /> Monthly Crop Health Trend
-            </h3>
-            <span className="badge badge-green">Kuruvai Season</span>
-          </div>
-          <CropHealthChart />
-        </div>
-
-        {/* 7-Day Weather & Temp Summary Chart */}
-        <div className="card-glass">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <BarChart2 size={18} color="#0284c7" /> Weather Telemetry Summary
-            </h3>
-            <span className="badge badge-blue">{farmerProfile.district || 'Karur'}</span>
-          </div>
-          <WeatherSummaryChart forecastData={activeWeather.forecast7Days} />
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+            Kuruvai Season • Active Tillering
+          </p>
         </div>
 
       </div>
 
-      {/* Recent AI Recommendations & Activity */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
+      {/* Main Dashboard Layout (2 Columns) */}
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.75rem' }}>
         
-        {/* Left: Quick Access Modules Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        {/* Left Column: Farm Health Gauge & Action Tasks */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           
-          <div className="card-glass" style={{ cursor: 'pointer' }} onClick={() => onNavigate('disease')}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: '#d1fae5', color: '#047857', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Leaf size={22} />
-              </div>
-              <span className="badge badge-green">AI Scan</span>
-            </div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.35rem' }}>AI Disease Detector</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem', lineHeight: 1.4 }}>
-              Scan leaf images to detect diseases with confidence score, organic cure & fungicides.
-            </p>
-            <div style={{ color: 'var(--primary-600)', fontWeight: 700, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              Launch Scanner <ArrowRight size={14} />
-            </div>
+          {/* Circular Farm Health Score Widget */}
+          <div className="card-glass">
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Activity size={18} color="var(--primary-600)" /> AI Farm Health & Canopy Index
+            </h3>
+            <FarmHealthGauge score={farmHealthScore} />
           </div>
 
-          <div className="card-glass" style={{ cursor: 'pointer' }} onClick={() => onNavigate('calendar')}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: '#f3e8ff', color: '#7e22ce', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <CalendarDays size={22} />
-              </div>
-              <span className="badge" style={{ background: '#f3e8ff', color: '#7e22ce' }}>Innovation ⭐</span>
+          {/* Today's Recommended Farming Action Tasks */}
+          <div className="card-glass">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Calendar size={18} color="var(--primary-600)" /> Today's Recommended AI Tasks
+              </h3>
+              <span className="badge badge-green">3 Tasks Active</span>
             </div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.35rem' }}>Seasonal Calendar</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem', lineHeight: 1.4 }}>
-              Month-by-month activity roadmap for {farmerProfile.primaryCrop ? farmerProfile.primaryCrop.toUpperCase() : 'PADDY'} with interactive task checklist.
-            </p>
-            <div style={{ color: '#7e22ce', fontWeight: 700, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-              View Timeline <ArrowRight size={14} />
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {todayTasks.map(t => (
+                <div 
+                  key={t.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0.85rem 1rem',
+                    borderRadius: 'var(--radius-md)',
+                    background: t.done ? 'var(--primary-50)' : 'var(--bg-slate)',
+                    border: '1px solid var(--border-light)'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <CheckCircle2 size={20} color={t.done ? 'var(--primary-600)' : 'var(--text-light)'} />
+                    <span style={{ fontSize: '0.875rem', fontWeight: 600, textDecoration: t.done ? 'line-through' : 'none', color: t.done ? 'var(--primary-800)' : 'var(--text-main)' }}>
+                      {t.text}
+                    </span>
+                  </div>
+                  <span className="badge badge-amber" style={{ fontSize: '0.675rem' }}>
+                    {t.category}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
         </div>
 
-        {/* Right: AI Today's Advisory Feed */}
-        <div className="card-glass">
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Sparkles size={18} color="var(--primary-600)" /> Today's Karur AI Advisories
-          </h3>
+        {/* Right Column: Quick AI Feature Launcher Grid */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          
+          <div className="card-glass" style={{ borderTop: '4px solid var(--primary-600)' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.85rem' }}>
+              ⚡ Quick AI Module Launchers
+            </h3>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            <div style={{ padding: '0.75rem', borderRadius: '8px', background: 'var(--bg-main)', border: '1px solid var(--border-light)' }}>
-              <p style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--primary-700)', marginBottom: '0.2rem' }}>
-                🌱 Cauvery Water Management
-              </p>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-main)', lineHeight: 1.4 }}>
-                Maintain 2-3cm water depth in Kuruvai Paddy fields post Mayanur canal release.
-              </p>
-            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+              <button 
+                onClick={() => onNavigate('disease')} 
+                className="btn-outline" 
+                style={{ width: '100%', justifyContent: 'space-between', textAlign: 'left' }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Scan size={18} color="var(--primary-600)" /> AI Disease Scanner
+                </span>
+                <ArrowRight size={16} />
+              </button>
 
-            <div style={{ padding: '0.75rem', borderRadius: '8px', background: 'var(--bg-main)', border: '1px solid var(--border-light)' }}>
-              <p style={{ fontSize: '0.825rem', fontWeight: 700, color: '#d97706', marginBottom: '0.2rem' }}>
-                🐛 Groundnut & Banana Scouting
-              </p>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-main)', lineHeight: 1.4 }}>
-                Inspect Banana leaves for Sigatoka leaf spot and Groundnut for Tikka disease.
-              </p>
+              <button 
+                onClick={() => onNavigate('assistant')} 
+                className="btn-outline" 
+                style={{ width: '100%', justifyContent: 'space-between', textAlign: 'left' }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Bot size={18} color="var(--primary-600)" /> AgriBot AI Q&A
+                </span>
+                <ArrowRight size={16} />
+              </button>
+
+              <button 
+                onClick={() => onNavigate('recommend')} 
+                className="btn-outline" 
+                style={{ width: '100%', justifyContent: 'space-between', textAlign: 'left' }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Sprout size={18} color="var(--primary-600)" /> Crop Recommendation
+                </span>
+                <ArrowRight size={16} />
+              </button>
+
+              <button 
+                onClick={() => onNavigate('market')} 
+                className="btn-outline" 
+                style={{ width: '100%', justifyContent: 'space-between', textAlign: 'left' }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <ShoppingBag size={18} color="var(--primary-600)" /> Market Prices
+                </span>
+                <ArrowRight size={16} />
+              </button>
             </div>
           </div>
+
+          {/* Matched Schemes Summary Widget */}
+          <div className="card-glass" style={{ background: 'linear-gradient(135deg, #FFFBEB 0%, #FFFFFF 100%)', border: '1px solid #FDE68A' }}>
+            <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--accent-amber-dark)', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Award size={18} color="#D97706" /> Matched Govt Subsidies
+            </h4>
+            <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
+              You are eligible for PM-KISAN ₹6,000 + Kuruvai Package subsidy in Karur.
+            </p>
+            <button onClick={() => onNavigate('schemes')} className="btn-primary" style={{ width: '100%', background: '#D97706' }}>
+              View Schemes & Apply
+            </button>
+          </div>
+
         </div>
 
       </div>
