@@ -110,7 +110,7 @@ export default function Footer({ onNavigate }) {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, color: 'var(--primary-700)' }}>
             <Sparkles size={16} color="var(--primary-600)" />
-            <span>Built by <strong>Vignesh S</strong></span>
+            <span>Built by <strong>Yagavi S</strong></span>
           </div>
         </div>
 

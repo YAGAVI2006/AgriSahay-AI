@@ -639,7 +639,7 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
           {/* Bottom Bar */}
           <div style={{ borderTop: '1px solid #334155', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', fontSize: '0.85rem' }}>
             <div>© 2026 AgriSahay AI. All rights reserved.</div>
-            <div style={{ color: '#F59E0B', fontWeight: 700 }}>Built by Vignesh S</div>
+            <div style={{ color: '#F59E0B', fontWeight: 700 }}>Built by Yagavi S</div>
           </div>
 
         </div>
