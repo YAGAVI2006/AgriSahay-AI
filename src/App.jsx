@@ -292,6 +292,7 @@ export default function App() {
             <SchemesView 
               farmerProfile={farmerProfile}
               onOpenProfile={() => setCurrentView('profile')}
+              selectedLanguage={selectedLanguage}
             />
           )}
 

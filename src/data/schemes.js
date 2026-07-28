@@ -6,10 +6,10 @@ export const GOVERNMENT_SCHEMES = [
     level: 'Tamil Nadu Government',
     icon: '🌊',
     monetaryBenefit: '50% to 100% Subsidy on Seeds, Bio-Inputs & Drip Irrigation',
-    states: ['Tamil Nadu'],
+    states: ['Tamil Nadu', 'All'],
     maxLandAcres: 999,
     farmerCategories: ['marginal', 'small', 'medium', 'large', 'woman', 'sc_st'],
-    crops: ['paddy', 'banana', 'sugarcane', 'groundnut', 'turmeric', 'maize'],
+    crops: ['paddy', 'banana', 'sugarcane', 'groundnut', 'turmeric', 'maize', 'coriander', 'mint', 'All'],
     shortDesc: 'State project modernizing Cauvery basin irrigation infrastructure, supplying certified seeds, green manure, drip kits, and farm machinery in Karur & TN districts.',
     eligibility: [
       'Farmers residing in notified river basin sub-watersheds (Cauvery, Amaravathi in Karur)',
@@ -36,10 +36,10 @@ export const GOVERNMENT_SCHEMES = [
     level: 'Tamil Nadu Government',
     icon: '🌾',
     monetaryBenefit: 'Free Paddy Seed Kits + 70% Solar Pump Subsidy',
-    states: ['Tamil Nadu'],
+    states: ['Tamil Nadu', 'All'],
     maxLandAcres: 999,
-    farmerCategories: ['marginal', 'small', 'woman', 'sc_st'],
-    crops: ['paddy', 'sugarcane', 'banana', 'groundnut', 'cotton', 'turmeric'],
+    farmerCategories: ['marginal', 'small', 'woman', 'sc_st', 'medium', 'large'],
+    crops: ['paddy', 'sugarcane', 'banana', 'groundnut', 'cotton', 'turmeric', 'coriander', 'mint', 'All'],
     shortDesc: 'Chief Minister’s special package providing free fertilizer kits (DAP & Zinc), 70% off solar water pumps, and micro-irrigation grants.',
     eligibility: [
       'Small & Marginal farmers of Karur, Delta, and surrounding TN districts',
@@ -101,7 +101,7 @@ export const GOVERNMENT_SCHEMES = [
     states: ['All', 'Tamil Nadu'],
     maxLandAcres: 999,
     farmerCategories: ['marginal', 'small', 'medium', 'large', 'woman', 'sc_st'],
-    crops: ['paddy', 'sugarcane', 'banana', 'cotton', 'groundnut', 'maize', 'turmeric'],
+    crops: ['paddy', 'sugarcane', 'banana', 'cotton', 'groundnut', 'maize', 'turmeric', 'coriander', 'mint', 'All'],
     shortDesc: 'Comprehensive crop insurance covering yield losses due to non-preventable natural risks (floods, monsoon deficit, unseasonal rain, pest outbreaks).',
     eligibility: [
       'All farmers growing notified crops (Kuruvai/Samba Paddy, Banana, Sugarcane, Cotton) in Karur district',
@@ -159,8 +159,8 @@ export const GOVERNMENT_SCHEMES = [
     monetaryBenefit: '100% Subsidy for Small/Marginal Farmers; 75% for Others',
     states: ['All', 'Tamil Nadu'],
     maxLandAcres: 999,
-    farmerCategories: ['marginal', 'small', 'woman', 'sc_st'],
-    crops: ['paddy', 'sugarcane', 'banana', 'coconut', 'groundnut', 'cotton', 'maize', 'turmeric', 'tomato', 'onion'],
+    farmerCategories: ['marginal', 'small', 'woman', 'sc_st', 'medium', 'large'],
+    crops: ['paddy', 'sugarcane', 'banana', 'coconut', 'groundnut', 'cotton', 'maize', 'turmeric', 'tomato', 'onion', 'coriander', 'mint', 'All'],
     shortDesc: 'Full 100% subsidy for installing Drip & Sprinkler irrigation systems for small/marginal farmers in Karur district.',
     eligibility: [
       'Farmers possessing land with assured water source (borewell/canal/well)',
@@ -211,10 +211,11 @@ export const GOVERNMENT_SCHEMES = [
 ];
 
 export function recommendSchemes({ state, crop, landSizeAcres, category }) {
-  return GOVERNMENT_SCHEMES.filter(scheme => {
-    const stateMatch = scheme.states.includes('All') || scheme.states.includes(state);
-    const cropMatch = scheme.crops.includes('All') || scheme.crops.includes(crop);
-    const categoryMatch = scheme.farmerCategories.includes(category) || scheme.farmerCategories.includes('marginal');
-    return stateMatch && cropMatch && categoryMatch;
+  const filtered = GOVERNMENT_SCHEMES.filter(scheme => {
+    const stateMatch = scheme.states.includes('All') || scheme.states.includes(state) || !state;
+    const cropMatch = scheme.crops.includes('All') || scheme.crops.includes(crop) || !crop;
+    return stateMatch && cropMatch;
   });
+
+  return filtered.length > 0 ? filtered : GOVERNMENT_SCHEMES;
 }

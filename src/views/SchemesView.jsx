@@ -1,20 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Landmark, CheckCircle2, FileText, ExternalLink, Filter, Sparkles, ChevronRight, Award, Info, X } from 'lucide-react';
 import { GOVERNMENT_SCHEMES, recommendSchemes } from '../data/schemes';
 import { CROP_LIST, FARMER_CATEGORIES, STATES_AND_DISTRICTS } from '../data/crops';
 
-export default function SchemesView({ farmerProfile, onOpenProfile }) {
-  const [selectedState, setSelectedState] = useState(farmerProfile.state || 'Punjab');
+export default function SchemesView({ farmerProfile, onOpenProfile, selectedLanguage = 'en' }) {
+  const isTa = selectedLanguage === 'ta';
+
+  const [selectedState, setSelectedState] = useState(farmerProfile.state || 'Tamil Nadu');
   const [selectedCrop, setSelectedCrop] = useState(farmerProfile.primaryCrop || 'paddy');
   const [selectedCategory, setSelectedCategory] = useState(farmerProfile.farmerCategory || 'small');
   const [activeModalScheme, setActiveModalScheme] = useState(null);
+  const [schemesList, setSchemesList] = useState([]);
 
-  const matchedSchemes = recommendSchemes({
-    state: selectedState,
-    crop: selectedCrop,
-    landSizeAcres: farmerProfile.landSizeAcres || 4.5,
-    category: selectedCategory
-  });
+  useEffect(() => {
+    // Try fetching from Spring Boot API first
+    const fetchApiSchemes = async () => {
+      try {
+        const res = await fetch('http://localhost:8080/api/v1/schemes/matched');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            setSchemesList(data.map((s, idx) => ({
+              id: 'scheme-' + idx,
+              title: s.title,
+              category: 'Government Subsidy',
+              level: s.provider || 'Tamil Nadu Govt',
+              icon: '🏛️',
+              monetaryBenefit: s.benefitAmount || 'Financial Support',
+              shortDesc: s.eligibilityCriteria || 'Official scheme for Tamil Nadu farmers.',
+              eligibility: [s.eligibilityCriteria || 'Landholding farmer in Tamil Nadu'],
+              documents: ['Aadhaar Card', 'Chitta / Adangal', 'Bank Passbook'],
+              applicationSteps: ['Apply on Uzhavan App or nearest Block Agriculture Office'],
+              officialLink: 'https://www.tnagrisnet.tn.gov.in/'
+            })));
+            return;
+          }
+        }
+      } catch (e) {
+        console.log('Using local schemes engine');
+      }
+
+      // Local fallback
+      const matched = recommendSchemes({
+        state: selectedState,
+        crop: selectedCrop,
+        landSizeAcres: farmerProfile.landSizeAcres || 4.5,
+        category: selectedCategory
+      });
+      setSchemesList(matched);
+    };
+
+    fetchApiSchemes();
+  }, [selectedState, selectedCrop, selectedCategory, farmerProfile]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -23,24 +60,26 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div className="badge badge-amber" style={{ marginBottom: '0.35rem' }}>
-            <Sparkles size={12} /> AI Matching Engine
+            <Sparkles size={12} /> {isTa ? 'AI பொருத்தும் இன்ஜின்' : 'AI Matching Engine'}
           </div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>🏛 Government Scheme Recommendations</h2>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>
+            🏛 {isTa ? 'அரசு திட்டங்கள் & மானிய பரிந்துரைகள்' : 'Government Scheme Recommendations'}
+          </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            AI matches official schemes based on your State, Crop, Land Holding & Category.
+            {isTa ? 'மாநிலம், பயிர், நில அளவு மற்றும் வகையின் அடிப்படையில் அதிகாரப்பூர்வ திட்டங்கள் பொருந்துகின்றன.' : 'AI matches official schemes based on your State, Crop, Land Holding & Category.'}
           </p>
         </div>
 
         {/* Farmer Profile Status Pill */}
         <div style={{ background: 'var(--primary-50)', border: '1px solid var(--primary-100)', borderRadius: 'var(--radius-md)', padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div>
-            <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', display: 'block' }}>Matching Profile</span>
+            <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', display: 'block' }}>{isTa ? 'பொருந்தும் சுயவிவரம்' : 'Matching Profile'}</span>
             <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary-800)' }}>
               {selectedState} | {farmerProfile.landSizeAcres || 4.5} Acres | {selectedCrop.toUpperCase()}
             </span>
           </div>
           <button onClick={onOpenProfile} className="btn-outline" style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}>
-            Change
+            {isTa ? 'மாற்று' : 'Change'}
           </button>
         </div>
       </div>
@@ -48,7 +87,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
       {/* Filter Control Bar */}
       <div className="card-glass" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, fontSize: '0.9rem', color: 'var(--primary-700)' }}>
-          <Filter size={18} /> Scheme Filters:
+          <Filter size={18} /> {isTa ? 'திட்ட வடிகட்டிகள்:' : 'Scheme Filters:'}
         </div>
 
         <div>
@@ -90,7 +129,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
 
       {/* Schemes Grid List */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '1.25rem' }}>
-        {matchedSchemes.map((scheme) => (
+        {schemesList.map((scheme) => (
           <div key={scheme.id} className="card-glass" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               {/* Header Badges */}
@@ -102,7 +141,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
               {/* Title & Icon */}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
                 <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>
-                  {scheme.icon}
+                  {scheme.icon || '🏛️'}
                 </div>
                 <div>
                   <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--primary-800)', lineHeight: 1.3 }}>
@@ -113,7 +152,9 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
 
               {/* Monetary Benefit Pill */}
               <div style={{ background: 'var(--primary-50)', border: '1px solid var(--primary-100)', borderRadius: '8px', padding: '0.65rem 0.85rem', marginBottom: '0.85rem' }}>
-                <span style={{ fontSize: '0.725rem', color: 'var(--primary-700)', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>Financial Benefit / Subsidy</span>
+                <span style={{ fontSize: '0.725rem', color: 'var(--primary-700)', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>
+                  {isTa ? 'நிதி உதவி / மானியம்' : 'Financial Benefit / Subsidy'}
+                </span>
                 <span style={{ fontWeight: 800, color: 'var(--primary-800)', fontSize: '0.95rem' }}>{scheme.monetaryBenefit}</span>
               </div>
 
@@ -130,7 +171,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
                 className="btn-primary"
                 style={{ fontSize: '0.8rem', padding: '0.4rem 0.85rem', width: '100%' }}
               >
-                View Eligibility & Application Steps <ChevronRight size={14} />
+                {isTa ? 'தகுதி & விண்ணப்பப் படிகளைப் பார்க்க' : 'View Eligibility & Application Steps'} <ChevronRight size={14} />
               </button>
             </div>
           </div>
@@ -143,7 +184,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
           <div className="modal-content">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.85rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <span style={{ fontSize: '2rem' }}>{activeModalScheme.icon}</span>
+                <span style={{ fontSize: '2rem' }}>{activeModalScheme.icon || '🏛️'}</span>
                 <div>
                   <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--primary-800)' }}>{activeModalScheme.title}</h2>
                   <span className="badge badge-amber">{activeModalScheme.category}</span>
@@ -156,14 +197,16 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
 
             {/* Financial Benefit Box */}
             <div style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#ffffff', padding: '1rem', borderRadius: 'var(--radius-md)', marginBottom: '1.25rem' }}>
-              <span style={{ fontSize: '0.75rem', opacity: 0.9, display: 'block', textTransform: 'uppercase' }}>Financial Benefit / Grant Amount</span>
+              <span style={{ fontSize: '0.75rem', opacity: 0.9, display: 'block', textTransform: 'uppercase' }}>
+                {isTa ? 'நிதி உதவி / மானியத் தொகை' : 'Financial Benefit / Grant Amount'}
+              </span>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>{activeModalScheme.monetaryBenefit}</h3>
             </div>
 
             {/* Eligibility Checklist */}
             <div style={{ marginBottom: '1.25rem' }}>
               <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <CheckCircle2 size={16} color="var(--primary-600)" /> Eligibility Criteria
+                <CheckCircle2 size={16} color="var(--primary-600)" /> {isTa ? 'தகுதி நிபந்தனைகள்' : 'Eligibility Criteria'}
               </h4>
               <ul style={{ listStyleType: 'none', paddingLeft: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                 {activeModalScheme.eligibility.map((item, idx) => (
@@ -178,7 +221,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
             {/* Documents Checklist */}
             <div style={{ marginBottom: '1.25rem' }}>
               <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <FileText size={16} color="#d97706" /> Required Documents Checklist
+                <FileText size={16} color="#d97706" /> {isTa ? 'தேவையான ஆவணங்கள்' : 'Required Documents Checklist'}
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
                 {activeModalScheme.documents.map((doc, idx) => (
@@ -192,7 +235,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
             {/* Application Steps */}
             <div style={{ marginBottom: '1.25rem' }}>
               <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <Award size={16} color="#0284c7" /> Step-by-Step Application Steps
+                <Award size={16} color="#0284c7" /> {isTa ? 'படி-படியான விண்ணப்ப முறை' : 'Step-by-Step Application Steps'}
               </h4>
               <ol style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem' }}>
                 {activeModalScheme.applicationSteps.map((step, idx) => (
@@ -204,7 +247,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
             {/* Official Portal Button */}
             <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
               <button onClick={() => setActiveModalScheme(null)} className="btn-outline">
-                Close
+                {isTa ? 'மூடு' : 'Close'}
               </button>
               <a 
                 href={activeModalScheme.officialLink} 
@@ -213,7 +256,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile }) {
                 className="btn-accent"
                 style={{ textDecoration: 'none' }}
               >
-                Apply on Official Portal <ExternalLink size={14} />
+                {isTa ? 'அதிகாரப்பூர்வ தளத்தில் விண்ணப்பிக்க' : 'Apply on Official Portal'} <ExternalLink size={14} />
               </a>
             </div>
 
