@@ -27,7 +27,7 @@ export const GOVERNMENT_SCHEMES = [
       'Field verification completed by Agricultural Officer (AO).',
       'Subsidy inputs or direct benefit transfer (DBT) credited directly.'
     ],
-    officialLink: 'https://tniamp.tn.gov.in/'
+    officialLink: 'https://www.tnagrisnet.tn.gov.in/'
   },
   {
     id: 'tn-agri-dept-schemes',
