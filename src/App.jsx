@@ -181,6 +181,7 @@ export default function App() {
         setCurrentView={setCurrentView}
         onLogout={handleLogout}
         activeRole={activeRole}
+        selectedLanguage={selectedLanguage}
       />
 
       {/* Main Content Area */}
@@ -211,6 +212,7 @@ export default function App() {
               matchedSchemes={matchedSchemes}
               onNavigate={(view) => setCurrentView(view)}
               recentScans={recentScans}
+              selectedLanguage={selectedLanguage}
             />
           )}
 

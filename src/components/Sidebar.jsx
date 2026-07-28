@@ -24,44 +24,45 @@ import {
   UserCheck 
 } from 'lucide-react';
 
-export default function Sidebar({ currentView, setCurrentView, onLogout, activeRole = 'farmer' }) {
+export default function Sidebar({ currentView, setCurrentView, onLogout, activeRole = 'farmer', selectedLanguage = 'en' }) {
+  const isTa = selectedLanguage === 'ta';
 
   const menuSections = [
     {
-      title: 'CORE PLATFORM',
+      title: isTa ? 'முக்கிய தளம்' : 'CORE PLATFORM',
       items: [
-        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { id: 'digital_twin', label: 'AI Digital Twin', icon: Cpu, badge: 'AI' },
-        { id: 'satellite', label: 'Satellite NDVI', icon: Satellite },
-        { id: 'pest', label: 'AI Pest Risk', icon: Bug },
-        { id: 'yield', label: 'Yield Forecaster', icon: TrendingUp },
-        { id: 'outbreak', label: 'Outbreak Heatmap', icon: Map }
+        { id: 'dashboard', label: isTa ? 'டாஷ்போர்டு' : 'Dashboard', icon: LayoutDashboard },
+        { id: 'digital_twin', label: isTa ? 'AI டிஜிட்டல் ட்வின்' : 'AI Digital Twin', icon: Cpu, badge: 'AI' },
+        { id: 'satellite', label: isTa ? 'சாட்டிலைட் NDVI' : 'Satellite NDVI', icon: Satellite },
+        { id: 'pest', label: isTa ? 'AI பூச்சி ஆபத்து' : 'AI Pest Risk', icon: Bug },
+        { id: 'yield', label: isTa ? 'மகசூல் கணிப்பு' : 'Yield Forecaster', icon: TrendingUp },
+        { id: 'outbreak', label: isTa ? 'நோய் பரவல் வரைபடம்' : 'Outbreak Heatmap', icon: Map }
       ]
     },
     {
-      title: 'FARMING DECISION MODULES',
+      title: isTa ? 'விவசாய முடிவு தொகுதிகள்' : 'FARMING DECISION MODULES',
       items: [
-        { id: 'recommend', label: 'Crop Recommend', icon: Sprout },
-        { id: 'disease', label: 'AI Disease Detector', icon: Scan, badge: 'VISION' },
-        { id: 'assistant', label: 'AgriBot AI Q&A', icon: Bot },
-        { id: 'community', label: 'Uzhavar Mandram', icon: Users },
-        { id: 'weather', label: 'Weather Intelligence', icon: CloudSun },
-        { id: 'market', label: 'Market Prices', icon: ShoppingBag },
-        { id: 'schemes', label: 'Govt Schemes', icon: Award }
+        { id: 'recommend', label: isTa ? 'பயிர் பரிந்துரை' : 'Crop Recommend', icon: Sprout },
+        { id: 'disease', label: isTa ? 'AI நோய் கண்டறிதல்' : 'AI Disease Detector', icon: Scan, badge: 'VISION' },
+        { id: 'assistant', label: isTa ? 'அக்ரிபாட் AI கேள்வி-பதில்' : 'AgriBot AI Q&A', icon: Bot },
+        { id: 'community', label: isTa ? 'உழவர் மன்றம்' : 'Uzhavar Mandram', icon: Users },
+        { id: 'weather', label: isTa ? 'வானிலை நுண்ணறிவு' : 'Weather Intelligence', icon: CloudSun },
+        { id: 'market', label: isTa ? 'சந்தை விலைகள்' : 'Market Prices', icon: ShoppingBag },
+        { id: 'schemes', label: isTa ? 'அரசு திட்டங்கள்' : 'Govt Schemes', icon: Award }
       ]
     },
     {
-      title: 'MANAGEMENT & ANALYTICS',
+      title: isTa ? 'மேலாண்மை & பகுப்பாய்வு' : 'MANAGEMENT & ANALYTICS',
       items: [
-        { id: 'irrigation', label: 'Irrigation Planner', icon: Droplet },
-        { id: 'fertilizer', label: 'Fertilizer Guide', icon: Zap },
-        { id: 'sustainability', label: 'Carbon & Eco Score', icon: Leaf },
-        { id: 'calendar', label: 'Crop Calendar', icon: Calendar },
-        { id: 'vault', label: 'Document Vault', icon: ShieldCheck },
-        { id: 'map', label: 'Farm Map GIS', icon: Compass },
-        { id: 'emergency', label: 'Emergency Support', icon: PhoneCall },
-        { id: 'analytics', label: 'Analytics Report', icon: BarChart3 },
-        { id: 'admin', label: 'Admin & Officer Panel', icon: UserCheck }
+        { id: 'irrigation', label: isTa ? 'நீர்ப்பாசன திட்டம்' : 'Irrigation Planner', icon: Droplet },
+        { id: 'fertilizer', label: isTa ? 'உர கையேடு' : 'Fertilizer Guide', icon: Zap },
+        { id: 'sustainability', label: isTa ? 'சுற்றுச்சூழல் புள்ளி' : 'Carbon & Eco Score', icon: Leaf },
+        { id: 'calendar', label: isTa ? 'பயிர் காலண்டர்' : 'Crop Calendar', icon: Calendar },
+        { id: 'vault', label: isTa ? 'ஆவண பெட்டகம்' : 'Document Vault', icon: ShieldCheck },
+        { id: 'map', label: isTa ? 'பண்ணை வரைபடம்' : 'Farm Map GIS', icon: Compass },
+        { id: 'emergency', label: isTa ? 'அவசர உதவி' : 'Emergency Support', icon: PhoneCall },
+        { id: 'analytics', label: isTa ? 'பகுப்பாய்வு அறிக்கை' : 'Analytics Report', icon: BarChart3 },
+        { id: 'admin', label: isTa ? 'நிர்வாகி குழு' : 'Admin & Officer Panel', icon: UserCheck }
       ]
     }
   ];
@@ -95,10 +96,10 @@ export default function Sidebar({ currentView, setCurrentView, onLogout, activeR
         }}>
           <div>
             <span style={{ fontSize: '0.65rem', color: 'var(--primary-700)', fontWeight: 800, textTransform: 'uppercase', display: 'block' }}>
-              ACTIVE ROLE
+              {isTa ? 'செயலில் உள்ள பங்கு' : 'ACTIVE ROLE'}
             </span>
             <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary-900)' }}>
-              {activeRole.toUpperCase()} USER
+              {activeRole.toUpperCase()} {isTa ? 'பயனர்' : 'USER'}
             </span>
           </div>
           <span className="badge badge-amber" style={{ fontSize: '0.6rem' }}>ONLINE</span>
