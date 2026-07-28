@@ -148,7 +148,7 @@ export const GOVERNMENT_SCHEMES = [
       'Submit along with Chitta proof.',
       'Bank issues KCC card cum ATM within 14 working days.'
     ],
-    officialLink: 'https://pmkisan.gov.in/'
+    officialLink: 'https://www.myscheme.gov.in/schemes/kcc'
   },
   {
     id: 'pmksy',

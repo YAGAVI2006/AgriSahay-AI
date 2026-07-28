@@ -13,44 +13,13 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
   const [schemesList, setSchemesList] = useState([]);
 
   useEffect(() => {
-    // Try fetching from Spring Boot API first
-    const fetchApiSchemes = async () => {
-      try {
-        const res = await fetch('http://localhost:8080/api/v1/schemes/matched');
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.length > 0) {
-            setSchemesList(data.map((s, idx) => ({
-              id: 'scheme-' + idx,
-              title: s.title,
-              category: 'Government Subsidy',
-              level: s.provider || 'Tamil Nadu Govt',
-              icon: '🏛️',
-              monetaryBenefit: s.benefitAmount || 'Financial Support',
-              shortDesc: s.eligibilityCriteria || 'Official scheme for Tamil Nadu farmers.',
-              eligibility: [s.eligibilityCriteria || 'Landholding farmer in Tamil Nadu'],
-              documents: ['Aadhaar Card', 'Chitta / Adangal', 'Bank Passbook'],
-              applicationSteps: ['Apply on Uzhavan App or nearest Block Agriculture Office'],
-              officialLink: 'https://www.tnagrisnet.tn.gov.in/'
-            })));
-            return;
-          }
-        }
-      } catch (e) {
-        console.log('Using local schemes engine');
-      }
-
-      // Local fallback
-      const matched = recommendSchemes({
-        state: selectedState,
-        crop: selectedCrop,
-        landSizeAcres: farmerProfile.landSizeAcres || 4.5,
-        category: selectedCategory
-      });
-      setSchemesList(matched);
-    };
-
-    fetchApiSchemes();
+    const matched = recommendSchemes({
+      state: selectedState,
+      crop: selectedCrop,
+      landSizeAcres: farmerProfile.landSizeAcres || 4.5,
+      category: selectedCategory
+    });
+    setSchemesList(matched);
   }, [selectedState, selectedCrop, selectedCategory, farmerProfile]);
 
   return (
@@ -165,14 +134,24 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
             </div>
 
             {/* Card Actions */}
-            <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.85rem', display: 'flex', gap: '0.5rem' }}>
               <button 
                 onClick={() => setActiveModalScheme(scheme)}
                 className="btn-primary"
-                style={{ fontSize: '0.8rem', padding: '0.4rem 0.85rem', width: '100%' }}
+                style={{ fontSize: '0.8rem', padding: '0.4rem 0.75rem', flex: 1, justifyContent: 'center' }}
               >
-                {isTa ? 'தகுதி & விண்ணப்பப் படிகளைப் பார்க்க' : 'View Eligibility & Application Steps'} <ChevronRight size={14} />
+                {isTa ? 'தகுதி & படிகள்' : 'Eligibility & Steps'} <ChevronRight size={14} />
               </button>
+
+              <a 
+                href={scheme.officialLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-accent"
+                style={{ fontSize: '0.8rem', padding: '0.4rem 0.75rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+              >
+                {isTa ? 'விண்ணப்பிக்க' : 'Apply'} <ExternalLink size={14} />
+              </a>
             </div>
           </div>
         ))}
@@ -252,7 +231,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
               <a 
                 href={activeModalScheme.officialLink} 
                 target="_blank" 
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="btn-accent"
                 style={{ textDecoration: 'none' }}
               >
