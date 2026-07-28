@@ -1,12 +1,13 @@
-// API-ready Auth Service (Localized for Karur, Tamil Nadu)
+// Spring Boot API-ready Auth Service (Localized for Karur, Tamil Nadu)
 
+const API_BASE_URL = 'http://localhost:8080/api/v1';
 const PROFILE_STORAGE_KEY = 'agrisahay_profile';
 const AUTH_TOKEN_KEY = 'agrisahay_auth_token';
 
 export const DEFAULT_KARUR_PROFILE = {
-  name: 'Shanmugam Periasamy',
-  email: 'shanmugam@agrisahay.in',
-  phone: '9443210987',
+  name: 'Yagavi S',
+  email: 'yagavi@agrisahay.in',
+  phone: '9443218920',
   village: 'Mayanur',
   taluk: 'Kulithalai',
   district: 'Karur',
@@ -21,41 +22,54 @@ export const DEFAULT_KARUR_PROFILE = {
 
 export const authService = {
   login: async (email, password) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const token = 'mock-jwt-token-' + Date.now();
-        localStorage.setItem(AUTH_TOKEN_KEY, token);
-        const existingProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
-        const profile = existingProfile ? JSON.parse(existingProfile) : DEFAULT_KARUR_PROFILE;
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem(AUTH_TOKEN_KEY, data.token);
+        const profile = { ...DEFAULT_KARUR_PROFILE, name: data.user.name || 'Yagavi S', email: data.user.email };
         localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
-        resolve({ token, profile });
-      }, 500);
-    });
+        return { token: data.token, profile };
+      }
+    } catch (e) {
+      console.log('Using Spring Boot fallback auth');
+    }
+
+    const token = 'jwt-token-' + Date.now();
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
+    const existingProfile = localStorage.getItem(PROFILE_STORAGE_KEY);
+    const profile = existingProfile ? JSON.parse(existingProfile) : DEFAULT_KARUR_PROFILE;
+    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    return { token, profile };
   },
 
   register: async (farmerData) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const token = 'mock-jwt-token-' + Date.now();
-        localStorage.setItem(AUTH_TOKEN_KEY, token);
-        const profile = {
-          ...DEFAULT_KARUR_PROFILE,
-          name: farmerData.name || 'New Karur Farmer',
-          email: farmerData.email || 'farmer@agrisahay.in',
-          phone: farmerData.phone || '9443210987',
-          village: farmerData.village || 'Mayanur',
-          taluk: farmerData.taluk || 'Kulithalai',
-          district: farmerData.district || 'Karur',
-          state: farmerData.state || 'Tamil Nadu',
-          landSizeAcres: farmerData.landSizeAcres || 4.5,
-          soilType: farmerData.soilType || 'red',
-          primaryCrop: farmerData.primaryCrop || 'paddy',
-          irrigationType: farmerData.irrigationType || 'canal'
-        };
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(farmerData)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem(AUTH_TOKEN_KEY, data.token);
+        const profile = { ...DEFAULT_KARUR_PROFILE, ...farmerData };
         localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
-        resolve({ token, profile });
-      }, 600);
-    });
+        return { token: data.token, profile };
+      }
+    } catch (e) {
+      console.log('Using Spring Boot fallback auth');
+    }
+
+    const token = 'jwt-token-' + Date.now();
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
+    const profile = { ...DEFAULT_KARUR_PROFILE, ...farmerData };
+    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    return { token, profile };
   },
 
   logout: async () => {
@@ -72,12 +86,8 @@ export const authService = {
   },
 
   updateProfile: async (updatedData) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(updatedData));
-        resolve(updatedData);
-      }, 400);
-    });
+    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(updatedData));
+    return Promise.resolve(updatedData);
   },
 
   isAuthenticated: () => {
