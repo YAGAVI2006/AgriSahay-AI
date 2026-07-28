@@ -141,6 +141,8 @@ export default function App() {
       <div className="app-landing-wrapper">
         <LandingPage 
           onNavigate={(view) => setCurrentView(view)} 
+          selectedLanguage={selectedLanguage}
+          setSelectedLanguage={setSelectedLanguage}
           onLoginDemo={() => {
             authService.login('farmer@agrisahay.in', 'password123').then(res => {
               setFarmerProfile(res.profile);

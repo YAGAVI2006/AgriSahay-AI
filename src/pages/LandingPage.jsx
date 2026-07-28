@@ -18,13 +18,15 @@ import {
   Globe, 
   Mail, 
   Phone, 
-  Github, 
-  Linkedin, 
-  Twitter 
+  X
 } from 'lucide-react';
+import { translations } from '../data/translations';
 
-export default function LandingPage({ onNavigate, onLoginDemo }) {
+export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage = 'en', setSelectedLanguage }) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
+  const t = translations[selectedLanguage] || translations.en;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,41 +50,41 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
   const whyChooseCards = [
     {
       icon: Sprout,
-      title: 'Smart Crop Recommendation',
-      desc: 'Receive crop suggestions based on season, soil, and local weather conditions.'
+      title: t.cropRecTitle,
+      desc: t.cropRecDesc
     },
     {
       icon: CloudSun,
-      title: 'Weather Intelligence',
-      desc: 'Access real-time weather forecasts and farming advice tailored to your village.'
+      title: t.weatherTitle,
+      desc: t.weatherDesc
     },
     {
       icon: Scan,
-      title: 'Disease Detection',
-      desc: 'Upload crop images to identify diseases and receive treatment recommendations.'
+      title: t.diseaseTitle,
+      desc: t.diseaseDesc
     },
     {
       icon: ShoppingBag,
-      title: 'Market Insights',
-      desc: 'Track crop prices and market trends across local mandis to maximize profits.'
+      title: t.marketTitle,
+      desc: t.marketDesc
     },
     {
       icon: Award,
-      title: 'Government Schemes',
-      desc: 'Discover agriculture schemes and subsidies you may be eligible for.'
+      title: t.schemesTitle,
+      desc: t.schemesDesc
     },
     {
       icon: Bot,
-      title: 'AI Farming Assistant',
-      desc: 'Ask farming questions anytime and receive AI-powered bilingual guidance.'
+      title: t.aiAssistantTitle,
+      desc: t.aiAssistantDesc
     }
   ];
 
   const stepsList = [
-    { number: '1️⃣', title: 'Register Your Farm', desc: 'Enter land size, soil type, and location details.' },
-    { number: '2️⃣', title: 'Select Crop or Upload Image', desc: 'Choose a crop or upload a leaf photo for diagnosis.' },
-    { number: '3️⃣', title: 'AI Analyzes Weather & Farm Data', desc: 'Digital Twin simulates sensors, NDVI, and climate data.' },
-    { number: '4️⃣', title: 'Receive Smart Recommendations', desc: 'Get exact fertilizer dosing, market insights & guidance.' }
+    { number: '1️⃣', title: t.step1Title, desc: t.step1Desc },
+    { number: '2️⃣', title: t.step2Title, desc: t.step2Desc },
+    { number: '3️⃣', title: t.step3Title, desc: t.step3Desc },
+    { number: '4️⃣', title: t.step4Title, desc: t.step4Desc }
   ];
 
   const testimonials = [
@@ -146,14 +148,37 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
 
           {/* Navigation */}
           <nav style={{ display: 'flex', gap: '2.25rem', fontSize: '0.9rem', fontWeight: 600, color: '#374151' }}>
-            <span onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>Home</span>
-            <span onClick={() => scrollToSection('features')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>Features</span>
-            <span onClick={() => scrollToSection('about')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>About</span>
-            <span onClick={() => scrollToSection('contact')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>Contact</span>
+            <span onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>{t.home}</span>
+            <span onClick={() => scrollToSection('features')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>{t.features}</span>
+            <span onClick={() => scrollToSection('about')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>{t.about}</span>
+            <span onClick={() => scrollToSection('contact')} style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseOver={e=>e.target.style.color='#16A34A'} onMouseOut={e=>e.target.style.color='#374151'}>{t.contact}</span>
           </nav>
 
           {/* Right Side */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            
+            {/* Language Switcher */}
+            {setSelectedLanguage && (
+              <button
+                onClick={() => setSelectedLanguage(selectedLanguage === 'en' ? 'ta' : 'en')}
+                style={{
+                  background: 'rgba(22, 163, 74, 0.1)',
+                  border: '1px solid rgba(22, 163, 74, 0.3)',
+                  color: '#16A34A',
+                  padding: '0.45rem 0.85rem',
+                  borderRadius: '8px',
+                  fontWeight: 700,
+                  fontSize: '0.825rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem'
+                }}
+              >
+                <Globe size={14} /> {selectedLanguage === 'en' ? 'தமிழ்' : 'English'}
+              </button>
+            )}
+
             <button 
               onClick={() => onNavigate('login')}
               style={{
@@ -166,7 +191,7 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
                 padding: '0.5rem 0.85rem'
               }}
             >
-              Login
+              {t.login}
             </button>
 
             <button 
@@ -187,7 +212,7 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
                 transition: 'all 0.2s ease'
               }}
             >
-              Get Started <ArrowRight size={16} />
+              {t.getStarted} <ArrowRight size={16} />
             </button>
           </div>
 
@@ -235,13 +260,13 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
                 backdropFilter: 'blur(8px)'
               }}
             >
-              <Sparkles size={14} color="#F59E0B" /> ✨ AI-Powered Agriculture Platform
+              <Sparkles size={14} color="#F59E0B" /> {t.heroBadge}
             </div>
 
             {/* Decision Support Headline */}
             <h1 
               style={{
-                fontSize: '3.4rem',
+                fontSize: '3.2rem',
                 fontWeight: 800,
                 lineHeight: 1.12,
                 letterSpacing: '-0.03em',
@@ -249,13 +274,12 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
                 fontFamily: 'Plus Jakarta Sans, sans-serif'
               }}
             >
-              AI-Powered Agriculture <br />
-              <span style={{ color: '#4ADE80' }}>Decision Support System</span>
+              {t.heroTitle}
             </h1>
 
             {/* Decision Support Subheading */}
-            <p style={{ fontSize: '1.15rem', color: '#D1D5DB', lineHeight: 1.6, marginBottom: '2.25rem', maxWidth: '580px' }}>
-              Make smarter farming decisions with intelligent crop recommendations, disease detection, weather insights, market analysis, and personalized AI guidance—all in one platform.
+            <p style={{ fontSize: '1.1rem', color: '#D1D5DB', lineHeight: 1.6, marginBottom: '2.25rem', maxWidth: '580px' }}>
+              {t.heroSub}
             </p>
 
             {/* Buttons */}
@@ -277,11 +301,11 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
                   gap: '0.5rem'
                 }}
               >
-                Get Started <ArrowRight size={18} />
+                {t.getStarted} <ArrowRight size={18} />
               </button>
 
               <button 
-                onClick={() => onNavigate('dashboard')}
+                onClick={() => setIsVideoModalOpen(true)}
                 style={{
                   background: 'rgba(255, 255, 255, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.25)',
@@ -297,7 +321,7 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
                   gap: '0.5rem'
                 }}
               >
-                <Play size={16} color="#F59E0B" /> Watch Demo
+                <Play size={16} color="#F59E0B" /> {t.watchDemo}
               </button>
             </div>
           </motion.div>
@@ -347,10 +371,10 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
           
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Why Choose AgriSahay AI?
+              {t.whyHeading}
             </span>
             <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#111827', marginTop: '0.35rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-              Intelligent Decision Support Features
+              {t.whySub}
             </h2>
           </div>
 
@@ -405,10 +429,10 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
           
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Simple 4-Step Process
+              {t.howSub}
             </span>
             <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#111827', marginTop: '0.35rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-              How AgriSahay AI Works
+              {t.howHeading}
             </h2>
           </div>
 
@@ -444,7 +468,7 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
       {/* ==================================================== */}
       {/* 5. DASHBOARD PREVIEW */}
       {/* ==================================================== */}
-      <section style={{ padding: '5.5rem 2rem', background: '#F8FAFC' }}>
+      <section id="dashboard-preview" style={{ padding: '5.5rem 2rem', background: '#F8FAFC' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
@@ -464,90 +488,21 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
                 style={{ width: '100%', height: '440px', objectFit: 'cover', borderRadius: '12px' }} 
               />
             </div>
-
-            {/* Floating Info Cards */}
-            <div style={{ position: 'absolute', top: '15%', left: '-25px', background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '12px', padding: '0.85rem 1.25rem', boxShadow: '0 10px 25px rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <CloudSun size={20} color="#F59E0B" />
-              <div>
-                <span style={{ fontSize: '0.7rem', color: '#6B7280', display: 'block' }}>Weather</span>
-                <span style={{ fontSize: '0.9rem', fontWeight: 800 }}>33°C Sunny (Karur)</span>
-              </div>
-            </div>
-
-            <div style={{ position: 'absolute', bottom: '15%', right: '-25px', background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: '12px', padding: '0.85rem 1.25rem', boxShadow: '0 10px 25px rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <Activity size={20} color="#16A34A" />
-              <div>
-                <span style={{ fontSize: '0.7rem', color: '#6B7280', display: 'block' }}>Farm Health</span>
-                <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#16A34A' }}>92 / 100 Optimal</span>
-              </div>
-            </div>
           </div>
 
         </div>
       </section>
 
       {/* ==================================================== */}
-      {/* 6. TESTIMONIALS */}
-      {/* ==================================================== */}
-      <section style={{ padding: '5.5rem 2rem', background: '#FFFFFF', borderTop: '1px solid #E5E7EB' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Farmer Experiences
-            </span>
-            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#111827', marginTop: '0.35rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-              Trusted by Local Farmers
-            </h2>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.75rem' }}>
-            {testimonials.map((t, idx) => (
-              <div 
-                key={idx}
-                style={{
-                  background: '#F8FAFC',
-                  border: '1px solid #E5E7EB',
-                  borderRadius: '16px',
-                  padding: '2rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <div>
-                  <div style={{ display: 'flex', gap: '4px', marginBottom: '1rem', color: '#F59E0B' }}>
-                    {[...Array(t.rating)].map((_, i) => (
-                      <Star key={i} size={18} fill="#F59E0B" />
-                    ))}
-                  </div>
-                  <p style={{ fontSize: '0.925rem', color: '#374151', lineHeight: 1.6, fontStyle: 'italic', marginBottom: '1.5rem' }}>
-                    "{t.quote}"
-                  </p>
-                </div>
-
-                <div style={{ borderTop: '1px solid #E5E7EB', paddingTop: '1rem' }}>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#111827' }}>{t.name}</h4>
-                  <p style={{ fontSize: '0.8rem', color: '#16A34A', fontWeight: 700 }}>{t.crop}</p>
-                  <p style={{ fontSize: '0.75rem', color: '#6B7280' }}>{t.location}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ==================================================== */}
-      {/* 7. CALL TO ACTION */}
+      {/* 6. CALL TO ACTION */}
       {/* ==================================================== */}
       <section style={{ padding: '6rem 2rem', background: 'linear-gradient(135deg, #14532D 0%, #16A34A 100%)', color: '#FFFFFF', textAlign: 'center' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <h2 style={{ fontSize: '2.8rem', fontWeight: 800, marginBottom: '1rem', fontFamily: 'Plus Jakarta Sans, sans-serif', letterSpacing: '-0.02em' }}>
-            Start Your Smart Farming Journey Today
+            {t.ctaTitle}
           </h2>
           <p style={{ fontSize: '1.15rem', color: '#DCFCE7', marginBottom: '2.5rem', opacity: 0.9 }}>
-            Experience AI-powered farming with AgriSahay AI and make informed agricultural decisions.
+            {t.ctaSub}
           </p>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
@@ -565,85 +520,124 @@ export default function LandingPage({ onNavigate, onLoginDemo }) {
                 boxShadow: '0 4px 14px rgba(0,0,0,0.15)'
               }}
             >
-              Get Started
-            </button>
-            <button 
-              onClick={() => scrollToSection('contact')}
-              style={{
-                background: 'transparent',
-                border: '2px solid rgba(255, 255, 255, 0.4)',
-                color: '#FFFFFF',
-                fontWeight: 700,
-                fontSize: '1rem',
-                padding: '0.9rem 2.25rem',
-                borderRadius: '8px',
-                cursor: 'pointer'
-              }}
-            >
-              Contact Us
+              {t.getStarted}
             </button>
           </div>
         </div>
       </section>
 
       {/* ==================================================== */}
-      {/* 8. FOOTER */}
+      {/* 7. FOOTER */}
       {/* ==================================================== */}
       <footer id="contact" style={{ background: '#1E293B', color: '#94A3B8', padding: '4rem 2rem 2rem' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1.5fr', gap: '3rem', marginBottom: '3.5rem' }}>
-            
-            {/* Column 1: Brand */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: '#FFFFFF', fontSize: '1.3rem', fontWeight: 800, marginBottom: '1rem' }}>
-                <span>🌾</span> AgriSahay AI
-              </div>
-              <p style={{ fontSize: '0.875rem', lineHeight: 1.6, maxWidth: '300px' }}>
-                AI-Powered Agriculture Decision Support System for farmers in Karur District, Tamil Nadu.
-              </p>
-            </div>
-
-            {/* Column 2: Quick Links */}
-            <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '1rem' }}>Quick Links</h4>
-              <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.875rem' }}>
-                <li style={{ cursor: 'pointer' }} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Home</li>
-                <li style={{ cursor: 'pointer' }} onClick={() => scrollToSection('features')}>Features</li>
-                <li style={{ cursor: 'pointer' }} onClick={() => scrollToSection('about')}>About</li>
-                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('login')}>Login</li>
-              </ul>
-            </div>
-
-            {/* Column 3: Resources */}
-            <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '1rem' }}>Resources</h4>
-              <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.875rem' }}>
-                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('recommend')}>Crop Suitability</li>
-                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('disease')}>Disease Diagnosis</li>
-                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('schemes')}>Govt Subsidies</li>
-                <li style={{ cursor: 'pointer' }} onClick={() => onNavigate('weather')}>Weather Alerts</li>
-              </ul>
-            </div>
-
-            {/* Column 4: Contact & Social */}
-            <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '1rem' }}>Contact & Support</h4>
-              <p style={{ fontSize: '0.875rem', marginBottom: '0.5rem' }}>📍 Karur District, Tamil Nadu</p>
-              <p style={{ fontSize: '0.875rem', marginBottom: '0.5rem' }}>📞 Kisan Call Center: 1800-180-1551</p>
-              <p style={{ fontSize: '0.875rem' }}>✉️ support@agrisahay.in</p>
-            </div>
-
-          </div>
-
-          {/* Bottom Bar */}
           <div style={{ borderTop: '1px solid #334155', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', fontSize: '0.85rem' }}>
             <div>© 2026 AgriSahay AI. All rights reserved.</div>
-            <div style={{ color: '#F59E0B', fontWeight: 700 }}>Built by Yagavi S</div>
+            <div style={{ color: '#F59E0B', fontWeight: 700 }}>{t.builtBy}</div>
           </div>
-
         </div>
       </footer>
+
+      {/* ==================================================== */}
+      {/* WATCH DEMO MODAL */}
+      {/* ==================================================== */}
+      {isVideoModalOpen && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 2000,
+            background: 'rgba(15, 23, 42, 0.85)',
+            backdropFilter: 'blur(12px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem'
+          }}
+        >
+          <div 
+            style={{
+              background: '#0F172A',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '20px',
+              maxWidth: '850px',
+              width: '100%',
+              overflow: 'hidden',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+              color: '#FFFFFF'
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.75rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <span style={{ fontSize: '1.4rem' }}>🎬</span>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  AgriSahay AI System Demonstration
+                </h3>
+              </div>
+              <button 
+                onClick={() => setIsVideoModalOpen(false)}
+                style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            {/* Video Preview Container */}
+            <div style={{ position: 'relative', width: '100%', height: '420px', background: '#000000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '2rem' }}>
+              <div style={{ width: '70px', height: '70px', borderRadius: '50%', background: 'rgba(22, 163, 74, 0.3)', border: '2px solid #22C55E', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4ADE80', marginBottom: '1.5rem' }}>
+                <Play size={32} style={{ marginLeft: '4px' }} />
+              </div>
+              <h4 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.5rem', color: '#FFFFFF' }}>
+                Interactive Platform Walkthrough
+              </h4>
+              <p style={{ fontSize: '0.95rem', color: '#94A3B8', maxWidth: '550px', lineHeight: 1.5, marginBottom: '1.75rem' }}>
+                Explore smart crop recommendation algorithms, neural leaf disease diagnosis, Karur mandi price tracking, and Gemini AI Q&A in action.
+              </p>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <button 
+                  onClick={() => {
+                    setIsVideoModalOpen(false);
+                    onLoginDemo();
+                  }}
+                  style={{
+                    background: '#16A34A',
+                    color: '#FFFFFF',
+                    fontWeight: 700,
+                    fontSize: '0.95rem',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Launch Live Demo Dashboard
+                </button>
+                <button 
+                  onClick={() => {
+                    setIsVideoModalOpen(false);
+                    scrollToSection('dashboard-preview');
+                  }}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: '#FFFFFF',
+                    fontWeight: 600,
+                    fontSize: '0.95rem',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  View Dashboard Preview
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );
