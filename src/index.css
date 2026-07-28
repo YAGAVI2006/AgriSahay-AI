@@ -1,12 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
+/* Design Tokens System */
 :root {
-  /* Color Palette - Emerald Green & Slate Vercel Aesthetics */
-  --bg-slate: #F8FAFC;
-  --bg-main: var(--bg-slate);
-  --card-bg: #FFFFFF;
-  --card-border: #E2E8F0;
-  
+  /* Brand Colors */
   --primary-50: #ECFDF5;
   --primary-100: #D1FAE5;
   --primary-500: #10B981;
@@ -16,54 +13,49 @@
   --primary-900: #064E3B;
 
   --accent-amber: #F59E0B;
-  --accent-amber-dark: #D97706;
   --accent-amber-light: #FEF3C7;
+  --accent-amber-dark: #B45309;
 
-  --success: #10B981;
-  --warning: #F97316;
-  --error: #EF4444;
-
+  /* Theme Surfaces (Light Mode Defaults) */
+  --bg-slate: #F8FAFC;
+  --bg-main: #FFFFFF;
+  --card-bg: #FFFFFF;
   --text-main: #0F172A;
   --text-muted: #64748B;
   --text-light: #94A3B8;
-
   --border-light: #E2E8F0;
-  --border-hover: #CBD5E1;
 
-  /* Typography */
-  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  /* Typography Tokens */
+  --font-body: 'Inter', sans-serif;
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
 
-  /* Elevation & Shadows */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-emerald: 0 10px 25px -5px rgba(5, 150, 105, 0.25);
-
-  /* Border Radii */
-  --radius-sm: 6px;
-  --radius-md: 10px;
+  /* Radius Tokens */
+  --radius-sm: 8px;
+  --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
+/* Dark Mode Tokens Override */
 [data-theme="dark"] {
-  --bg-slate: #090D16;
-  --bg-main: var(--bg-slate);
-  --card-bg: #111827;
-  --card-border: #1F2937;
+  --bg-slate: #0F172A;
+  --bg-main: #1E293B;
+  --card-bg: #1E293B;
   --text-main: #F8FAFC;
   --text-muted: #94A3B8;
   --text-light: #64748B;
-  --border-light: #1F2937;
-  --border-hover: #374151;
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --border-light: #334155;
+  --primary-50: rgba(16, 185, 129, 0.15);
+  --primary-100: rgba(16, 185, 129, 0.25);
 }
 
+/* Global Reset */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -76,7 +68,6 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -84,108 +75,90 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
-/* Glassmorphism Classes */
-.glass-panel {
+/* Glassmorphism Navigation & Cards */
+.glass-nav {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-light);
-}
-
-[data-theme="dark"] .glass-panel {
-  background: rgba(17, 24, 39, 0.85);
-  border-color: #1F2937;
-}
-
-.glass-nav {
+  border-bottom: 1px solid var(--border-light);
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-light);
 }
 
 [data-theme="dark"] .glass-nav {
-  background: rgba(9, 13, 22, 0.85);
-  border-bottom-color: #1F2937;
+  background: rgba(30, 41, 59, 0.85);
 }
 
-/* Card Design System */
 .card-glass {
   background: var(--card-bg);
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
 }
 
 .card-glass:hover {
   box-shadow: var(--shadow-md);
-  border-color: var(--border-hover);
 }
 
-.card-hover-lift {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.card-hover-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--primary-500);
-}
-
-/* Button Component Tokens */
+/* Button UI Components */
 .btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
   background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
   color: #FFFFFF;
-  font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 0.875rem;
+  font-family: var(--font-heading);
   padding: 0.65rem 1.25rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   border: none;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
-  box-shadow: var(--shadow-emerald);
   transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
 }
 
 .btn-outline {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-light);
+  font-weight: 600;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
-  background: var(--card-bg);
-  color: var(--text-main);
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0.65rem 1.25rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-light);
-  cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .btn-outline:hover {
-  background: var(--primary-50);
   border-color: var(--primary-500);
-  color: var(--primary-700);
+  color: var(--primary-600);
+  background: var(--primary-50);
 }
 
-/* Badge Tokens */
+.btn-accent {
+  background: var(--accent-amber);
+  color: #0F172A;
+  font-weight: 700;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Badge Utilities */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -194,8 +167,6 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 700;
-  font-family: var(--font-heading);
-  letter-spacing: 0.02em;
 }
 
 .badge-green {
@@ -269,5 +240,48 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
   .view-container {
     padding: 1.25rem 1rem 5rem;
+  }
+}
+
+/* Modal Overlay & Modal Content Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1.5rem;
+}
+
+.modal-content {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-light, #e2e8f0);
+  border-radius: 20px;
+  max-width: 650px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-main);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }

@@ -180,8 +180,8 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
 
       {/* Scheme Detail Modal */}
       {activeModalScheme && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="modal-overlay" onClick={() => setActiveModalScheme(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.85rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <span style={{ fontSize: '2rem' }}>{activeModalScheme.icon || '🏛️'}</span>
