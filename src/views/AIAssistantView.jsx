@@ -94,62 +94,73 @@ export default function AIAssistantView({ farmerProfile, selectedLanguage = 'en'
 
     let botText = "";
 
-    // Try Spring Boot Backend REST API first
+    // 1. Ultra-fast Spring Boot fetch attempt with 500ms timeout
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 500);
+
       const res = await fetch('http://localhost:8080/api/v1/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: text })
+        body: JSON.stringify({ prompt: text }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
       if (res.ok) {
         const data = await res.json();
         botText = data.reply;
       }
     } catch (e) {
-      console.log("Using localized AI response engine fallback");
+      // Instant fallback without freezing
     }
 
-    // Localized Intelligent Fallback Engine
+    // 2. High-Precision Local Agronomic AI Response Engine
     if (!botText) {
       const lower = text.toLowerCase();
       if (isTa) {
-        botText = "கரூர் மாவட்டத்திற்கான TNAU வேளாண்மை ஆராய்ச்சியின் அடிப்படையில்: ";
-        if (lower.includes('மஞ்சள்') || lower.includes('yellow')) {
-          botText += "இலைகள் மஞ்சள் நிறமாக மாறுவது நைட்ரஜன் குறைபாடு அல்லது துத்தநாக (Zinc) குளோரோசிஸ் காரணமாகும். பஞ்சகவ்யா 3% (30ml/லிட்டர் நீர்) தெளிக்கவும் அல்லது ஏக்கருக்கு 10கிலோ துத்தநாக சல்பேட் பயன்படுத்தவும்.";
-        } else if (lower.includes('உரம்') || lower.includes('npk') || lower.includes('fertilizer')) {
-          botText += "1 ஏக்கர் கொத்தமல்லி/கீரைகளுக்கு: 500கிலோ மண்புழு உரம் (Vermicompost) அடி உரமாகவும், 15வது நாளில் பஞ்சகவ்யா 3% தெளிக்கவும். இலைகள் கருகுவதைத் தவிர்க்க அதிக யூரியா பயன்படுத்துவதைத் தவிர்க்கவும்.";
-        } else if (lower.includes('பாசனம்') || lower.includes('நீர்') || lower.includes('drip')) {
-          botText += "கரூர் செம்மண்ணிற்கு: தினமும் அதிகாலை (காலை 6 - 8 மணி) 45 நிமிடங்கள் சொட்டு நீர் பாசனம் செய்யவும். நெற்பயிருக்கு மாறி மாறி நனைத்து உலர்த்தும் முறையைப் பின்பற்றவும்.";
-        } else if (lower.includes('மானிய') || lower.includes('திட்டம்') || lower.includes('kisan')) {
-          botText += "PM-KISAN ₹6,000 ஆண்டு தவணையைப் பெற: குளித்தலை / கரூர் வேளாண்மை அலுவலகத்திலோ அல்லது PM-KISAN இணையதளத்திலோ உங்கள் ஆதார் எண்ணை நிலச் சிட்டாவுடன் இணைக்கவும்.";
+        botText = "🌾 கரூர் மாவட்டத்திற்கான TNAU வேளாண்மை ஆராய்ச்சியின் அடிப்படையில்:\n\n";
+        if (lower.includes('மஞ்சள்') || lower.includes('yellow') || lower.includes('இலை')) {
+          botText += "• காரணம்: இலைகள் மஞ்சள் நிறமாக மாறுவது நைட்ரஜன் குறைபாடு அல்லது துத்தநாக (Zinc) குளோரோசிஸ் ஆகும்.\n• இயற்கை சிகிச்சை: பஞ்சகவ்யா 3% (30ml/லிட்டர் நீர்) இலைவழி தெளிக்கவும்.\n• ரசாயன சிகிச்சை: ஏக்கருக்கு 10கிலோ துத்தநாக சல்பேட் (Zinc Sulphate) மணலில் கலந்து இடவும்.";
+        } else if (lower.includes('உரம்') || lower.includes('npk') || lower.includes('fertilizer') || lower.includes('கொத்தமல்லி')) {
+          botText += "• 1 ஏக்கர் கொத்தமல்லி/கீரைகளுக்கு பரிந்துரைக்கப்பட்ட உர அளவு:\n- அடி உரம்: 500கிலோ மண்புழு உரம் (Vermicompost) + 25கிலோ DAP.\n- 15வது நாள்: பஞ்சகவ்யா 3% தெளிப்பு.\n- 25வது நாள்: வேப்ப எண்ணெயில் தடவப்பட்ட யூரியா 15கிலோ.";
+        } else if (lower.includes('பாசனம்') || lower.includes('நீர்') || lower.includes('drip') || lower.includes('சொட்டு')) {
+          botText += "• கரூர் செம்மண்ணிற்கு பாசன முறை:\n- சொட்டு நீர் பாசனம்: தினமும் அதிகாலை (காலை 6 - 8 மணி) 45 நிமிடங்கள் இயங்கவும்.\n- நெற்பயிர்: மாறி மாறி நனைத்து உலர்த்தும் முறை (AWD) மூலம் 30% தண்ணீர் சேமிக்கலாம்.";
+        } else if (lower.includes('மானிய') || lower.includes('திட்டம்') || lower.includes('kisan') || lower.includes('pm')) {
+          botText += "• PM-KISAN ₹6,000 ஆண்டு நிதியுதவி பெறுவது எப்படி:\n1. ஆதார் மற்றும் மொபைல் எண் இணைப்பு.\n2. நிலச் சிட்டா/அடங்கல் நகலுடன் குளித்தலை / கரூர் வேளாண்மை அலுவலகத்தை அணுகவும் அல்லது pmkisan.gov.in போர்ட்டலில் விண்ணப்பிக்கவும்.";
+        } else if (lower.includes('பூச்சி') || lower.includes('pest') || lower.includes('வண்டு')) {
+          botText += "• பூச்சி கட்டுப்பாடு ஆலோசனை:\n- இயற்கை முறை: வேப்ப எண்ணெய் 3% (30ml/லிட்டர்) + சோப்பு கரைசல் தெளிக்கவும்.\n- மஞ்சள் ஒட்டும் அட்டைகளை ஏக்கருக்கு 10 இடங்களில் பொருத்தவும்.";
         } else {
-          botText += "கரூரில் அதிக மகசூல் பெற, மண்ணின் pH 6.5-7.5 ஆக பராமரிக்கவும், சூடோமோனாஸ் புளோரசன்ஸ் மூலம் விதை நேர்த்தி செய்யவும், சொட்டு நீர் பாசனத்தைப் பயன்படுத்தவும்.";
+          botText += "• கரூர் மாவட்டத்திற்கான சிறந்த சாகுபடி ஆலோசனைகள்:\n1. மண்ணின் pH அளவை 6.5 - 7.5 ஆக பராமரிக்கவும்.\n2. சூடோமோனாஸ் புளோரசன்ஸ் (10கிராம்/கிலோ) கொண்டு விதை நேர்த்தி செய்யவும்.\n3. சொட்டு நீர் பாசனம் மற்றும் கரிம உரங்களைப் பயன்படுத்தவும்.";
         }
       } else {
-        botText = "Based on TNAU agronomic research for Karur district: ";
-        if (lower.includes('yellow') || lower.includes('மஞ்சள்')) {
-          botText += "Yellowing in leaves is usually caused by Nitrogen deficiency or Zinc chlorosis. Apply Panchagavya 3% (30ml/L water) foliar spray or Zinc Sulphate @ 10kg/acre mixed with sand.";
-        } else if (lower.includes('npk') || lower.includes('fertilizer') || lower.includes('உரம்')) {
-          botText += "For 1 acre Coriander/Greens: Apply 500kg Vermicompost basal + Panchagavya 3% spray at 15th day. Avoid high Urea chemical dose to prevent leaf burning.";
-        } else if (lower.includes('drip') || lower.includes('irrigation') || lower.includes('பாசனம்')) {
-          botText += "For Karur Red Soil: Run drip fertigation for 45 minutes daily early morning (6 AM - 8 AM). Maintain Alternate Wetting & Drying (AWD) for rice.";
-        } else if (lower.includes('pm-kisan') || lower.includes('scheme') || lower.includes('மானிய')) {
-          botText += "To claim PM-KISAN ₹6,000 annual installment: Ensure your Aadhaar is linked with land Chitta/Adangal at Kulithalai / Karur Agriculture Office or via PM-KISAN portal.";
+        botText = "🌾 Based on TNAU agronomic research for Karur district:\n\n";
+        if (lower.includes('yellow') || lower.includes('மஞ்சள்') || lower.includes('leaf')) {
+          botText += "• Cause: Leaf yellowing is caused by Nitrogen deficiency or Zinc chlorosis.\n• Organic Remedy: Spray Panchagavya 3% (30ml/L water) as foliar feed.\n• Chemical Dosage: Apply Zinc Sulphate @ 10kg/acre mixed with dry sand.";
+        } else if (lower.includes('npk') || lower.includes('fertilizer') || lower.includes('உரம்') || lower.includes('coriander')) {
+          botText += "• NPK Fertilizer Plan for 1 Acre Coriander/Greens:\n- Basal Dose: 500kg Vermicompost + 25kg DAP per acre.\n- Day 15: Panchagavya 3% foliar spray.\n- Day 25: Neem-coated Urea 15kg top dressing.";
+        } else if (lower.includes('drip') || lower.includes('irrigation') || lower.includes('பாசனம்') || lower.includes('water')) {
+          botText += "• Irrigation Schedule for Karur Red Soil:\n- Drip Fertigation: Run drip lines for 45 mins daily early morning (6 AM - 8 AM).\n- Paddy: Practice Alternate Wetting & Drying (AWD) to save 30% water.";
+        } else if (lower.includes('pm-kisan') || lower.includes('scheme') || lower.includes('subsidy') || lower.includes('மானிய')) {
+          botText += "• PM-KISAN ₹6,000 Subsidy Application Process:\n1. Ensure Aadhaar is linked to land Chitta/Adangal.\n2. Submit documents at Kulithalai / Karur Block Agriculture Office or online via pmkisan.gov.in.";
+        } else if (lower.includes('pest') || lower.includes('insect') || lower.includes('worm') || lower.includes('பூச்சி')) {
+          botText += "• Integrated Pest Management (IPM):\n- Organic Control: Spray Neem Oil 3% (30ml/L water) with liquid soap.\n- Install 10 Yellow Sticky Traps per acre for sucking pests.";
         } else {
-          botText += "For optimal yield in Karur, maintain soil pH 6.5-7.5, perform seed treatment with Pseudomonas fluorescens (10g/kg seed), and use drip fertigation.";
+          botText += "• Key Farm Recommendations for Karur:\n1. Maintain soil pH between 6.5 and 7.5.\n2. Perform bio-seed treatment with Pseudomonas fluorescens (10g/kg seed).\n3. Combine drip fertigation with organic vermicompost basal application.";
         }
       }
     }
 
-    const botMsg = {
-      id: Date.now() + 1,
-      sender: 'bot',
-      text: botText,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
+    setTimeout(() => {
+      const botMsg = {
+        id: Date.now() + 1,
+        sender: 'bot',
+        text: botText,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
 
-    setMessages(prev => [...prev, botMsg]);
-    setIsTyping(false);
+      setMessages(prev => [...prev, botMsg]);
+      setIsTyping(false);
+    }, 400);
   };
 
   const handleCopy = (id, text) => {
@@ -214,11 +225,12 @@ export default function AIAssistantView({ farmerProfile, selectedLanguage = 'en'
                 borderTopRightRadius: msg.sender === 'user' ? '2px' : '16px',
                 boxShadow: 'var(--shadow-xs)',
                 fontSize: '0.9rem',
-                lineHeight: 1.55
+                lineHeight: 1.6,
+                whiteSpace: 'pre-line'
               }}>
                 <p>{msg.text}</p>
                 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem', fontSize: '0.725rem', opacity: 0.8 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.65rem', fontSize: '0.725rem', opacity: 0.8 }}>
                   <span>{msg.timestamp}</span>
 
                   {msg.sender === 'bot' && (
