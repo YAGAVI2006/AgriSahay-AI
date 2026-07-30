@@ -3,23 +3,23 @@ import { Landmark, CheckCircle2, FileText, ExternalLink, Filter, Sparkles, Chevr
 import { GOVERNMENT_SCHEMES, recommendSchemes } from '../data/schemes';
 import { CROP_LIST, FARMER_CATEGORIES, STATES_AND_DISTRICTS } from '../data/crops';
 
-export default function SchemesView({ farmerProfile, onOpenProfile, selectedLanguage = 'en' }) {
+export default function SchemesView({ farmerProfile = {}, onOpenProfile, selectedLanguage = 'en' }) {
   const isTa = selectedLanguage === 'ta';
 
-  const [selectedState, setSelectedState] = useState(farmerProfile.state || 'Tamil Nadu');
-  const [selectedCrop, setSelectedCrop] = useState(farmerProfile.primaryCrop || 'paddy');
-  const [selectedCategory, setSelectedCategory] = useState(farmerProfile.farmerCategory || 'small');
+  const [selectedState, setSelectedState] = useState(farmerProfile?.state || 'Tamil Nadu');
+  const [selectedCrop, setSelectedCrop] = useState(farmerProfile?.primaryCrop || 'paddy');
+  const [selectedCategory, setSelectedCategory] = useState(farmerProfile?.farmerCategory || 'small');
   const [activeModalScheme, setActiveModalScheme] = useState(null);
-  const [schemesList, setSchemesList] = useState([]);
+  const [schemesList, setSchemesList] = useState(GOVERNMENT_SCHEMES);
 
   useEffect(() => {
     const matched = recommendSchemes({
       state: selectedState,
       crop: selectedCrop,
-      landSizeAcres: farmerProfile.landSizeAcres || 4.5,
+      landSizeAcres: farmerProfile?.landSizeAcres || 4.5,
       category: selectedCategory
     });
-    setSchemesList(matched);
+    setSchemesList(matched && matched.length > 0 ? matched : GOVERNMENT_SCHEMES);
   }, [selectedState, selectedCrop, selectedCategory, farmerProfile]);
 
   return (
@@ -44,7 +44,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
           <div>
             <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)', display: 'block' }}>{isTa ? 'பொருந்தும் சுயவிவரம்' : 'Matching Profile'}</span>
             <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary-800)' }}>
-              {selectedState} | {farmerProfile.landSizeAcres || 4.5} Acres | {selectedCrop.toUpperCase()}
+              {selectedState} | {farmerProfile?.landSizeAcres || 4.5} Acres | {selectedCrop ? selectedCrop.toUpperCase() : 'PADDY'}
             </span>
           </div>
           <button onClick={onOpenProfile} className="btn-outline" style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}>
@@ -65,7 +65,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
             onChange={(e) => setSelectedState(e.target.value)}
             style={{ padding: '0.45rem 0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)', background: 'var(--bg-main)', color: 'var(--text-main)', fontSize: '0.85rem', fontWeight: 600 }}
           >
-            {Object.keys(STATES_AND_DISTRICTS).map(st => (
+            {Object.keys(STATES_AND_DISTRICTS || {}).map(st => (
               <option key={st} value={st}>{st}</option>
             ))}
           </select>
@@ -77,7 +77,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
             onChange={(e) => setSelectedCrop(e.target.value)}
             style={{ padding: '0.45rem 0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)', background: 'var(--bg-main)', color: 'var(--text-main)', fontSize: '0.85rem', fontWeight: 600 }}
           >
-            {CROP_LIST.map(cr => (
+            {(CROP_LIST || []).map(cr => (
               <option key={cr.id} value={cr.id}>{cr.icon} {cr.name}</option>
             ))}
           </select>
@@ -89,7 +89,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
             onChange={(e) => setSelectedCategory(e.target.value)}
             style={{ padding: '0.45rem 0.75rem', borderRadius: '8px', border: '1px solid var(--border-light)', background: 'var(--bg-main)', color: 'var(--text-main)', fontSize: '0.85rem', fontWeight: 600 }}
           >
-            {FARMER_CATEGORIES.map(cat => (
+            {(FARMER_CATEGORIES || []).map(cat => (
               <option key={cat.id} value={cat.id}>{cat.name}</option>
             ))}
           </select>
@@ -98,7 +98,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
 
       {/* Schemes Grid List */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '1.25rem' }}>
-        {schemesList.map((scheme) => (
+        {(schemesList || GOVERNMENT_SCHEMES).map((scheme) => (
           <div key={scheme.id} className="card-glass" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               {/* Header Badges */}
@@ -188,7 +188,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
                 <CheckCircle2 size={16} color="var(--primary-600)" /> {isTa ? 'தகுதி நிபந்தனைகள்' : 'Eligibility Criteria'}
               </h4>
               <ul style={{ listStyleType: 'none', paddingLeft: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                {activeModalScheme.eligibility.map((item, idx) => (
+                {(activeModalScheme.eligibility || []).map((item, idx) => (
                   <li key={idx} style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
                     <span style={{ color: 'var(--primary-600)', fontWeight: 800 }}>✓</span>
                     <span>{item}</span>
@@ -203,7 +203,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
                 <FileText size={16} color="#d97706" /> {isTa ? 'தேவையான ஆவணங்கள்' : 'Required Documents Checklist'}
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                {activeModalScheme.documents.map((doc, idx) => (
+                {(activeModalScheme.documents || []).map((doc, idx) => (
                   <div key={idx} style={{ background: 'var(--bg-main)', border: '1px solid var(--border-light)', padding: '0.5rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 500 }}>
                     📄 {doc}
                   </div>
@@ -217,7 +217,7 @@ export default function SchemesView({ farmerProfile, onOpenProfile, selectedLang
                 <Award size={16} color="#0284c7" /> {isTa ? 'படி-படியான விண்ணப்ப முறை' : 'Step-by-Step Application Steps'}
               </h4>
               <ol style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem' }}>
-                {activeModalScheme.applicationSteps.map((step, idx) => (
+                {(activeModalScheme.applicationSteps || []).map((step, idx) => (
                   <li key={idx} style={{ lineHeight: 1.4 }}>{step}</li>
                 ))}
               </ol>
