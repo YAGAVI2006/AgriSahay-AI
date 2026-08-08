@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Mic, Volume2, Sparkles, RefreshCw, ThumbsUp, Copy, Check, MicOff } from 'lucide-react';
+import { Send, Bot, User, Mic, Volume2, Sparkles, RefreshCw, Copy, Check, MicOff } from 'lucide-react';
+import apiClient from '../services/apiClient';
 
-export default function AIAssistantView({ farmerProfile, selectedLanguage = 'en' }) {
+export default function AIAssistantView({ farmerProfile = {}, selectedLanguage = 'en' }) {
   const isTa = selectedLanguage === 'ta';
 
   const [messages, setMessages] = useState([
@@ -79,7 +80,7 @@ export default function AIAssistantView({ farmerProfile, selectedLanguage = 'en'
 
   const handleSendMessage = async (textToSend = null) => {
     const text = textToSend || inputQuery;
-    if (!text.trim()) return;
+    if (!text || !text.trim()) return;
 
     const userMsg = {
       id: Date.now(),
@@ -94,24 +95,14 @@ export default function AIAssistantView({ farmerProfile, selectedLanguage = 'en'
 
     let botText = "";
 
-    // 1. Ultra-fast Spring Boot fetch attempt with 500ms timeout
+    // 1. Attempt Spring Boot backend REST API
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 500);
-
-      const res = await fetch('http://localhost:8080/api/v1/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: text }),
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const data = await res.json();
+      const data = await apiClient.post('/chat', { prompt: text });
+      if (data && data.reply) {
         botText = data.reply;
       }
     } catch (e) {
-      // Instant fallback without freezing
+      // Instant fallback
     }
 
     // 2. High-Precision Local Agronomic AI Response Engine
@@ -160,7 +151,7 @@ export default function AIAssistantView({ farmerProfile, selectedLanguage = 'en'
 
       setMessages(prev => [...prev, botMsg]);
       setIsTyping(false);
-    }, 400);
+    }, 250);
   };
 
   const handleCopy = (id, text) => {
@@ -195,7 +186,7 @@ export default function AIAssistantView({ farmerProfile, selectedLanguage = 'en'
         </div>
       </div>
 
-      {/* Main Chat Box Container (ChatGPT UI Style) */}
+      {/* Main Chat Box Container */}
       <div className="card-glass" style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '1.25rem', overflow: 'hidden', border: '1px solid var(--border-light)' }}>
         
         {/* Messages Stream */}
