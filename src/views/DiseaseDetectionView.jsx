@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Upload, Camera, Leaf, CheckCircle2, ShieldAlert, Sparkles, RefreshCw, AlertCircle, Info, ChevronRight, Check } from 'lucide-react';
+import { Upload, Camera, Leaf, CheckCircle2, ShieldAlert, Sparkles, RefreshCw, AlertCircle, Check } from 'lucide-react';
 import { SAMPLE_DISEASE_GALLERY } from '../data/diseaseData';
 import { diseaseService } from '../services/diseaseService';
 import { CROP_LIST } from '../data/cropsData';
 
-export default function DiseaseDetectionView({ onSaveScanToHistory }) {
+export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLanguage = 'en' }) {
+  const isTa = selectedLanguage === 'ta';
   const [selectedSample, setSelectedSample] = useState(null);
   const [customImage, setCustomImage] = useState(null);
   const [selectedCropTarget, setSelectedCropTarget] = useState('paddy');
@@ -15,7 +16,6 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
   const handleSelectSample = (sample) => {
     setSelectedSample(sample);
     setCustomImage(null);
-    // Extract crop ID from sample.id (e.g. sample-coriander -> coriander)
     const cropId = sample.id.replace('sample-', '');
     setSelectedCropTarget(cropId);
     startDiagnosis(sample.id, cropId);
@@ -23,7 +23,6 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
 
   const handleCropTargetChange = (cropId) => {
     setSelectedCropTarget(cropId);
-    // Re-run diagnosis for current custom image or sample if available
     const input = customImage || (selectedSample ? selectedSample.id : null);
     if (input) {
       startDiagnosis(input, cropId);
@@ -47,12 +46,12 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
   const startDiagnosis = (inputSource, cropTarget) => {
     setIsScanning(true);
     setScanResult(null);
-    
-    diseaseService.analyzeImage(inputSource, cropTarget).then(result => {
-      setScanResult(result);
+
+    diseaseService.diagnoseLeafImage(inputSource, cropTarget).then(res => {
+      setScanResult(res);
       setIsScanning(false);
       if (onSaveScanToHistory) {
-        onSaveScanToHistory(result);
+        onSaveScanToHistory(res);
       }
     });
   };
@@ -60,282 +59,244 @@ export default function DiseaseDetectionView({ onSaveScanToHistory }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       
-      {/* Header Title */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <div className="badge badge-green" style={{ marginBottom: '0.4rem' }}>
-            <Sparkles size={12} /> AI Plant Classifier & Disease Neural Vision
-          </div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>🌿 AI Crop & Plant Disease Detector</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            Upload crop leaf photos or select sample leaves below to identify the plant species & detect diseases with cure steps.
-          </p>
+      {/* Header */}
+      <div>
+        <div className="badge badge-green" style={{ marginBottom: '0.35rem' }}>
+          <Sparkles size={12} /> {isTa ? 'நரம்பியல் பார்வை நுண்ணறிவு' : 'Neural Vision Diagnosis Engine'}
         </div>
+        <h2 style={{ fontSize: '1.65rem', fontWeight: 800 }}>
+          {isTa ? '🐛 AI பயிர் நோய் கண்டறிதல் & சிகிச்சை முறை' : '🐛 AI Crop Disease Detection & Remedies'}
+        </h2>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+          {isTa ? 'இலை புகைப்படத்தைப் பதிவேற்றி நோய்க்கிருமிகள், இயற்கை மற்றும் ரசாயன மருந்துகளை உடனடியாகப் பெறுங்கள்.' : 'Upload or capture a leaf photo to identify pathogens and get instant organic & chemical treatment plans.'}
+        </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.75rem' }}>
+      {/* Main Grid: Upload on Left, Results on Right */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '1.5rem' }}>
         
-        {/* Left Column: Upload & Sample Gallery */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        {/* Left Column: Upload & Sample Selection */}
+        <div className="card-saas" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           
-          {/* Target Plant Selector */}
-          <div className="card-glass" style={{ padding: '1rem', border: '2px solid var(--primary-500)', background: 'linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%)' }}>
-            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, marginBottom: '0.35rem', color: 'var(--primary-900)' }}>
-              Step 1: Select Plant / Crop Type:
+          {/* Crop Selector Bar */}
+          <div>
+            <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '0.4rem' }}>
+              {isTa ? 'பயிர் வகையைத் தேர்ந்தெடுக்கவும்' : 'Select Target Crop Species'}
             </label>
             <select 
               value={selectedCropTarget} 
               onChange={(e) => handleCropTargetChange(e.target.value)}
-              style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid var(--border-light)', background: '#ffffff', color: 'var(--primary-900)', fontSize: '0.95rem', fontWeight: 700 }}
+              className="select-clean"
+              style={{ width: '100%' }}
             >
-              {CROP_LIST.map(cr => (
-                <option key={cr.id} value={cr.id}>{cr.icon} {cr.name}</option>
+              {(CROP_LIST || []).map(c => (
+                <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
               ))}
             </select>
           </div>
 
-          {/* Main Upload Box / Scanner View */}
-          <div className="card-glass" style={{ textAlign: 'center', padding: '1.5rem' }}>
-            {isScanning ? (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', padding: '1rem 0' }}>
-                <div className="scanner-box">
-                  <div className="scanner-line"></div>
-                  <div className="scanner-overlay"></div>
-                  <img 
-                    src={customImage || (selectedSample ? selectedSample.imageUrl : 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=600&q=80')} 
-                    alt="Scanning" 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                  />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary-600)', fontWeight: 700 }}>
-                  <RefreshCw className="animate-spin" size={18} />
-                  <span>Analyzing plant species & leaf symptoms for {selectedCropTarget.toUpperCase()}...</span>
-                </div>
+          {/* Clean Drag & Drop Upload Zone */}
+          <div style={{
+            border: '2px dashed var(--primary-300)',
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--bg-slate)',
+            padding: '2rem 1.5rem',
+            textAlign: 'center',
+            cursor: 'pointer',
+            position: 'relative'
+          }}>
+            <input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleFileUpload}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                opacity: 0,
+                cursor: 'pointer'
+              }}
+            />
+
+            {customImage ? (
+              <div>
+                <img 
+                  src={customImage} 
+                  alt="Custom Leaf" 
+                  style={{ maxHeight: '180px', borderRadius: 'var(--radius-sm)', objectFit: 'contain', margin: '0 auto' }} 
+                />
+                <p style={{ fontSize: '0.75rem', color: 'var(--primary-600)', marginTop: '0.5rem', fontWeight: 600 }}>
+                  ✓ {isTa ? 'புகைப்படம் பதிவேற்றப்பட்டது' : 'Leaf photo uploaded successfully'}
+                </p>
+              </div>
+            ) : selectedSample ? (
+              <div>
+                <img 
+                  src={selectedSample.image} 
+                  alt={selectedSample.title} 
+                  style={{ maxHeight: '180px', borderRadius: 'var(--radius-sm)', objectFit: 'cover', margin: '0 auto' }} 
+                />
+                <p style={{ fontSize: '0.8rem', fontWeight: 700, marginTop: '0.5rem' }}>{selectedSample.title}</p>
               </div>
             ) : (
               <div>
-                <label 
-                  htmlFor="leaf-upload-input"
-                  style={{
-                    border: '2px dashed var(--primary-400)',
-                    borderRadius: 'var(--radius-lg)',
-                    padding: '2rem 1.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.75rem',
-                    cursor: 'pointer',
-                    background: 'var(--primary-50)',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#ffffff', color: 'var(--primary-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-md)' }}>
-                    <Camera size={28} />
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--primary-800)' }}>Upload Crop Leaf Image</h3>
-                    <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', marginTop: '2px' }}>PNG, JPG or JPEG up to 10MB supported</p>
-                  </div>
-                  <button type="button" className="btn-primary" style={{ marginTop: '0.5rem', pointerEvents: 'none' }}>
-                    <Upload size={16} /> Choose File / Take Photo
-                  </button>
-                </label>
-                <input 
-                  id="leaf-upload-input" 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleFileUpload} 
-                  style={{ display: 'none' }} 
-                />
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--primary-50)', color: 'var(--primary-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.75rem' }}>
+                  <Upload size={24} />
+                </div>
+                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>
+                  {isTa ? 'இலை புகைப்படத்தைப் பதிவேற்றவும்' : 'Upload Leaf Photo'}
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                  {isTa ? 'படத்தை இங்கே இழுத்துப் போடவும் அல்லது கிளிக் செய்யவும்' : 'Drag and drop image here or browse files'}
+                </div>
               </div>
             )}
           </div>
 
-          {/* Sample Gallery Section */}
-          <div className="card-glass">
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Leaf size={16} color="var(--primary-600)" /> Fast Demo Gallery: Click Sample Leaf Images
-            </h4>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
-              {SAMPLE_DISEASE_GALLERY.map((sample) => (
-                <div 
+          {/* Quick Demo Sample Gallery */}
+          <div>
+            <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
+              {isTa ? 'அல்லது மாதிரி இலைகளை சோதிக்கவும்' : 'Or Test with Sample Diagnoses'}
+            </label>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem' }}>
+              {(SAMPLE_DISEASE_GALLERY || []).slice(0, 4).map((sample) => (
+                <button
                   key={sample.id}
                   onClick={() => handleSelectSample(sample)}
                   style={{
                     border: selectedSample?.id === sample.id ? '2px solid var(--primary-600)' : '1px solid var(--border-light)',
-                    borderRadius: 'var(--radius-md)',
-                    overflow: 'hidden',
-                    cursor: 'pointer',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '0.35rem',
                     background: 'var(--bg-main)',
-                    transition: 'all 0.2s ease'
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '0.25rem'
                   }}
                 >
-                  <img src={sample.imageUrl} alt={sample.diseaseName} style={{ width: '100%', height: '80px', objectFit: 'cover' }} />
-                  <div style={{ padding: '0.4rem', fontSize: '0.725rem', textAlign: 'center' }}>
-                    <p style={{ fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sample.cropIcon} {sample.cropName}</p>
-                  </div>
-                </div>
+                  <img src={sample.image} alt={sample.title} style={{ width: '100%', height: '48px', objectFit: 'cover', borderRadius: '4px' }} />
+                  <span style={{ fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-main)', textAlign: 'center', lineHeight: 1.1 }}>
+                    {sample.title.split(' ')[0]}
+                  </span>
+                </button>
               ))}
             </div>
           </div>
 
         </div>
 
-        {/* Right Column: AI Plant Identification & Diagnosis Display */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          
-          {scanResult ? (
-            <div className="card-glass" style={{ borderLeft: '4px solid var(--primary-600)', animation: 'fadeIn 0.3s ease-out' }}>
+        {/* Right Column: Diagnostic Results Card */}
+        <div className="card-saas" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          {isScanning ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '320px', gap: '1rem' }}>
+              <RefreshCw className="animate-spin" size={32} color="var(--primary-600)" />
+              <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-main)' }}>
+                {isTa ? 'நரம்பியல் ஸ்கேன் ஆய்வு செய்கிறது...' : 'Neural Network Analyzing Leaf Pathogens...'}
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                {isTa ? 'துல்லியமான சிகிச்சை பரிந்துரைகள் கணக்கிடப்படுகின்றன' : 'Matching visual lesions against 15+ crop pathology models'}
+              </div>
+            </div>
+          ) : scanResult ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
-              {/* Plant Identification Banner */}
-              <div style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', color: '#ffffff', padding: '1.25rem', borderRadius: 'var(--radius-md)', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <img 
-                    src={scanResult.imageUrl} 
-                    alt="Analyzed Leaf" 
-                    style={{ width: '64px', height: '64px', borderRadius: '12px', objectFit: 'cover', border: '2px solid rgba(255,255,255,0.4)', flexShrink: 0 }} 
-                  />
-                  <div>
-                    <span style={{ fontSize: '0.725rem', opacity: 0.9, textTransform: 'uppercase', letterSpacing: '0.05em' }}>AI Plant Identification</span>
-                    <h3 style={{ fontSize: '1.35rem', fontWeight: 800, margin: '2px 0 0 0', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <span>{scanResult.cropIcon}</span> {scanResult.identifiedPlant || scanResult.cropName}
-                    </h3>
-                    <p style={{ fontSize: '0.8rem', opacity: 0.85, fontStyle: 'italic', margin: '2px 0 0 0' }}>
-                      Botanical: {scanResult.botanicalName} ({scanResult.cropType})
-                    </p>
-                  </div>
+              {/* Header: Plant & Disease Name */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.85rem' }}>
+                <div>
+                  <span className="badge badge-green" style={{ marginBottom: '0.25rem' }}>
+                    {scanResult.cropName ? scanResult.cropName.toUpperCase() : 'PADDY'}
+                  </span>
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--primary-800)', margin: 0 }}>
+                    {scanResult.diseaseName}
+                  </h3>
                 </div>
 
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#fef08a' }}>
-                    {scanResult.confidenceScore}%
-                  </div>
-                  <span className="badge badge-amber" style={{ fontSize: '0.65rem' }}>Match Accuracy</span>
-                </div>
-              </div>
-
-              {/* Disease Name & Scientific Details */}
-              <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '0.85rem', marginBottom: '1rem' }}>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Detected Pathogen / Disease</span>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#dc2626', marginTop: '2px' }}>
-                  🦠 {scanResult.diseaseName}
-                </h3>
-                <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                  Scientific Name: {scanResult.scientificName}
-                </p>
-              </div>
-
-              {/* Key Attributes */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                <div style={{ background: 'var(--bg-main)', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>Severity Level</span>
-                  <span style={{ fontWeight: 700, color: '#d97706', fontSize: '0.875rem' }}>{scanResult.severity}</span>
-                </div>
-                <div style={{ background: 'var(--bg-main)', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1px solid var(--border-light)' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block' }}>Affected Plant Area</span>
-                  <span style={{ fontWeight: 700, fontSize: '0.875rem' }}>{scanResult.affectedPart}</span>
+                <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: 'var(--radius-sm)', padding: '0.4rem 0.75rem', textAlign: 'right' }}>
+                  <span style={{ fontSize: '0.65rem', color: '#047857', fontWeight: 800, display: 'block', textTransform: 'uppercase' }}>Confidence</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#065F46' }}>{scanResult.confidence}%</span>
                 </div>
               </div>
 
               {/* Symptoms List */}
-              <div style={{ marginBottom: '1.25rem' }}>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <AlertCircle size={16} color="#d97706" /> Observed Symptoms
-                </h4>
-                <ul style={{ listStyleType: 'none', paddingLeft: 0, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  {scanResult.symptoms.map((sym, idx) => (
-                    <li key={idx} style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'flex-start', gap: '0.4rem' }}>
-                      <span style={{ color: 'var(--primary-600)', fontWeight: 800 }}>•</span>
-                      <span>{sym}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+                  {isTa ? 'அறிகுறிகள்' : 'Symptoms Observed'}
+                </div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-body)', lineHeight: 1.5, background: 'var(--bg-slate)', padding: '0.75rem', borderRadius: 'var(--radius-sm)' }}>
+                  {scanResult.symptoms}
+                </div>
               </div>
 
-              {/* Treatment Tabs Switcher */}
-              <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1rem' }}>
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <button 
+              {/* Treatment Tabs (Organic vs Chemical) */}
+              <div>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.65rem' }}>
+                  <button
                     onClick={() => setActiveTab('organic')}
-                    className={activeTab === 'organic' ? 'btn-primary' : 'btn-outline'}
-                    style={{ fontSize: '0.8rem', padding: '0.4rem 0.85rem' }}
+                    style={{
+                      padding: '0.4rem 0.85rem',
+                      borderRadius: 'var(--radius-sm)',
+                      border: 'none',
+                      background: activeTab === 'organic' ? 'var(--primary-600)' : 'var(--bg-slate)',
+                      color: activeTab === 'organic' ? '#FFFFFF' : 'var(--text-body)',
+                      fontWeight: 700,
+                      fontSize: '0.8rem',
+                      cursor: 'pointer'
+                    }}
                   >
-                    🌱 Organic Treatment
+                    🌿 {isTa ? 'இயற்கை சிகிச்சை' : 'Organic Remedy'}
                   </button>
-                  <button 
+
+                  <button
                     onClick={() => setActiveTab('chemical')}
-                    className={activeTab === 'chemical' ? 'btn-primary' : 'btn-outline'}
-                    style={{ fontSize: '0.8rem', padding: '0.4rem 0.85rem' }}
+                    style={{
+                      padding: '0.4rem 0.85rem',
+                      borderRadius: 'var(--radius-sm)',
+                      border: 'none',
+                      background: activeTab === 'chemical' ? '#D97706' : 'var(--bg-slate)',
+                      color: activeTab === 'chemical' ? '#FFFFFF' : 'var(--text-body)',
+                      fontWeight: 700,
+                      fontSize: '0.8rem',
+                      cursor: 'pointer'
+                    }}
                   >
-                    🧪 Chemical Fungicide
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('prevention')}
-                    className={activeTab === 'prevention' ? 'btn-primary' : 'btn-outline'}
-                    style={{ fontSize: '0.8rem', padding: '0.4rem 0.85rem' }}
-                  >
-                    🛡️ Prevention Tips
+                    🧪 {isTa ? 'ரசாயன சிகிச்சை' : 'Chemical Dosage'}
                   </button>
                 </div>
 
-                {/* Tab Content Box */}
-                <div style={{ background: 'var(--bg-main)', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-light)' }}>
-                  {activeTab === 'organic' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <p style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary-700)', marginBottom: '0.25rem' }}>
-                        Recommended Eco-Friendly & Bio-Control Sprays:
-                      </p>
-                      {scanResult.organicTreatment.map((item, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.85rem' }}>
-                          <CheckCircle2 size={16} color="var(--primary-600)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {activeTab === 'chemical' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <p style={{ fontSize: '0.8rem', fontWeight: 700, color: '#c2410c', marginBottom: '0.25rem' }}>
-                        Chemical Fungicides & Dosages:
-                      </p>
-                      {scanResult.chemicalTreatment.map((item, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.85rem' }}>
-                          <Info size={16} color="#ea580c" style={{ flexShrink: 0, marginTop: '2px' }} />
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {activeTab === 'prevention' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <p style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0284c7', marginBottom: '0.25rem' }}>
-                        Long-Term Cultural & Soil Management Practices:
-                      </p>
-                      {scanResult.preventionTips.map((item, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.85rem' }}>
-                          <CheckCircle2 size={16} color="#0284c7" style={{ flexShrink: 0, marginTop: '2px' }} />
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-body)', lineHeight: 1.5, background: 'var(--bg-slate)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', borderLeft: activeTab === 'organic' ? '4px solid var(--primary-600)' : '4px solid #D97706' }}>
+                  {activeTab === 'organic' ? scanResult.organicTreatment : scanResult.chemicalTreatment}
                 </div>
               </div>
+
+              {/* Prevention Advisory */}
+              {scanResult.prevention && (
+                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.75rem' }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                    🛡️ {isTa ? 'தடுப்பு முறைகள்' : 'Prevention'}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-body)' }}>
+                    {scanResult.prevention}
+                  </div>
+                </div>
+              )}
 
             </div>
           ) : (
-            <div className="card-glass" style={{ textAlign: 'center', padding: '4rem 2rem', color: 'var(--text-muted)' }}>
-              <Leaf size={48} style={{ opacity: 0.3, margin: '0 auto 1rem' }} />
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>No Leaf Image Analyzed Yet</h3>
-              <p style={{ fontSize: '0.875rem', marginTop: '0.4rem', maxWidth: '360px', margin: '0.4rem auto 0' }}>
-                Select a crop from the dropdown or click a sample leaf in the gallery to trigger instant AI Plant Identification & Disease Scanning.
-              </p>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '320px', textAlign: 'center', color: 'var(--text-muted)', gap: '0.75rem' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--primary-50)', color: 'var(--primary-600)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Leaf size={24} />
+              </div>
+              <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>
+                {isTa ? 'முடிவுகள் இங்கே தோன்றும்' : 'Ready for Leaf Diagnosis'}
+              </div>
+              <div style={{ fontSize: '0.8rem', maxWidth: '280px' }}>
+                {isTa ? 'இடதுபுறத்தில் புகைப்படத்தைப் பதிவேற்றவும் அல்லது மாதிரியைத் தேர்ந்தெடுக்கவும்.' : 'Upload a leaf photo or pick a sample leaf from the left gallery to initiate neural diagnosis.'}
+              </div>
             </div>
           )}
-
         </div>
 
       </div>

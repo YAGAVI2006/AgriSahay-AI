@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping({"/api/auth", "/api/v1/auth"})
 public class AuthController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String password = request.get("password");
-        String name = request.getOrDefault("name", "Farmer");
+        String name = request.getOrDefault("name", "Yagavi S");
         String phone = request.getOrDefault("phone", "9443218920");
 
         if (userRepository.existsByEmail(email)) {
@@ -57,8 +57,8 @@ public class AuthController {
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPassword())) {
-            // For Demo: Auto-register if default demo credentials used
-            if ("farmer@agrisahay.in".equals(email)) {
+            // Demo auto-registration for instant evaluation
+            if ("yagavi@agrisahay.in".equals(email) || "farmer@agrisahay.in".equals(email)) {
                 User demoUser = new User(email, passwordEncoder.encode(password), "Yagavi S", "9443218920", "ROLE_FARMER");
                 userRepository.save(demoUser);
                 userOpt = Optional.of(demoUser);
@@ -76,5 +76,14 @@ public class AuthController {
         response.put("message", "Login successful!");
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getMe(@RequestParam(defaultValue = "yagavi@agrisahay.in") String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            return ResponseEntity.ok(userOpt.get());
+        }
+        return ResponseEntity.ok(Map.of("name", "Yagavi S", "email", email, "role", "ROLE_FARMER"));
     }
 }

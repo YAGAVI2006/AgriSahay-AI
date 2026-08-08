@@ -1,223 +1,199 @@
-import React, { useState } from 'react';
-import { CloudSun, CloudRain, Thermometer, Wind, Droplets, Sun, AlertTriangle, MapPin, CheckCircle2, ShieldAlert } from 'lucide-react';
-import { getWeatherData } from '../data/weatherData';
+import React, { useState, useEffect } from 'react';
+import { 
+  CloudSun, 
+  Droplet, 
+  Wind, 
+  Sun, 
+  Sparkles, 
+  AlertTriangle, 
+  CheckCircle2, 
+  MapPin, 
+  Calendar,
+  Thermometer,
+  Compass
+} from 'lucide-react';
+import { weatherService } from '../services/weatherService';
+import WeatherSummaryChart from '../components/WeatherSummaryChart';
 
-export default function WeatherView({ farmerProfile, onUpdateLocation }) {
-  const [selectedDistrict, setSelectedDistrict] = useState(farmerProfile.district || 'Karur');
+export default function WeatherView({ farmerProfile = {}, selectedLanguage = 'en' }) {
+  const isTa = selectedLanguage === 'ta';
+  const districtName = farmerProfile?.district || 'Karur';
 
-  const weatherData = getWeatherData(selectedDistrict);
+  const [weather, setWeather] = useState({
+    district: districtName,
+    temp: 33,
+    feelsLike: 35,
+    condition: 'Partly Sunny with Light Breeze',
+    humidity: 64,
+    windSpeed: '14 km/h NW',
+    rainProbability: 25,
+    forecast7Days: [
+      { day: 'Today', tempMax: 34, tempMin: 24, condition: 'Partly Sunny', rain: 25, icon: '☀️' },
+      { day: 'Tomorrow', tempMax: 32, tempMin: 23, condition: 'Rain Expected', rain: 75, icon: '🌦️' },
+      { day: 'Day 3', tempMax: 30, tempMin: 22, condition: 'Passing Showers', rain: 55, icon: '🌧️' },
+      { day: 'Day 4', tempMax: 33, tempMin: 24, condition: 'Clear Sky', rain: 15, icon: '☀️' },
+      { day: 'Day 5', tempMax: 35, tempMin: 25, condition: 'Warm & Sunny', rain: 10, icon: '☀️' },
+      { day: 'Day 6', tempMax: 34, tempMin: 24, condition: 'Cloudy Intervals', rain: 20, icon: '⛅' },
+      { day: 'Day 7', tempMax: 33, tempMin: 24, condition: 'Pleasant', rain: 15, icon: '⛅' }
+    ],
+    farmingAdvice: [
+      'Delay heavy irrigation for next 48 hours as convective showers are likely.',
+      'Favorable window for biological foliar sprays (Panchagavya / Neem oil) in early morning.',
+      'Clear field drainage channels to prevent waterlogging in low-lying paddy plots.'
+    ]
+  });
 
-  const handleDistrictSelect = (dt) => {
-    setSelectedDistrict(dt);
-    if (onUpdateLocation) {
-      onUpdateLocation(dt);
-    }
-  };
-
-  const tnDistricts = ["Karur", "Tiruchirappalli", "Namakkal", "Dindigul", "Erode", "Thanjavur"];
+  useEffect(() => {
+    weatherService.getWeatherByDistrict(districtName).then(data => {
+      if (data) setWeather(prev => ({ ...prev, ...data }));
+    });
+  }, [districtName]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       
-      {/* Top Title & Location Bar Selector */}
+      {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <div className="badge badge-blue" style={{ marginBottom: '0.35rem' }}>
-            <CloudSun size={12} /> Hyperlocal Micro-Climate Advisories
+          <div className="badge badge-amber" style={{ marginBottom: '0.35rem' }}>
+            <Sparkles size={12} /> {isTa ? 'நுண்-காலநிலை முன்னறிவிப்பு' : 'Micro-Climate Telemetry'}
           </div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>🌦 Smart Weather Dashboard (Karur & TN)</h2>
+          <h2 style={{ fontSize: '1.65rem', fontWeight: 800 }}>
+            {isTa ? '🌦️ வானிலை நுண்ணறிவு & விவசாய வழிகாட்டுதல்' : '🌦️ Weather Intelligence & Farming Advisory'}
+          </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            Real-time weather telemetry, 7-day forecast, rain alerts & agronomic advisories for Cauvery basin.
+            {isTa ? `${districtName} மாவட்டத்திற்கான 7-நாள் துல்லிய வானிலை மற்றும் பாசன ஆலோசனைகள்.` : `7-day micro-climate telemetry and actionable agronomic advisories for ${districtName}.`}
           </p>
         </div>
 
-        {/* Location Switcher Pills (Tamil Nadu Districts) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)' }}>Quick Select District:</span>
-          {tnDistricts.map(dt => (
-            <button
-              key={dt}
-              onClick={() => handleDistrictSelect(dt)}
-              className={selectedDistrict === dt ? 'btn-primary' : 'btn-outline'}
-              style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '9999px' }}
-            >
-              <MapPin size={12} /> {dt}
-            </button>
-          ))}
+        <div style={{ background: 'var(--primary-50)', border: '1px solid var(--primary-100)', borderRadius: 'var(--radius-md)', padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <MapPin size={16} color="var(--primary-700)" />
+          <span style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--primary-800)' }}>
+            {districtName}, Tamil Nadu
+          </span>
         </div>
       </div>
 
-      {/* Extreme Rain / Weather Warning Alert Box */}
-      {weatherData.alerts && weatherData.alerts.length > 0 && (
-        <div style={{
-          background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)',
-          border: '1px solid #fed7aa',
-          borderRadius: 'var(--radius-lg)',
-          padding: '1.25rem 1.5rem',
-          display: 'flex',
-          gap: '1rem',
-          alignItems: 'flex-start'
-        }}>
-          <AlertTriangle size={26} color="#ea580c" style={{ flexShrink: 0, marginTop: '2px' }} />
-          <div>
-            <h4 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#c2410c', marginBottom: '0.25rem' }}>
-              {weatherData.alerts[0].title}
-            </h4>
-            <p style={{ fontSize: '0.9rem', color: '#9a3412', lineHeight: 1.5 }}>
-              {weatherData.alerts[0].message}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Main Weather Telemetry Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 2fr', gap: '1.5rem' }}>
+      {/* 4 Core Weather Metrics */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
         
-        {/* Main Current Weather Card */}
-        <div className="card-glass" style={{ background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)', color: '#ffffff', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'relative', zIndex: 2 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.2)', padding: '4px 12px', borderRadius: '9999px', fontSize: '0.85rem' }}>
-                <MapPin size={14} />
-                <span>{farmerProfile.village ? `${farmerProfile.village}, ` : ''}{weatherData.district}, {weatherData.state}</span>
-              </div>
-              <span style={{ fontSize: '0.8rem', opacity: 0.9 }}>Live Telemetry</span>
+        {/* Temperature */}
+        <div className="kpi-card">
+          <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#FFFBEB', color: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Thermometer size={22} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
+              {isTa ? 'வெப்பநிலை' : 'Temperature'}
             </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', margin: '1.5rem 0' }}>
-              <div style={{ fontSize: '4.5rem', lineHeight: 1 }}>{weatherData.icon}</div>
-              <div>
-                <div style={{ fontSize: '3.5rem', fontWeight: 800, lineHeight: 1, fontFamily: 'var(--font-heading)' }}>
-                  {weatherData.temp}°C
-                </div>
-                <p style={{ fontSize: '1.1rem', fontWeight: 600, marginTop: '0.35rem' }}>
-                  {weatherData.condition}
-                </p>
-                <p style={{ fontSize: '0.85rem', opacity: 0.85 }}>Feels like {weatherData.feelsLike}°C</p>
-              </div>
+            <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)' }}>
+              {weather.temp}°C
             </div>
-
-            {/* Quick Metrics Line */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '1rem', marginTop: '1rem' }}>
-              <div>
-                <span style={{ fontSize: '0.75rem', opacity: 0.85, display: 'block' }}>Rain Chance</span>
-                <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>{weatherData.rainProbability}%</span>
-              </div>
-              <div>
-                <span style={{ fontSize: '0.75rem', opacity: 0.85, display: 'block' }}>Humidity</span>
-                <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>{weatherData.humidity}%</span>
-              </div>
-              <div>
-                <span style={{ fontSize: '0.75rem', opacity: 0.85, display: 'block' }}>Wind Speed</span>
-                <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>{weatherData.windSpeed}</span>
-              </div>
+            <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>
+              Feels like {weather.feelsLike || 35}°C
             </div>
           </div>
         </div>
 
-        {/* Detailed Agronomic Telemetry Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          
-          <div className="card-glass" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#e0f2fe', color: '#0284c7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Droplets size={24} />
+        {/* Humidity */}
+        <div className="kpi-card">
+          <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Droplet size={22} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
+              {isTa ? 'காற்றின் ஈரப்பதம்' : 'Humidity'}
             </div>
-            <div>
-              <span style={{ fontSize: '0.785rem', color: 'var(--text-muted)' }}>Soil Moisture Level</span>
-              <h4 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{weatherData.soilMoisture}</h4>
-              <p style={{ fontSize: '0.725rem', color: 'var(--primary-600)' }}>Optimal for Kuruvai tillering</p>
+            <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)' }}>
+              {weather.humidity}%
+            </div>
+            <div style={{ fontSize: '0.725rem', color: '#2563EB', fontWeight: 600 }}>
+              Optimal for transpiration
             </div>
           </div>
+        </div>
 
-          <div className="card-glass" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#fef3c7', color: '#d97706', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Sun size={24} />
+        {/* Wind Speed */}
+        <div className="kpi-card">
+          <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#ECFDF5', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Wind size={22} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
+              {isTa ? 'காற்றின் வேகம்' : 'Wind Speed'}
             </div>
-            <div>
-              <span style={{ fontSize: '0.785rem', color: 'var(--text-muted)' }}>UV Radiation Index</span>
-              <h4 style={{ fontSize: '1.1rem', fontWeight: 700 }}>UV {weatherData.uvIndex} (Moderate)</h4>
-              <p style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Safe for morning field work</p>
+            <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)' }}>
+              {weather.windSpeed}
+            </div>
+            <div style={{ fontSize: '0.725rem', color: '#059669', fontWeight: 600 }}>
+              Safe for foliar spraying
             </div>
           </div>
+        </div>
 
-          <div className="card-glass" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#d1fae5', color: '#047857', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Wind size={24} />
+        {/* Rain Probability */}
+        <div className="kpi-card">
+          <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#F5F3FF', color: '#7C3AED', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <CloudSun size={22} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
+              {isTa ? 'மழை வாய்ப்பு' : 'Rain Probability'}
             </div>
-            <div>
-              <span style={{ fontSize: '0.785rem', color: 'var(--text-muted)' }}>Wind & Spray Suitability</span>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 700 }}>{weatherData.windSpeed}</h4>
-              <p style={{ fontSize: '0.725rem', color: '#059669' }}>Favorable for spraying</p>
+            <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)' }}>
+              {weather.rainProbability}%
+            </div>
+            <div style={{ fontSize: '0.725rem', color: '#7C3AED', fontWeight: 600 }}>
+              {weather.rainProbability > 50 ? 'Showers likely' : 'Low precipitation risk'}
             </div>
           </div>
-
-          <div className="card-glass" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#f3e8ff', color: '#7e22ce', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <CloudRain size={24} />
-            </div>
-            <div>
-              <span style={{ fontSize: '0.785rem', color: 'var(--text-muted)' }}>Expected Rain Total</span>
-              <h4 style={{ fontSize: '1.1rem', fontWeight: 700 }}>15 - 25 mm</h4>
-              <p style={{ fontSize: '0.725rem', color: '#7e22ce' }}>Next 48 hrs forecast</p>
-            </div>
-          </div>
-
         </div>
 
       </div>
 
-      {/* 7-Day Interactive Forecast Card Deck */}
-      <div className="card-glass">
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <CloudSun size={20} color="var(--primary-600)" /> 7-Day Karur Agronomic Forecast
+      {/* Agricultural Advisory Banners */}
+      <div className="card-saas" style={{ borderLeft: '4px solid var(--primary-600)' }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <CheckCircle2 size={18} color="var(--primary-600)" />
+          {isTa ? 'வானிலை அடிப்படையிலான வேளாண் ஆலோசனைகள்' : 'Agronomic Action Plan for Current Weather'}
         </h3>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.75rem' }}>
-          {weatherData.forecast7Days.map((item, idx) => (
-            <div 
-              key={idx}
-              style={{
-                background: idx === 0 ? 'var(--primary-50)' : 'var(--bg-main)',
-                border: idx === 0 ? '2px solid var(--primary-500)' : '1px solid var(--border-light)',
-                borderRadius: 'var(--radius-md)',
-                padding: '0.85rem 0.5rem',
-                textAlign: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '0.4rem'
-              }}
-            >
-              <span style={{ fontSize: '0.85rem', fontWeight: idx === 0 ? 800 : 600, color: idx === 0 ? 'var(--primary-800)' : 'var(--text-main)' }}>
-                {item.day}
-              </span>
-              <div style={{ fontSize: '1.8rem', margin: '2px 0' }}>{item.icon}</div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>
-                {item.tempMax}° <span style={{ opacity: 0.5, fontSize: '0.75rem', fontWeight: 400 }}>/ {item.tempMin}°</span>
-              </div>
-              <div style={{ fontSize: '0.725rem', color: 'var(--primary-700)', display: 'flex', alignItems: 'center', gap: '2px' }}>
-                <CloudRain size={10} /> {item.rain}%
-              </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {(weather.farmingAdvice || []).map((adv, idx) => (
+            <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-body)' }}>
+              <span style={{ color: 'var(--primary-600)', fontWeight: 800 }}>✓</span>
+              <span>{adv}</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Daily Farming Action Recommendations based on Weather */}
-      <div className="card-glass">
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <CheckCircle2 size={20} color="var(--primary-600)" /> Weather-Based Farming Recommendations for Karur
+      {/* 7-Day Forecast Cards */}
+      <div className="card-saas">
+        <h3 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: '1rem' }}>
+          {isTa ? '7-நாள் வானிலை முன்னறிவிப்பு' : '7-Day Micro-Climate Forecast'}
         </h3>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-          {weatherData.farmingAdvice.map((advice, i) => (
-            <div key={i} style={{ background: 'var(--bg-main)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)', padding: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary-700)', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.4rem' }}>
-                <span>Recommendation #{i+1}</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
+          {(weather.forecast7Days || []).map((day, idx) => (
+            <div key={idx} style={{
+              background: 'var(--bg-slate)',
+              border: '1px solid var(--border-light)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '0.85rem 0.65rem',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.35rem'
+            }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-main)' }}>{day.day}</div>
+              <div style={{ fontSize: '1.75rem', margin: '0.2rem 0' }}>{day.icon}</div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                {day.tempMax}° / <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{day.tempMin}°</span>
               </div>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-main)', lineHeight: 1.4 }}>
-                {advice}
-              </p>
+              <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>{day.condition}</div>
+              {day.rain > 0 && (
+                <div style={{ fontSize: '0.7rem', color: '#2563EB', fontWeight: 600 }}>💧 {day.rain}%</div>
+              )}
             </div>
           ))}
         </div>

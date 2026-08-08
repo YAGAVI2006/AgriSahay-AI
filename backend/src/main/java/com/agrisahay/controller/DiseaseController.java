@@ -8,15 +8,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/disease")
+@RequestMapping({"/api/disease", "/api/v1/disease"})
 public class DiseaseController {
 
     @Autowired
     private DiseaseService diseaseService;
 
-    @PostMapping("/analyze")
-    public ResponseEntity<Map<String, Object>> analyzeDisease(@RequestBody(required = false) Map<String, String> request) {
-        String cropId = (request != null) ? request.getOrDefault("cropTarget", "paddy") : "paddy";
-        return ResponseEntity.ok(diseaseService.analyzeCropDisease(cropId));
+    @PostMapping({"/analyze", ""})
+    public ResponseEntity<?> analyzeDisease(@RequestBody(required = false) Map<String, String> request) {
+        String crop = request != null && request.containsKey("crop") ? request.get("crop") : "paddy";
+        String symptom = request != null && request.containsKey("symptom") ? request.get("symptom") : "";
+
+        Map<String, Object> diagnosis = diseaseService.diagnoseCrop(crop, symptom);
+        return ResponseEntity.ok(diagnosis);
     }
 }
