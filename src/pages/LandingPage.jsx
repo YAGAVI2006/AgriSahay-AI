@@ -8,7 +8,6 @@ import {
   ShoppingBag, 
   Award, 
   ArrowRight, 
-  Play, 
   CheckCircle2, 
   Sparkles, 
   ShieldCheck, 
@@ -18,7 +17,6 @@ import {
   Globe, 
   Mail, 
   Phone, 
-  X,
   Droplet,
   Compass,
   Check
@@ -27,7 +25,6 @@ import { translations } from '../data/translations';
 
 export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage = 'en', setSelectedLanguage }) {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const t = translations[selectedLanguage] || translations.en;
 
@@ -228,7 +225,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
       <section 
         style={{
           position: 'relative',
-          minHeight: '85vh',
+          minHeight: '82vh',
           paddingTop: '8rem',
           paddingBottom: '5rem',
           display: 'flex',
@@ -287,46 +284,27 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
               {t.heroSub}
             </p>
 
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
+            {/* Main Action Button */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <button 
                 onClick={onLoginDemo}
                 style={{
                   background: '#16A34A',
                   color: '#FFFFFF',
                   fontWeight: 700,
-                  fontSize: '1rem',
-                  padding: '0.85rem 2rem',
+                  fontSize: '1.05rem',
+                  padding: '0.9rem 2.5rem',
                   borderRadius: '8px',
                   border: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(22, 163, 74, 0.4)',
+                  boxShadow: '0 4px 16px rgba(22, 163, 74, 0.4)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem'
+                  gap: '0.5rem',
+                  transition: 'all 0.2s ease'
                 }}
               >
                 {t.getStarted} <ArrowRight size={18} />
-              </button>
-
-              <button 
-                onClick={() => setIsVideoModalOpen(true)}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.25)',
-                  color: '#FFFFFF',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  padding: '0.85rem 2rem',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  backdropFilter: 'blur(8px)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem'
-                }}
-              >
-                <Play size={16} color="#F59E0B" /> {t.watchDemo}
               </button>
             </div>
 
@@ -477,10 +455,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                 borderRadius: '8px',
                 border: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
+                boxShadow: '0 4px 14px rgba(0,0,0,0.15)'
               }}
             >
               {t.getStarted} <ArrowRight size={18} />
@@ -545,77 +520,6 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
           <p>© {new Date().getFullYear()} AgriSahay AI. {t.footerRights} | <span style={{ color: '#22C55E', fontWeight: 700 }}>Built by Yagavi S</span></p>
         </div>
       </footer>
-
-      {/* Watch Demo Video Modal */}
-      {isVideoModalOpen && (
-        <div 
-          onClick={() => setIsVideoModalOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.85)',
-            backdropFilter: 'blur(8px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
-            padding: '1.5rem'
-          }}
-        >
-          <div 
-            onClick={e => e.stopPropagation()}
-            style={{
-              background: '#0F172A',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '20px',
-              maxWidth: '800px',
-              width: '100%',
-              overflow: 'hidden',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.5rem', borderBottom: '1px solid #1E293B' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#FFFFFF', fontWeight: 700 }}>
-                <Play size={18} color="#16A34A" /> {t.watchDemo} - AgriSahay AI
-              </div>
-              <button onClick={() => setIsVideoModalOpen(false)} style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer' }}>
-                <X size={20} />
-              </button>
-            </div>
-
-            <div style={{ padding: '2.5rem 1.5rem', textAlign: 'center', color: '#FFFFFF' }}>
-              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(22, 163, 74, 0.2)', color: '#22C55E', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
-                <Sparkles size={32} />
-              </div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
-                AgriSahay AI Interactive System Demo
-              </h3>
-              <p style={{ color: '#94A3B8', fontSize: '0.9rem', maxWidth: '500px', margin: '0 auto 1.5rem' }}>
-                Experience live neural crop disease detection, 7-day micro-climate telemetry, and automated government subsidy matching.
-              </p>
-              
-              <button 
-                onClick={() => { setIsVideoModalOpen(false); onLoginDemo(); }}
-                style={{
-                  background: 'linear-gradient(135deg, #16A34A 0%, #14532D 100%)',
-                  color: '#FFFFFF',
-                  fontWeight: 700,
-                  fontSize: '0.95rem',
-                  padding: '0.75rem 1.75rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                Launch Live Dashboard <ArrowRight size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   );
