@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Landmark, CheckCircle2, FileText, ExternalLink, Filter, Sparkles, ChevronRight, Award, Info, X } from 'lucide-react';
+import { Landmark, CheckCircle2, FileText, ExternalLink, Filter, Sparkles, ChevronRight, Award, Info, X, Globe } from 'lucide-react';
 import { GOVERNMENT_SCHEMES, recommendSchemes } from '../data/schemes';
 import { CROP_LIST, FARMER_CATEGORIES, STATES_AND_DISTRICTS } from '../data/crops';
 
@@ -29,13 +29,13 @@ export default function SchemesView({ farmerProfile = {}, onOpenProfile, selecte
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div className="badge badge-amber" style={{ marginBottom: '0.35rem' }}>
-            <Sparkles size={12} /> {isTa ? 'AI பொருத்தும் இன்ஜின்' : 'AI Matching Engine'}
+            <Sparkles size={12} /> {isTa ? 'அரசு மானியங்கள் & திட்டங்கள்' : 'Government Subsidies & Schemes Engine'}
           </div>
           <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>
-            🏛 {isTa ? 'அரசு திட்டங்கள் & மானிய பரிந்துரைகள்' : 'Government Scheme Recommendations'}
+            🏛 {isTa ? 'அரசு திட்டங்கள் & அதிகாரப்பூர்வ இணையதளங்கள்' : 'Government Scheme Recommendations & Official Portals'}
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            {isTa ? 'மாநிலம், பயிர், நில அளவு மற்றும் வகையின் அடிப்படையில் அதிகாரப்பூர்வ திட்டங்கள் பொருந்துகின்றன.' : 'AI matches official schemes based on your State, Crop, Land Holding & Category.'}
+            {isTa ? 'மாநிலம், பயிர் மற்றும் நில அளவின் அடிப்படையில் அதிகாரப்பூர்வ மத்திய மற்றும் தமிழ்நாடு அரசு போர்ட்டல்கள்.' : 'Verified Central & Tamil Nadu State Government portals matched to your farm profile.'}
           </p>
         </div>
 
@@ -98,63 +98,96 @@ export default function SchemesView({ farmerProfile = {}, onOpenProfile, selecte
 
       {/* Schemes Grid List */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '1.25rem' }}>
-        {(schemesList || GOVERNMENT_SCHEMES).map((scheme) => (
-          <div key={scheme.id} className="card-glass" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <div>
-              {/* Header Badges */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <span className="badge badge-amber">{scheme.category}</span>
-                <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>{scheme.level}</span>
-              </div>
+        {(schemesList || GOVERNMENT_SCHEMES).map((scheme) => {
+          // Extract hostname for clean domain badge
+          let domainDisplay = 'Official Portal';
+          try {
+            const urlObj = new URL(scheme.officialLink);
+            domainDisplay = urlObj.hostname;
+          } catch(e) {}
 
-              {/* Title & Icon */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>
-                  {scheme.icon || '🏛️'}
+          return (
+            <div key={scheme.id} className="card-glass" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                {/* Header Badges */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                  <span className="badge badge-amber">{scheme.category}</span>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>{scheme.level}</span>
                 </div>
-                <div>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--primary-800)', lineHeight: 1.3 }}>
-                    {scheme.title}
-                  </h3>
+
+                {/* Title & Icon */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>
+                    {scheme.icon || '🏛️'}
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--primary-800)', lineHeight: 1.3 }}>
+                      {scheme.title}
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Monetary Benefit Pill */}
+                <div style={{ background: 'var(--primary-50)', border: '1px solid var(--primary-100)', borderRadius: '8px', padding: '0.65rem 0.85rem', marginBottom: '0.85rem' }}>
+                  <span style={{ fontSize: '0.725rem', color: 'var(--primary-700)', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>
+                    {isTa ? 'நிதி உதவி / மானியம்' : 'Financial Benefit / Subsidy'}
+                  </span>
+                  <span style={{ fontWeight: 800, color: 'var(--primary-800)', fontSize: '0.95rem' }}>{scheme.monetaryBenefit}</span>
+                </div>
+
+                {/* Short Description */}
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: 1.4, marginBottom: '0.85rem' }}>
+                  {scheme.shortDesc}
+                </p>
+
+                {/* Direct Original Link Badge */}
+                <div style={{ marginBottom: '1rem' }}>
+                  <a 
+                    href={scheme.officialLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      color: 'var(--primary-700)',
+                      textDecoration: 'none',
+                      background: 'var(--primary-50)',
+                      border: '1px solid var(--primary-200)',
+                      borderRadius: '6px',
+                      padding: '0.25rem 0.55rem'
+                    }}
+                  >
+                    <Globe size={13} /> {domainDisplay} <ExternalLink size={11} />
+                  </a>
                 </div>
               </div>
 
-              {/* Monetary Benefit Pill */}
-              <div style={{ background: 'var(--primary-50)', border: '1px solid var(--primary-100)', borderRadius: '8px', padding: '0.65rem 0.85rem', marginBottom: '0.85rem' }}>
-                <span style={{ fontSize: '0.725rem', color: 'var(--primary-700)', fontWeight: 700, display: 'block', textTransform: 'uppercase' }}>
-                  {isTa ? 'நிதி உதவி / மானியம்' : 'Financial Benefit / Subsidy'}
-                </span>
-                <span style={{ fontWeight: 800, color: 'var(--primary-800)', fontSize: '0.95rem' }}>{scheme.monetaryBenefit}</span>
+              {/* Card Actions */}
+              <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.85rem', display: 'flex', gap: '0.5rem' }}>
+                <button 
+                  onClick={() => setActiveModalScheme(scheme)}
+                  className="btn-primary"
+                  style={{ fontSize: '0.8rem', padding: '0.45rem 0.75rem', flex: 1, justifyContent: 'center' }}
+                >
+                  {isTa ? 'தகுதி & ஆவணங்கள்' : 'Eligibility & Docs'} <ChevronRight size={14} />
+                </button>
+
+                <a 
+                  href={scheme.officialLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-accent"
+                  style={{ fontSize: '0.8rem', padding: '0.45rem 0.85rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontWeight: 700 }}
+                >
+                  {isTa ? 'விண்ணப்பிக்க' : 'Apply Online'} <ExternalLink size={14} />
+                </a>
               </div>
-
-              {/* Short Description */}
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: 1.4, marginBottom: '1rem' }}>
-                {scheme.shortDesc}
-              </p>
             </div>
-
-            {/* Card Actions */}
-            <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.85rem', display: 'flex', gap: '0.5rem' }}>
-              <button 
-                onClick={() => setActiveModalScheme(scheme)}
-                className="btn-primary"
-                style={{ fontSize: '0.8rem', padding: '0.4rem 0.75rem', flex: 1, justifyContent: 'center' }}
-              >
-                {isTa ? 'தகுதி & படிகள்' : 'Eligibility & Steps'} <ChevronRight size={14} />
-              </button>
-
-              <a 
-                href={scheme.officialLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-accent"
-                style={{ fontSize: '0.8rem', padding: '0.4rem 0.75rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
-              >
-                {isTa ? 'விண்ணப்பிக்க' : 'Apply'} <ExternalLink size={14} />
-              </a>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Scheme Detail Modal */}
@@ -180,6 +213,22 @@ export default function SchemesView({ farmerProfile = {}, onOpenProfile, selecte
                 {isTa ? 'நிதி உதவி / மானியத் தொகை' : 'Financial Benefit / Grant Amount'}
               </span>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>{activeModalScheme.monetaryBenefit}</h3>
+            </div>
+
+            {/* Direct Official Link Banner */}
+            <div style={{ background: 'var(--bg-slate)', border: '1px solid var(--border-light)', borderRadius: '8px', padding: '0.65rem 0.85rem', marginBottom: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--text-main)', fontWeight: 600 }}>
+                <Globe size={16} color="var(--primary-600)" />
+                <span>{activeModalScheme.officialLink}</span>
+              </div>
+              <a 
+                href={activeModalScheme.officialLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ fontSize: '0.75rem', color: 'var(--primary-700)', fontWeight: 700, textDecoration: 'underline' }}
+              >
+                Open Link ↗
+              </a>
             </div>
 
             {/* Eligibility Checklist */}
@@ -235,7 +284,7 @@ export default function SchemesView({ farmerProfile = {}, onOpenProfile, selecte
                 className="btn-accent"
                 style={{ textDecoration: 'none' }}
               >
-                {isTa ? 'அதிகாரப்பூர்வ தளத்தில் விண்ணப்பிக்க' : 'Apply on Official Portal'} <ExternalLink size={14} />
+                {isTa ? 'அதிகாரப்பூர்வ தளத்தில் விண்ணப்பிக்க' : 'Apply on Official Government Portal'} <ExternalLink size={14} />
               </a>
             </div>
 
