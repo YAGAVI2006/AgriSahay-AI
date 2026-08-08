@@ -63,8 +63,8 @@ export default function Navbar({
                   PRO
                 </span>
               </div>
-              <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-                Smart Farming. Smarter Decisions.
+              <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                AI-Powered Agriculture Decision Support System
               </p>
             </div>
           </div>

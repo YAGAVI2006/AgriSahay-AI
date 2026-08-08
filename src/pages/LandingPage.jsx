@@ -87,30 +87,6 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
     { number: '4️⃣', title: t.step4Title, desc: t.step4Desc }
   ];
 
-  const testimonials = [
-    {
-      name: 'R. Murugesan',
-      location: 'Mayanur, Karur District',
-      crop: 'Paddy & Banana Farmer',
-      quote: 'AgriSahay AI accurately identified Bacterial Leaf Blight in my paddy crop within seconds. The organic treatment saved my yield.',
-      rating: 5
-    },
-    {
-      name: 'S. Kavitha',
-      location: 'Kulithalai, Tamil Nadu',
-      crop: 'Leafy Greens & Coriander',
-      quote: 'The market price predictor helped me get ₹38/kg for coriander by timing the sale at Karur Uzhavar Sandhai.',
-      rating: 5
-    },
-    {
-      name: 'K. Palanisamy',
-      location: 'Aravakurichi, Karur',
-      crop: 'Sugarcane & Groundnut',
-      quote: 'The drip fertigation schedule and PM-KISAN subsidy guidance made farming decisions so effortless and profitable.',
-      rating: 5
-    }
-  ];
-
   return (
     <div style={{ background: '#F8FAFC', color: '#111827', fontFamily: 'Inter, sans-serif', overflowX: 'hidden' }}>
       
@@ -124,26 +100,36 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
           left: 0,
           right: 0,
           zIndex: 1000,
-          background: 'rgba(255, 255, 255, 0.92)',
+          background: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid #E5E7EB',
-          padding: isScrolled ? '0.65rem 3rem' : '1rem 3rem',
+          padding: isScrolled ? '0.65rem 3rem' : '0.9rem 3rem',
           transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-          boxShadow: isScrolled ? '0 4px 20px rgba(0,0,0,0.05)' : 'none'
+          boxShadow: isScrolled ? '0 4px 20px rgba(0,0,0,0.06)' : 'none'
         }}
       >
         <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           
-          {/* Logo */}
+          {/* Logo & Platform Tagline */}
           <div 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
-            style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}
           >
-            <span style={{ fontSize: '1.6rem' }}>🌾</span>
-            <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#14532D', letterSpacing: '-0.02em', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-              AgriSahay <span style={{ color: '#16A34A' }}>AI</span>
-            </span>
+            <span style={{ fontSize: '1.75rem' }}>🌾</span>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#14532D', letterSpacing: '-0.02em', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  AgriSahay <span style={{ color: '#16A34A' }}>AI</span>
+                </span>
+                <span className="badge badge-amber" style={{ fontSize: '0.65rem', padding: '1px 6px' }}>
+                  TNSCST
+                </span>
+              </div>
+              <div style={{ fontSize: '0.675rem', color: '#6B7280', fontWeight: 600, letterSpacing: '0.01em' }}>
+                AI-Powered Agriculture Decision Support System
+              </div>
+            </div>
           </div>
 
           {/* Navigation */}
@@ -220,68 +206,73 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
       </header>
 
       {/* ==================================================== */}
-      {/* 2. HERO SECTION (Clean, Minimalist & Centered) */}
+      {/* 2. HERO SECTION (High-Contrast, Ultra-Visible Title) */}
       {/* ==================================================== */}
       <section 
         style={{
           position: 'relative',
-          minHeight: '82vh',
-          paddingTop: '8rem',
-          paddingBottom: '5rem',
+          minHeight: '84vh',
+          paddingTop: '8.5rem',
+          paddingBottom: '5.5rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: `linear-gradient(rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.88)), url("https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80")`,
+          background: `linear-gradient(rgba(15, 23, 42, 0.84), rgba(15, 23, 42, 0.90)), url("https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           color: '#FFFFFF',
           textAlign: 'center'
         }}
       >
-        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 2rem', width: '100%' }}>
+        <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 2rem', width: '100%' }}>
           
           <motion.div 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Small Badge */}
+            {/* Prominent Badge */}
             <div 
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                background: 'rgba(22, 163, 74, 0.25)',
-                border: '1px solid rgba(34, 197, 94, 0.4)',
+                background: 'rgba(22, 163, 74, 0.3)',
+                border: '1px solid rgba(74, 222, 128, 0.5)',
                 color: '#4ADE80',
-                padding: '0.4rem 1.1rem',
+                padding: '0.45rem 1.25rem',
                 borderRadius: '9999px',
-                fontSize: '0.85rem',
-                fontWeight: 700,
+                fontSize: '0.875rem',
+                fontWeight: 800,
                 marginBottom: '1.75rem',
+                letterSpacing: '0.02em',
                 backdropFilter: 'blur(8px)'
               }}
             >
-              <Sparkles size={14} color="#F59E0B" /> {t.heroBadge}
+              <Sparkles size={16} color="#F59E0B" /> AI-POWERED AGRICULTURE DECISION SUPPORT SYSTEM
             </div>
 
             {/* Decision Support Headline */}
             <h1 
               style={{
-                fontSize: '3.4rem',
-                fontWeight: 800,
+                fontSize: '3.5rem',
+                fontWeight: 900,
                 lineHeight: 1.15,
                 letterSpacing: '-0.03em',
-                marginBottom: '1.35rem',
+                marginBottom: '1.5rem',
+                color: '#FFFFFF',
+                textShadow: '0 4px 20px rgba(0, 0, 0, 0.6)',
                 fontFamily: 'Plus Jakarta Sans, sans-serif'
               }}
             >
-              {t.heroTitle}
+              AI-Powered Agriculture Decision Support System
             </h1>
 
             {/* Decision Support Subheading */}
-            <p style={{ fontSize: '1.15rem', color: '#E2E8F0', lineHeight: 1.6, marginBottom: '2.5rem', maxWidth: '720px', margin: '0 auto 2.5rem' }}>
-              {t.heroSub}
+            <p style={{ fontSize: '1.2rem', color: '#F1F5F9', lineHeight: 1.6, marginBottom: '2.5rem', maxWidth: '780px', margin: '0 auto 2.5rem', textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)' }}>
+              {selectedLanguage === 'ta' 
+                ? 'புத்திசாலித்தனமான பயிர் பரிந்துரைகள், நோய் கண்டறிதல், வானிலை தகவல்கள், சந்தை பகுப்பாய்வு மற்றும் தனிப்பயனாக்கப்பட்ட AI வழிகாட்டுதலுடன் சிறந்த விவசாய முடிவுகளை எடுங்கள்.'
+                : 'Make smarter farming decisions with intelligent crop recommendations, neural disease detection, micro-climate weather insights, market price analytics, and bilingual AI guidance.'}
             </p>
 
             {/* Main Action Button */}
@@ -291,35 +282,35 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                 style={{
                   background: '#16A34A',
                   color: '#FFFFFF',
-                  fontWeight: 700,
-                  fontSize: '1.05rem',
-                  padding: '0.9rem 2.5rem',
-                  borderRadius: '8px',
+                  fontWeight: 800,
+                  fontSize: '1.1rem',
+                  padding: '0.95rem 2.75rem',
+                  borderRadius: '10px',
                   border: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 16px rgba(22, 163, 74, 0.4)',
+                  boxShadow: '0 6px 20px rgba(22, 163, 74, 0.45)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                   transition: 'all 0.2s ease'
                 }}
               >
-                {t.getStarted} <ArrowRight size={18} />
+                {t.getStarted} <ArrowRight size={20} />
               </button>
             </div>
 
             {/* Value Proposition Pills */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '3rem', flexWrap: 'wrap', fontSize: '0.85rem', color: '#CBD5E1' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '3.25rem', flexWrap: 'wrap', fontSize: '0.9rem', color: '#E2E8F0', fontWeight: 600 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.1)', padding: '0.35rem 0.85rem', borderRadius: '9999px' }}>
                 <Check size={16} color="#4ADE80" /> 15 Crops & Greens
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.1)', padding: '0.35rem 0.85rem', borderRadius: '9999px' }}>
                 <Check size={16} color="#4ADE80" /> Neural Disease Scanner
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.1)', padding: '0.35rem 0.85rem', borderRadius: '9999px' }}>
                 <Check size={16} color="#4ADE80" /> 7-Day Micro-Climate
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.1)', padding: '0.35rem 0.85rem', borderRadius: '9999px' }}>
                 <Check size={16} color="#4ADE80" /> Central & TN Subsidies
               </div>
             </div>
@@ -471,11 +462,14 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
         <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '3rem', marginBottom: '3.5rem' }}>
           
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
               <span style={{ fontSize: '1.6rem' }}>🌾</span>
               <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                 AgriSahay <span style={{ color: '#22C55E' }}>AI</span>
               </span>
+            </div>
+            <div style={{ fontSize: '0.75rem', color: '#4ADE80', fontWeight: 700, marginBottom: '0.85rem' }}>
+              AI-Powered Agriculture Decision Support System
             </div>
             <p style={{ fontSize: '0.875rem', lineHeight: 1.6, color: '#94A3B8' }}>
               {t.footerDesc}
