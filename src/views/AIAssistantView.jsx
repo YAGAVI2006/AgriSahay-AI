@@ -10,8 +10,8 @@ export default function AIAssistantView({ farmerProfile = {}, selectedLanguage =
       id: 1,
       sender: 'bot',
       text: isTa 
-        ? 'வணக்கம்! நான் உங்கள் அக்ரிசஹாய் AI விவசாய உதவி பாட். பயிர் சாகுபடி, மஞ்சள் இலை சிகிச்சை, NPK உர அளவு, சொட்டு நீர் பாசனம் அல்லது கரூர் அரசு மானியங்கள் பற்றி எதையும் கேளுங்கள்.'
-        : 'Vanakkam! I am your AgriSahay AI Farming Assistant. Ask me anything about crop cultivation, yellow leaf remedies, NPK fertilizer dosages, drip irrigation, or Karur government subsidies.',
+        ? 'வணக்கம்! நான் உங்கள் அக்ரிசஹாய் AI விவசாய உதவி பாட். பயிர் சாகுபடி (கீரை, நெல், கரும்பு, வாழை), மஞ்சள் இலை சிகிச்சை, NPK உர அளவு, சொட்டு நீர் பாசனம் அல்லது அரசு மானியங்கள் பற்றி எதையும் கேளுங்கள்.'
+        : 'Vanakkam! I am your AgriSahay AI Farming Assistant. Ask me anything about greens & crop cultivation (Greens, Paddy, Banana, Sugarcane, Coriander), yellow leaf remedies, NPK dosages, drip irrigation, or Karur subsidies.',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -23,15 +23,17 @@ export default function AIAssistantView({ farmerProfile = {}, selectedLanguage =
   const chatEndRef = useRef(null);
 
   const suggestedPrompts = isTa ? [
-    "🌿 நெல் & புதினாவில் மஞ்சள் இலையை எப்படி குணப்படுத்துவது?",
-    "🧪 1 ஏக்கர் கொத்தமல்லிக்கு NPK உர அளவு என்ன?",
-    "💧 கரூர் செம்மண்ணுக்கு சொட்டு நீர் பாசன அட்டவணை?",
-    "🏛️ PM-KISAN ₹6,000 மானியத்திற்கு எவ்வாறு விண்ணப்பிப்பது?"
+    "🌿 கீரை & கொத்தமல்லி சாகுபடி முறை எப்படி?",
+    "🌾 நெல் சாகுபடியில் அதிக மகசூல் பெறுவது எப்படி?",
+    "🐛 இலைகளில் மஞ்சள் நிறம் & பூச்சி கட்டுப்பாடு?",
+    "🧪 1 ஏக்கருக்கு NPK உர அட்டவணை என்ன?",
+    "💧 சொட்டு நீர் பாசனம் & PM-KISAN மானியம்?"
   ] : [
-    "🌿 How to cure yellow leaf in Paddy & Mint?",
-    "🧪 NPK fertilizer dosage for 1 acre Coriander?",
-    "💧 Drip irrigation schedule for Karur red soil?",
-    "🏛️ How to apply for PM-KISAN ₹6,000 subsidy?"
+    "🌿 How to grow greens & leafy vegetables?",
+    "🌾 How to maximize Paddy yield in Karur?",
+    "🐛 How to cure yellow leaf & pest attacks?",
+    "🧪 NPK fertilizer schedule for 1 acre?",
+    "💧 Drip irrigation & PM-KISAN subsidy?"
   ];
 
   useEffect(() => {
@@ -78,6 +80,73 @@ export default function AIAssistantView({ farmerProfile = {}, selectedLanguage =
     recognition.start();
   };
 
+  // Comprehensive Agronomic NLP Intent Resolution Engine
+  const generateAgronomicResponse = (query, inTamil) => {
+    const q = query.toLowerCase().trim();
+
+    // 1. Greetings
+    if (/^(hi|hello|vanakkam|வணக்கம்|hey|namaste|good\s*(morning|afternoon|evening))\b/i.test(q)) {
+      if (inTamil) {
+        return "வணக்கம்! அக்ரிசஹாய் AI விவசாய உதவி மையத்திற்கு வரவேற்கிறோம்.\n\nநான் உங்களுக்கு எவ்வாறு உதவ முடியும்?\n• 🥬 கீரைகள் & கொத்தமல்லி சாகுபடி வழிமுறைகள்\n• 🌾 நெல், வாழை, கரும்பு & மஞ்சள் சாகுபடி\n• 🐛 பயிர் நோய் கண்டறிதல் & இயற்கை பூச்சி மருந்துகள்\n• 🧪 1 ஏக்கர் NPK உர கணக்கீடு\n• 🏛️ அரசு மானியங்கள் & PM-KISAN விண்ணப்பம்\n\nஉங்கள் கேள்வியை கீழே தட்டச்சு செய்யவும்.";
+      }
+      return "Vanakkam! Welcome to AgriSahay AI Agricultural Intelligence Support.\n\nHow can I assist your farm today?\n• 🥬 Greens & Coriander cultivation guide\n• 🌾 Paddy, Banana, Sugarcane & Turmeric agronomy\n• 🐛 Disease detection & organic pest control\n• 🧪 1-Acre NPK fertilizer dosages\n• 🏛️ Government subsidies (PM-KISAN, TNIAMP, PMKSY)\n\nPlease ask your question below!";
+    }
+
+    // 2. Greens / Leafy Vegetables / Keerai / Spinach / Mint / Coriander / Palak / Amaranth
+    if (q.includes('green') || q.includes('keerai') || q.includes('கீரை') || q.includes('spinach') || q.includes('coriander') || q.includes('கொத்தமல்லி') || q.includes('mint') || q.includes('புதினா') || q.includes('palak') || q.includes('amaranth') || q.includes('sirukeerai') || q.includes('arai keerai')) {
+      if (inTamil) {
+        return "🥬 கீரை மற்றும் கொத்தமல்லி சாகுபடி முழு வழிகாட்டி (TNAU முறை):\n\n1. நிலம் தயாரிப்பு:\n• நிலத்தை 2-3 முறை நன்கு உழுது சமப்படுத்தவும்.\n• 1 ஏக்கருக்கு 5 முதல் 8 டன் மட்கிய தொழு உரம் அல்லது 500 கிலோ மண்புழு உரம் இட்டு கலக்கவும்.\n• 2x1 மீட்டர் அளவில் பாத்திகள் அமைக்கவும்.\n\n2. விதை அளவு & விதைப்பு:\n• சிறு கீரை / அரைக்கீரை: ஏக்கருக்கு 1.5 - 2 கிலோ விதைகள்.\n• கொத்தமல்லி: ஏக்கருக்கு 4 - 5 கிலோ (விதைகளை இரண்டாக உடைத்து விதைக்கவும்).\n• விதை நேர்த்தி: விதைகளை அசோஸ்பைரில்லம் + பாஸ்போபாக்டீரியா (200 கிராம்/கிலோ) கலந்து விதைக்கவும்.\n\n3. நீர்ப்பாசனம்:\n• விதைத்த உடனே பூவாளி அல்லது தெளிப்பு நீர் பாசனம் (Micro-sprinkler) மூலம் இலேசாக நீர் பாய்ச்சவும்.\n• 3-4 நாட்களுக்கு ஒருமுறை ஈரப்பதம் இருக்குமாறு பாசனம் செய்யவும்.\n\n4. உர மேலாண்மை & பூச்சி கட்டுப்பாடு:\n• விதைத்த 15-வது நாள்: 3% பஞ்சகவ்யா (30ml/லிட்டர்) இலைவழி தெளிக்கவும்.\n• அசுவினி / இலைப்புழுவுக்கு: வேப்ப எண்ணெய் 3% + காதி சோப் கரைசல் தெளிக்கவும்.\n\n5. அறுவடை:\n• 25 முதல் 30 நாட்களில் கீரைகளை வேருடன் பிடுங்கி அல்லது அறுத்து சந்தைப்படுத்தலாம்.";
+      }
+      return "🥬 Complete Guide to Growing Greens & Leafy Vegetables (TNAU Package):\n\n1. Land Preparation & Soil Profile:\n• Well-drained red loam or alluvial soil with pH 6.5 - 7.5.\n• Plough land 2-3 times to a fine tilth; mix 5-8 tons FYM or 500kg Vermicompost per acre.\n• Prepare raised beds of 2m x 1m size with drainage channels.\n\n2. Seed Rate & Sowing:\n• Amaranthus / Sirukeerai: 1.5 - 2 kg seeds/acre (mix with fine sand for uniform broadcasting).\n• Coriander: 4 - 5 kg/acre (split whole seeds gently into two halves before sowing).\n• Seed Treatment: Treat with Trichoderma viride (4g/kg) or Azospirillum (200g/kg).\n\n3. Irrigation Management:\n• Provide light sprinkling immediately after sowing.\n• Maintain regular light watering every 3-4 days using micro-sprinklers or drip lines.\n\n4. Nutrient & Pest Management:\n• Day 15: Foliar spray of Panchagavya 3% (30ml/liter water) for vigorous vegetative flush.\n• Pest Protection: Spray Neem oil 3% (30ml/L) + soap solution against aphids and flea beetles.\n\n5. Harvesting Window:\n• Ready for harvest within 25 to 35 days. Wash roots gently in clean water and bundle for mandi.";
+    }
+
+    // 3. Paddy / Rice / நெல்
+    if (q.includes('paddy') || q.includes('rice') || q.includes('நெல்') || q.includes('kuruvai') || q.includes('samba') || q.includes('thaladi')) {
+      if (inTamil) {
+        return "🌾 நெல் சாகுபடி & அதிக மகசூல் பெறுவதற்கான வழிகாட்டி:\n\n1. ரகங்கள்: குHandler/குறுவைக்கு CO 51, ADT 45, ASD 16; சம்பாவிற்கு BPT 5204, CR 1009 Sub 1.\n2. விதை நேர்த்தி: சூடோமோனாஸ் புளோரசன்ஸ் 10 கிராம்/கிலோ விதைக்கு.\n3. நடவு முறை: திருந்திய நெல் சாகுபடி (SRI) முறையில் 25x25 செ.மீ இடைவெளியில் ஒற்றை நாற்று நடவு.\n4. உர அட்டவணை (ஏக்கருக்கு):\n• அடி உரம்: 100 கிலோ DAP + 25 கிலோ பொட்டாஷ் + 10 கிலோ துத்தநாக சல்பேட்.\n• தூர் கட்டும் பருவம் (20-25 நாள்): 25 கிலோ யூரியா + 10 கிலோ வேப்பம் புண்ணாக்கு.\n• கதிர் வரும் பருவம் (45-50 நாள்): 20 கிலோ யூரியா + 15 கிலோ பொட்டாஷ்.\n5. நீர் மேலாண்மை: மாறி மாறி நனைத்து உலர்த்தும் முறை (AWD) மூலம் 30% தண்ணீர் சேமிப்பு.";
+      }
+      return "🌾 High-Yield Paddy Cultivation Guide (Karur & Cauvery Basin):\n\n1. Recommended Varieties: Kuruvai (CO 51, ADT 45, ASD 16); Samba (BPT 5204, CR 1009 Sub 1).\n2. Seed Inoculation: Bio-prime seeds with Pseudomonas fluorescens @ 10g/kg.\n3. Transplanting: System of Rice Intensification (SRI) single seedling per hill at 25x25 cm spacing.\n4. Nutrient Schedule (per Acre):\n• Basal: 100kg DAP + 25kg MOP + 10kg Zinc Sulphate.\n• Tillering Stage (Day 20-25): 25kg Neem-coated Urea.\n• Panicle Initiation (Day 45-50): 20kg Urea + 15kg Potash.\n5. Water Regimen: Practice Alternate Wetting & Drying (AWD) to save 30% water.";
+    }
+
+    // 4. Yellow Leaf / Chlorosis / Disease / Pest / Blight / இலை
+    if (q.includes('yellow') || q.includes('மஞ்சள்') || q.includes('chlorosis') || q.includes('leaf') || q.includes('disease') || q.includes('pest') || q.includes('blight') || q.includes('நோய்') || q.includes('பூச்சி')) {
+      if (inTamil) {
+        return "🐛 பயிர் இலை மஞ்சள் நிறமாதல் & பூச்சி கட்டுப்பாடு:\n\n1. காரணங்கள்:\n• நைட்ரஜன் குறைபாடு (கீழ் இலைகள் மஞ்சள் நிறமாகும்).\n• துத்தநாக (Zinc) குறைபாடு அல்லது இலைக்கருகல் பூஞ்சை தொற்று.\n\n2. இயற்கை தீர்வு:\n• பஞ்சகவ்யா 3% (300ml / 10 லிட்டர் நீர்) + சூடோமோனாஸ் 20 கிராம் தெளிக்கவும்.\n• வேப்ப எண்ணெய் 3% (30ml/லிட்டர்) தெளித்து சாறு உறிஞ்சும் பூச்சிகளைக் கட்டுப்படுத்தவும்.\n\n3. ரசாயன தீர்வு:\n• ஜிங்க் சல்பேட் 0.5% (5 கிராம்/லிட்டர்) + 1% யூரியா இலைவழி தெளிக்கவும்.\n• பூஞ்சை நோய்களுக்கு: கார்பென்டாசிம் (Bavistin) 1 கிராம்/லிட்டர் நீர்.";
+      }
+      return "🐛 Leaf Yellowing & Pest/Disease Management Protocol:\n\n1. Root Causes:\n• Nitrogen deficiency (starts on older lower leaves).\n• Zinc chlorosis / Iron deficiency in calcareous soils.\n• Fungal pathogen (Bacterial Leaf Blight / Blast / Leaf spot).\n\n2. Organic Remediation:\n• Foliar Spray: Panchagavya 3% (30ml/L) + Pseudomonas fluorescens (2g/L).\n• Sucking Pests: Spray Cold-pressed Neem oil 3% (30ml/L) + soap emulsifier.\n\n3. Chemical Correction:\n• Micronutrient correction: Spray Zinc Sulphate 0.5% (5g/L) + 1% Urea.\n• Fungicide: Carbendazim 50% WP @ 1g/liter or Copper Oxychloride @ 2.5g/liter.";
+    }
+
+    // 5. NPK / Fertilizer / உரம் / Vermicompost / DAP / Potash
+    if (q.includes('npk') || q.includes('fertilizer') || q.includes('உரம்') || q.includes('manure') || q.includes('compost') || q.includes('dap') || q.includes('urea')) {
+      if (inTamil) {
+        return "🧪 1 ஏக்கருக்கான NPK உர மேலாண்மை வழிகாட்டி:\n\n1. நெல் பயிர்: 50:25:25 கிலோ N:P:K (அடி உரமாக 50 கிலோ DAP + 25 கிலோ பொட்டாஷ்).\n2. கொத்தமல்லி & கீரைகள்: 25:15:15 கிலோ N:P:K + 500 கிலோ மண்புழு உரம்.\n3. கரும்பு: 110:25:45 கிலோ N:P:K (30, 60, 90 நாட்களில் பிரித்து இடவும்).\n4. வாழை: மரத்திற்கு 200:50:300 கிராம் N:P:K (மாதாந்திர சொட்டு நீர் உர பாசனம்).\n\nஉரமிடும் முன் மண்ணில் தகுந்த ஈரப்பதம் இருப்பதை உறுதி செய்யவும்.";
+      }
+      return "🧪 1-Acre Precision NPK Fertilizer Dosage Framework:\n\n1. Paddy (Rice): 50:25:25 kg N:P:K (Basal 50kg DAP + 25kg Potash; 2 splits Urea).\n2. Greens & Coriander: 25:15:15 kg N:P:K + 500kg Vermicompost basal.\n3. Sugarcane: 110:25:45 kg N:P:K split across days 30, 60, 90 & 120.\n4. Banana: 200g N, 50g P, 300g K per plant via monthly drip fertigation.\n\nTip: Always apply fertilizers when the soil holds optimal moisture (60-70% field capacity).";
+    }
+
+    // 6. Irrigation / Drip / Water / பாசனம் / நீர்
+    if (q.includes('drip') || q.includes('irrigation') || q.includes('water') || q.includes('பாசனம்') || q.includes('நீர்') || q.includes('borewell')) {
+      if (inTamil) {
+        return "💧 சொட்டு நீர் பாசன அட்டவணை (கரூர் மண் வகை):\n\n1. செம்மண் & வண்டல் மண்:\n• அதிகாலை 6 - 8 மணி அல்லது மாலை 4 - 6 மணிக்குள் பாசனம் செய்யவும்.\n• சொட்டு நீர் நேரம்: பயிர் வளர்ச்சியைப் பொறுத்து தினமும் 45 முதல் 60 நிமிடங்கள்.\n\n2. நீர் சேமிப்பு தொழில்நுட்பம்:\n• நெல்லில் AWD முறை: 5 செ.மீ நீர் தேங்கி, காய்ந்த பின் மீண்டும் பாய்ச்சவும்.\n• மல்ச்சிங் (Mulching): நிலப்போர்வை அமைப்பதன் மூலம் 40% ஆவியாதல் நீர் இழப்பு குறையும்.";
+      }
+      return "💧 Micro-Irrigation & Drip Management Protocol (Karur Micro-Climate):\n\n1. Operating Schedule for Red Loam Soil:\n• Run drip lines during early morning (6:00 AM - 8:30 AM) to minimize evapotranspiration.\n• Duration: 45 to 60 minutes daily (2-4 liters/hour dripper discharge).\n\n2. Water Conservation Best Practices:\n• Surface Mulching: Straw or 30-micron plastic mulch reduces evaporation by 40%.\n• Paddy: Alternate Wetting & Drying (AWD) saves 3-4 irrigations without yield drop.";
+    }
+
+    // 7. Government Schemes / Subsidies / PM-KISAN / TNIAMP / மானியம்
+    if (q.includes('scheme') || q.includes('subsidy') || q.includes('kisan') || q.includes('pm-kisan') || q.includes('tniamp') || q.includes('pmksy') || q.includes('pmfby') || q.includes('மானிய') || q.includes('திட்டம்')) {
+      if (inTamil) {
+        return "🏛️ அரசு வேளாண் மானியங்கள் & விண்ணப்ப வழிகாட்டி:\n\n1. PM-KISAN: ஆண்டுக்கு ₹6,000 (3 தவணைகள்) - pmkisan.gov.in போர்ட்டலில் விண்ணப்பிக்கவும்.\n2. PMKSY சொட்டு நீர் பாசனம்: சிறு விவசாயிகளுக்கு 100% மானியம், பிறருக்கு 75% மானியம் (tnhorticulture.tn.gov.in).\n3. TNIAMP தமிழ்நாடு திட்டம்: அமராவதி & காவிரி வடிநில விவசாயிகளுக்கு இலவச விதை மற்றும் நுண்ணுயிர் உரங்கள்.\n4. PMFBY பயிர் காப்பீடு: குறைந்த பிரிமியத்தில் பயிர் இழப்பீடு (pmfby.gov.in).\n\nதேவையான ஆவணங்கள்: பட்டா/சிட்டா, ஆதார் அட்டை, வங்கி பாஸ்புக், VAO சான்றிதழ்.";
+      }
+      return "🏛️ Verified Government Agricultural Subsidies Guide:\n\n1. PM-KISAN Samman Nidhi: Direct ₹6,000/year income grant (apply on pmkisan.gov.in).\n2. PMKSY Micro-Irrigation: 100% subsidy for small/marginal farmers (apply on tnhorticulture.tn.gov.in).\n3. TNIAMP Tamil Nadu Project: Certified free seed kits & bio-inputs across Cauvery basin (tnagrisnet.tn.gov.in).\n4. PMFBY Crop Insurance: 1.5% - 2% low farmer premium for comprehensive yield loss cover.\n\nDocuments Needed: Chitta/Adangal, Aadhaar card, VAO small farmer certificate, and Bank passbook.";
+    }
+
+    // 8. Default Detailed Agronomic Support
+    if (inTamil) {
+      return `🌾 கரூர் மாவட்டத்திற்கான TNAU வேளாண்மை ஆராய்ச்சி ஆலோசனை (${query}):\n\n1. நிலம் & மண் தயாரிப்பு:\n• மண்ணின் pH அளவை 6.5 - 7.5 ஆக பராமரிக்கவும்.\n• ஏக்கருக்கு 500 கிலோ மண்புழு உரம் இட்டு நிலத்தை உழவு செய்யவும்.\n\n2. விதை நேர்த்தி & பாதுகாப்பு:\n• சூடோமோனாஸ் புளோரசன்ஸ் 10 கிராம்/கிலோ விதைக்கு கலந்து விதைக்கவும்.\n• பூச்சி தாக்கத்திற்கு 3% வேப்ப எண்ணெய் கரைசல் தெளிக்கவும்.\n\n3. பாசனம் & ஊட்டச்சத்து:\n• சொட்டு நீர் பாசனம் மூலம் ஊட்டச்சத்து கரைசல் (Fertigation) அளிக்கவும்.\n• இலைவழி ஊட்டத்திற்கு 3% பஞ்சகவ்யா தெளிக்கவும்.`;
+    }
+    return `🌾 Agronomic Decision Support for Karur District (${query}):\n\n1. Soil & Field Optimization:\n• Maintain soil pH between 6.5 and 7.5 with organic matter incorporation.\n• Apply 500kg Vermicompost or 5 tons FYM per acre before sowing.\n\n2. Seed Priming & Crop Protection:\n• Inoculate seeds with Pseudomonas fluorescens (10g/kg) and Azospirillum (200g/acre).\n• Spray Neem oil 3% (30ml/liter water) at 15-day intervals for prophylactic pest defense.\n\n3. Irrigation & Foliar Feed:\n• Operate drip irrigation early morning (6-8 AM) for root zone aeration.\n• Provide 3% Panchagavya foliar spray at active vegetative and flowering flushes.`;
+  };
+
   const handleSendMessage = async (textToSend = null) => {
     const text = textToSend || inputQuery;
     if (!text || !text.trim()) return;
@@ -98,7 +167,7 @@ export default function AIAssistantView({ farmerProfile = {}, selectedLanguage =
     // 1. Attempt Spring Boot backend REST API
     try {
       const data = await apiClient.post('/chat', { prompt: text });
-      if (data && data.reply) {
+      if (data && data.reply && data.reply.trim().length > 15) {
         botText = data.reply;
       }
     } catch (e) {
@@ -107,38 +176,7 @@ export default function AIAssistantView({ farmerProfile = {}, selectedLanguage =
 
     // 2. High-Precision Local Agronomic AI Response Engine
     if (!botText) {
-      const lower = text.toLowerCase();
-      if (isTa) {
-        botText = "🌾 கரூர் மாவட்டத்திற்கான TNAU வேளாண்மை ஆராய்ச்சியின் அடிப்படையில்:\n\n";
-        if (lower.includes('மஞ்சள்') || lower.includes('yellow') || lower.includes('இலை')) {
-          botText += "• காரணம்: இலைகள் மஞ்சள் நிறமாக மாறுவது நைட்ரஜன் குறைபாடு அல்லது துத்தநாக (Zinc) குளோரோசிஸ் ஆகும்.\n• இயற்கை சிகிச்சை: பஞ்சகவ்யா 3% (30ml/லிட்டர் நீர்) இலைவழி தெளிக்கவும்.\n• ரசாயன சிகிச்சை: ஏக்கருக்கு 10கிலோ துத்தநாக சல்பேட் (Zinc Sulphate) மணலில் கலந்து இடவும்.";
-        } else if (lower.includes('உரம்') || lower.includes('npk') || lower.includes('fertilizer') || lower.includes('கொத்தமல்லி')) {
-          botText += "• 1 ஏக்கர் கொத்தமல்லி/கீரைகளுக்கு பரிந்துரைக்கப்பட்ட உர அளவு:\n- அடி உரம்: 500கிலோ மண்புழு உரம் (Vermicompost) + 25கிலோ DAP.\n- 15வது நாள்: பஞ்சகவ்யா 3% தெளிப்பு.\n- 25வது நாள்: வேப்ப எண்ணெயில் தடவப்பட்ட யூரியா 15கிலோ.";
-        } else if (lower.includes('பாசனம்') || lower.includes('நீர்') || lower.includes('drip') || lower.includes('சொட்டு')) {
-          botText += "• கரூர் செம்மண்ணிற்கு பாசன முறை:\n- சொட்டு நீர் பாசனம்: தினமும் அதிகாலை (காலை 6 - 8 மணி) 45 நிமிடங்கள் இயங்கவும்.\n- நெற்பயிர்: மாறி மாறி நனைத்து உலர்த்தும் முறை (AWD) மூலம் 30% தண்ணீர் சேமிக்கலாம்.";
-        } else if (lower.includes('மானிய') || lower.includes('திட்டம்') || lower.includes('kisan') || lower.includes('pm')) {
-          botText += "• PM-KISAN ₹6,000 ஆண்டு நிதியுதவி பெறுவது எப்படி:\n1. ஆதார் மற்றும் மொபைல் எண் இணைப்பு.\n2. நிலச் சிட்டா/அடங்கல் நகலுடன் குளித்தலை / கரூர் வேளாண்மை அலுவலகத்தை அணுகவும் அல்லது pmkisan.gov.in போர்ட்டலில் விண்ணப்பிக்கவும்.";
-        } else if (lower.includes('பூச்சி') || lower.includes('pest') || lower.includes('வண்டு')) {
-          botText += "• பூச்சி கட்டுப்பாடு ஆலோசனை:\n- இயற்கை முறை: வேப்ப எண்ணெய் 3% (30ml/லிட்டர்) + சோப்பு கரைசல் தெளிக்கவும்.\n- மஞ்சள் ஒட்டும் அட்டைகளை ஏக்கருக்கு 10 இடங்களில் பொருத்தவும்.";
-        } else {
-          botText += "• கரூர் மாவட்டத்திற்கான சிறந்த சாகுபடி ஆலோசனைகள்:\n1. மண்ணின் pH அளவை 6.5 - 7.5 ஆக பராமரிக்கவும்.\n2. சூடோமோனாஸ் புளோரசன்ஸ் (10கிராம்/கிலோ) கொண்டு விதை நேர்த்தி செய்யவும்.\n3. சொட்டு நீர் பாசனம் மற்றும் கரிம உரங்களைப் பயன்படுத்தவும்.";
-        }
-      } else {
-        botText = "🌾 Based on TNAU agronomic research for Karur district:\n\n";
-        if (lower.includes('yellow') || lower.includes('மஞ்சள்') || lower.includes('leaf')) {
-          botText += "• Cause: Leaf yellowing is caused by Nitrogen deficiency or Zinc chlorosis.\n• Organic Remedy: Spray Panchagavya 3% (30ml/L water) as foliar feed.\n• Chemical Dosage: Apply Zinc Sulphate @ 10kg/acre mixed with dry sand.";
-        } else if (lower.includes('npk') || lower.includes('fertilizer') || lower.includes('உரம்') || lower.includes('coriander')) {
-          botText += "• NPK Fertilizer Plan for 1 Acre Coriander/Greens:\n- Basal Dose: 500kg Vermicompost + 25kg DAP per acre.\n- Day 15: Panchagavya 3% foliar spray.\n- Day 25: Neem-coated Urea 15kg top dressing.";
-        } else if (lower.includes('drip') || lower.includes('irrigation') || lower.includes('பாசனம்') || lower.includes('water')) {
-          botText += "• Irrigation Schedule for Karur Red Soil:\n- Drip Fertigation: Run drip lines for 45 mins daily early morning (6 AM - 8 AM).\n- Paddy: Practice Alternate Wetting & Drying (AWD) to save 30% water.";
-        } else if (lower.includes('pm-kisan') || lower.includes('scheme') || lower.includes('subsidy') || lower.includes('மானிய')) {
-          botText += "• PM-KISAN ₹6,000 Subsidy Application Process:\n1. Ensure Aadhaar is linked to land Chitta/Adangal.\n2. Submit documents at Kulithalai / Karur Block Agriculture Office or online via pmkisan.gov.in.";
-        } else if (lower.includes('pest') || lower.includes('insect') || lower.includes('worm') || lower.includes('பூச்சி')) {
-          botText += "• Integrated Pest Management (IPM):\n- Organic Control: Spray Neem Oil 3% (30ml/L water) with liquid soap.\n- Install 10 Yellow Sticky Traps per acre for sucking pests.";
-        } else {
-          botText += "• Key Farm Recommendations for Karur:\n1. Maintain soil pH between 6.5 and 7.5.\n2. Perform bio-seed treatment with Pseudomonas fluorescens (10g/kg seed).\n3. Combine drip fertigation with organic vermicompost basal application.";
-        }
-      }
+      botText = generateAgronomicResponse(text, isTa);
     }
 
     setTimeout(() => {
@@ -151,7 +189,7 @@ export default function AIAssistantView({ farmerProfile = {}, selectedLanguage =
 
       setMessages(prev => [...prev, botMsg]);
       setIsTyping(false);
-    }, 250);
+    }, 200);
   };
 
   const handleCopy = (id, text) => {
@@ -181,7 +219,7 @@ export default function AIAssistantView({ farmerProfile = {}, selectedLanguage =
           </div>
           <h2 style={{ fontSize: '1.65rem', fontWeight: 800 }}>🤖 {isTa ? 'அக்ரிபாட் AI விவசாய உதவியாளர்' : 'AgriBot AI Assistant'}</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            {isTa ? 'தமிழ் மற்றும் ஆங்கிலத்தில் உடனடி விவசாய பதில்கள், சிகிச்சைகள் மற்றும் உர ஆலோசனைகள்.' : 'Instant agricultural answers, remedies & dosage recommendations in Tamil & English.'}
+            {isTa ? 'கீரைகள், நெல், கரும்பு, உர அளவுகள் மற்றும் அரசு மானியங்கள் குறித்த உடனடி பதில்கள்.' : 'Instant expert agricultural answers for greens, paddy, fertilizers & government subsidies.'}
           </p>
         </div>
       </div>
@@ -285,7 +323,7 @@ export default function AIAssistantView({ farmerProfile = {}, selectedLanguage =
             type="text"
             value={inputQuery}
             onChange={(e) => setInputQuery(e.target.value)}
-            placeholder={isTa ? "மஞ்சள் இலை, NPK உரம், சொட்டு நீர் பாசனம் பற்றி அக்ரிபாட்டிடம் கேளுங்கள்..." : "Ask AgriBot AI about yellow leaves, NPK fertilizers, drip irrigation..."}
+            placeholder={isTa ? "கீரை சாகுபடி, மஞ்சள் இலை, NPK உரம், PM-KISAN பற்றி அக்ரிபாட்டிடம் கேளுங்கள்..." : "Ask AgriBot AI about growing greens, yellow leaves, NPK fertilizers, PM-KISAN..."}
             style={{
               flex: 1,
               padding: '0.85rem 1.15rem',
