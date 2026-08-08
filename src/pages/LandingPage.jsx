@@ -18,7 +18,10 @@ import {
   Globe, 
   Mail, 
   Phone, 
-  X
+  X,
+  Droplet,
+  Compass,
+  Check
 } from 'lucide-react';
 import { translations } from '../data/translations';
 
@@ -124,11 +127,11 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
           left: 0,
           right: 0,
           zIndex: 1000,
-          background: 'rgba(255, 255, 255, 0.88)',
+          background: 'rgba(255, 255, 255, 0.92)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid #E5E7EB',
-          padding: isScrolled ? '0.65rem 3rem' : '1.1rem 3rem',
+          padding: isScrolled ? '0.65rem 3rem' : '1rem 3rem',
           transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           boxShadow: isScrolled ? '0 4px 20px rgba(0,0,0,0.05)' : 'none'
         }}
@@ -220,24 +223,26 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
       </header>
 
       {/* ==================================================== */}
-      {/* 2. HERO SECTION */}
+      {/* 2. HERO SECTION (Clean, Minimalist & Centered) */}
       {/* ==================================================== */}
       <section 
         style={{
           position: 'relative',
-          minHeight: '100vh',
-          paddingTop: '6.5rem',
+          minHeight: '85vh',
+          paddingTop: '8rem',
+          paddingBottom: '5rem',
           display: 'flex',
           alignItems: 'center',
-          background: `linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.82)), url("https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80")`,
+          justifyContent: 'center',
+          background: `linear-gradient(rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.88)), url("https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          color: '#FFFFFF'
+          color: '#FFFFFF',
+          textAlign: 'center'
         }}
       >
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 2rem', width: '100%', display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '3.5rem', alignItems: 'center' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 2rem', width: '100%' }}>
           
-          {/* Left Column */}
           <motion.div 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
@@ -252,11 +257,11 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                 background: 'rgba(22, 163, 74, 0.25)',
                 border: '1px solid rgba(34, 197, 94, 0.4)',
                 color: '#4ADE80',
-                padding: '0.4rem 0.9rem',
+                padding: '0.4rem 1.1rem',
                 borderRadius: '9999px',
-                fontSize: '0.825rem',
+                fontSize: '0.85rem',
                 fontWeight: 700,
-                marginBottom: '1.5rem',
+                marginBottom: '1.75rem',
                 backdropFilter: 'blur(8px)'
               }}
             >
@@ -266,11 +271,11 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
             {/* Decision Support Headline */}
             <h1 
               style={{
-                fontSize: '3.2rem',
+                fontSize: '3.4rem',
                 fontWeight: 800,
-                lineHeight: 1.12,
+                lineHeight: 1.15,
                 letterSpacing: '-0.03em',
-                marginBottom: '1.25rem',
+                marginBottom: '1.35rem',
                 fontFamily: 'Plus Jakarta Sans, sans-serif'
               }}
             >
@@ -278,12 +283,12 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
             </h1>
 
             {/* Decision Support Subheading */}
-            <p style={{ fontSize: '1.1rem', color: '#D1D5DB', lineHeight: 1.6, marginBottom: '2.25rem', maxWidth: '580px' }}>
+            <p style={{ fontSize: '1.15rem', color: '#E2E8F0', lineHeight: 1.6, marginBottom: '2.5rem', maxWidth: '720px', margin: '0 auto 2.5rem' }}>
               {t.heroSub}
             </p>
 
-            {/* Buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
               <button 
                 onClick={onLoginDemo}
                 style={{
@@ -291,7 +296,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                   color: '#FFFFFF',
                   fontWeight: 700,
                   fontSize: '1rem',
-                  padding: '0.85rem 1.85rem',
+                  padding: '0.85rem 2rem',
                   borderRadius: '8px',
                   border: 'none',
                   cursor: 'pointer',
@@ -312,7 +317,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                   color: '#FFFFFF',
                   fontWeight: 600,
                   fontSize: '1rem',
-                  padding: '0.85rem 1.85rem',
+                  padding: '0.85rem 2rem',
                   borderRadius: '8px',
                   cursor: 'pointer',
                   backdropFilter: 'blur(8px)',
@@ -324,40 +329,23 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                 <Play size={16} color="#F59E0B" /> {t.watchDemo}
               </button>
             </div>
-          </motion.div>
 
-          {/* Right Column: Floating Device Mockup */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
-            transition={{ 
-              opacity: { duration: 0.6 },
-              scale: { duration: 0.6 },
-              y: { duration: 4, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }
-            }}
-            style={{ position: 'relative' }}
-          >
-            <div 
-              style={{
-                background: '#1E293B',
-                borderRadius: '16px',
-                padding: '12px',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                border: '1px solid rgba(255, 255, 255, 0.2)'
-              }}
-            >
-              <div style={{ display: 'flex', gap: '6px', marginBottom: '8px', paddingLeft: '4px' }}>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#EF4444' }}></span>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#F59E0B' }}></span>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10B981' }}></span>
+            {/* Value Proposition Pills */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '3rem', flexWrap: 'wrap', fontSize: '0.85rem', color: '#CBD5E1' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Check size={16} color="#4ADE80" /> 15 Crops & Greens
               </div>
-              
-              <img 
-                src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1000&q=80" 
-                alt="AgriSahay AI Decision Dashboard Mockup" 
-                style={{ width: '100%', height: '360px', objectFit: 'cover', borderRadius: '10px' }} 
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Check size={16} color="#4ADE80" /> Neural Disease Scanner
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Check size={16} color="#4ADE80" /> 7-Day Micro-Climate
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Check size={16} color="#4ADE80" /> Central & TN Subsidies
+              </div>
             </div>
+
           </motion.div>
 
         </div>
@@ -410,7 +398,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                   <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#111827', marginBottom: '0.5rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                     {card.title}
                   </h3>
-                  <p style={{ fontSize: '0.9rem', color: '#4B5563', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '0.9rem', color: '#6B7280', lineHeight: 1.5 }}>
                     {card.desc}
                   </p>
                 </div>
@@ -466,35 +454,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
       </section>
 
       {/* ==================================================== */}
-      {/* 5. DASHBOARD PREVIEW */}
-      {/* ==================================================== */}
-      <section id="dashboard-preview" style={{ padding: '5.5rem 2rem', background: '#F8FAFC' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          
-          <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-            <span style={{ fontSize: '0.825rem', fontWeight: 800, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Real-Time Decision Intelligence
-            </span>
-            <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#111827', marginTop: '0.35rem', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-              Powerful Dashboard
-            </h2>
-          </div>
-
-          <div style={{ position: 'relative', maxWidth: '1000px', margin: '0 auto' }}>
-            <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '16px', boxShadow: '0 20px 40px -15px rgba(0,0,0,0.1)', border: '1px solid #E5E7EB' }}>
-              <img 
-                src="https://images.unsplash.com/photo-1595838729984-24b5840d0505?auto=format&fit=crop&w=1200&q=80" 
-                alt="Powerful Dashboard" 
-                style={{ width: '100%', height: '440px', objectFit: 'cover', borderRadius: '12px' }} 
-              />
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ==================================================== */}
-      {/* 6. CALL TO ACTION */}
+      {/* 5. CALL TO ACTION */}
       {/* ==================================================== */}
       <section style={{ padding: '6rem 2rem', background: 'linear-gradient(135deg, #14532D 0%, #16A34A 100%)', color: '#FFFFFF', textAlign: 'center' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -517,124 +477,142 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                 borderRadius: '8px',
                 border: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.15)'
+                boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
               }}
             >
-              {t.getStarted}
+              {t.getStarted} <ArrowRight size={18} />
             </button>
           </div>
         </div>
       </section>
 
       {/* ==================================================== */}
-      {/* 7. FOOTER */}
+      {/* 6. FOOTER */}
       {/* ==================================================== */}
-      <footer id="contact" style={{ background: '#1E293B', color: '#94A3B8', padding: '4rem 2rem 2rem' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{ borderTop: '1px solid #334155', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', fontSize: '0.85rem' }}>
-            <div>© 2026 AgriSahay AI. All rights reserved.</div>
-            <div style={{ color: '#F59E0B', fontWeight: 700 }}>{t.builtBy}</div>
+      <footer id="contact" style={{ background: '#0F172A', color: '#94A3B8', padding: '4.5rem 2rem 2rem' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '3rem', marginBottom: '3.5rem' }}>
+          
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
+              <span style={{ fontSize: '1.6rem' }}>🌾</span>
+              <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                AgriSahay <span style={{ color: '#22C55E' }}>AI</span>
+              </span>
+            </div>
+            <p style={{ fontSize: '0.875rem', lineHeight: 1.6, color: '#94A3B8' }}>
+              {t.footerDesc}
+            </p>
           </div>
+
+          <div>
+            <h4 style={{ color: '#FFFFFF', fontSize: '1rem', fontWeight: 700, marginBottom: '1.25rem' }}>
+              {t.quickLinks}
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.875rem' }}>
+              <span onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }}>{t.home}</span>
+              <span onClick={() => scrollToSection('features')} style={{ cursor: 'pointer' }}>{t.features}</span>
+              <span onClick={() => scrollToSection('about')} style={{ cursor: 'pointer' }}>{t.about}</span>
+              <span onClick={onLoginDemo} style={{ cursor: 'pointer' }}>{t.dashboard}</span>
+            </div>
+          </div>
+
+          <div>
+            <h4 style={{ color: '#FFFFFF', fontSize: '1rem', fontWeight: 700, marginBottom: '1.25rem' }}>
+              {t.contact}
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.875rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Mail size={16} color="#22C55E" />
+                <span>support@agrisahay.in</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Phone size={16} color="#22C55E" />
+                <span>+91 94432 18920</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Globe size={16} color="#22C55E" />
+                <span>Karur District, Tamil Nadu</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style={{ borderTop: '1px solid #1E293B', paddingTop: '2rem', textAlign: 'center', fontSize: '0.85rem' }}>
+          <p>© {new Date().getFullYear()} AgriSahay AI. {t.footerRights} | <span style={{ color: '#22C55E', fontWeight: 700 }}>Built by Yagavi S</span></p>
         </div>
       </footer>
 
-      {/* ==================================================== */}
-      {/* WATCH DEMO MODAL */}
-      {/* ==================================================== */}
+      {/* Watch Demo Video Modal */}
       {isVideoModalOpen && (
         <div 
+          onClick={() => setIsVideoModalOpen(false)}
           style={{
             position: 'fixed',
-            inset: 0,
-            zIndex: 2000,
-            background: 'rgba(15, 23, 42, 0.85)',
-            backdropFilter: 'blur(12px)',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            zIndex: 9999,
             padding: '1.5rem'
           }}
         >
           <div 
+            onClick={e => e.stopPropagation()}
             style={{
               background: '#0F172A',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               borderRadius: '20px',
-              maxWidth: '850px',
+              maxWidth: '800px',
               width: '100%',
               overflow: 'hidden',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
-              color: '#FFFFFF'
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
             }}
           >
-            {/* Modal Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.75rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <span style={{ fontSize: '1.4rem' }}>🎬</span>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-                  AgriSahay AI System Demonstration
-                </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 1.5rem', borderBottom: '1px solid #1E293B' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#FFFFFF', fontWeight: 700 }}>
+                <Play size={18} color="#16A34A" /> {t.watchDemo} - AgriSahay AI
               </div>
-              <button 
-                onClick={() => setIsVideoModalOpen(false)}
-                style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
-              >
-                <X size={22} />
+              <button onClick={() => setIsVideoModalOpen(false)} style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer' }}>
+                <X size={20} />
               </button>
             </div>
 
-            {/* Video Preview Container */}
-            <div style={{ position: 'relative', width: '100%', height: '420px', background: '#000000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '2rem' }}>
-              <div style={{ width: '70px', height: '70px', borderRadius: '50%', background: 'rgba(22, 163, 74, 0.3)', border: '2px solid #22C55E', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4ADE80', marginBottom: '1.5rem' }}>
-                <Play size={32} style={{ marginLeft: '4px' }} />
+            <div style={{ padding: '2.5rem 1.5rem', textAlign: 'center', color: '#FFFFFF' }}>
+              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(22, 163, 74, 0.2)', color: '#22C55E', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
+                <Sparkles size={32} />
               </div>
-              <h4 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.5rem', color: '#FFFFFF' }}>
-                Interactive Platform Walkthrough
-              </h4>
-              <p style={{ fontSize: '0.95rem', color: '#94A3B8', maxWidth: '550px', lineHeight: 1.5, marginBottom: '1.75rem' }}>
-                Explore smart crop recommendation algorithms, neural leaf disease diagnosis, Karur mandi price tracking, and Gemini AI Q&A in action.
+              <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+                AgriSahay AI Interactive System Demo
+              </h3>
+              <p style={{ color: '#94A3B8', fontSize: '0.9rem', maxWidth: '500px', margin: '0 auto 1.5rem' }}>
+                Experience live neural crop disease detection, 7-day micro-climate telemetry, and automated government subsidy matching.
               </p>
-
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <button 
-                  onClick={() => {
-                    setIsVideoModalOpen(false);
-                    onLoginDemo();
-                  }}
-                  style={{
-                    background: '#16A34A',
-                    color: '#FFFFFF',
-                    fontWeight: 700,
-                    fontSize: '0.95rem',
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '8px',
-                    border: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Launch Live Demo Dashboard
-                </button>
-                <button 
-                  onClick={() => {
-                    setIsVideoModalOpen(false);
-                    scrollToSection('dashboard-preview');
-                  }}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#FFFFFF',
-                    fontWeight: 600,
-                    fontSize: '0.95rem',
-                    padding: '0.75rem 1.5rem',
-                    borderRadius: '8px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  View Dashboard Preview
-                </button>
-              </div>
+              
+              <button 
+                onClick={() => { setIsVideoModalOpen(false); onLoginDemo(); }}
+                style={{
+                  background: 'linear-gradient(135deg, #16A34A 0%, #14532D 100%)',
+                  color: '#FFFFFF',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  padding: '0.75rem 1.75rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                Launch Live Dashboard <ArrowRight size={16} />
+              </button>
             </div>
-
           </div>
         </div>
       )}
