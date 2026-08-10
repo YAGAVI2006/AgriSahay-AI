@@ -122,8 +122,8 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                 <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#14532D', letterSpacing: '-0.02em', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
                   AgriSahay <span style={{ color: '#16A34A' }}>AI</span>
                 </span>
-                <span className="badge badge-amber" style={{ fontSize: '0.65rem', padding: '1px 6px' }}>
-                  TNSCST
+                <span className="badge badge-green" style={{ fontSize: '0.65rem', padding: '1px 6px' }}>
+                  RESEARCH
                 </span>
               </div>
               <div style={{ fontSize: '0.675rem', color: '#6B7280', fontWeight: 600, letterSpacing: '0.01em' }}>
@@ -249,7 +249,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                 backdropFilter: 'blur(8px)'
               }}
             >
-              <Sparkles size={16} color="#F59E0B" /> TNSCST RESEARCH PROJECT • LOCALIZED AGRO-DECISION SUPPORT
+              <Sparkles size={16} color="#F59E0B" /> AGRICULTURAL RESEARCH PROJECT • LOCALIZED DECISION SUPPORT
             </div>
 
             {/* Decision Support Headline */}

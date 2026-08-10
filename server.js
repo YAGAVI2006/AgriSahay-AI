@@ -345,7 +345,7 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
-  // 11. Experimental Evaluation Metrics Endpoint (TNSCST Research)
+  // 11. Experimental Evaluation Metrics Endpoint (Agricultural Research)
   if (pathname === '/api/evaluation/metrics' || pathname.startsWith('/api/evaluation')) {
     return sendJson(res, 200, {
       testSetSize: 500,

@@ -41,7 +41,7 @@ export default function EvaluationView({ selectedLanguage = 'en' }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div className="badge badge-amber" style={{ marginBottom: '0.35rem' }}>
-            <Sparkles size={12} /> {isTa ? 'ஆராய்ச்சி & பரிசோதனை மதிப்பீடு' : 'TNSCST Research & Experimental Validation'}
+            <Sparkles size={12} /> {isTa ? 'ஆராய்ச்சி & பரிசோதனை மதிப்பீடு' : 'Research & Experimental Validation'}
           </div>
           <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>
             🔬 {isTa ? 'பரிசோதனை மதிப்பீடு & மாதிரி செயல்திறன்' : 'Experimental Evaluation & Model Validation Benchmarks'}

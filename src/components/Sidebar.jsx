@@ -25,7 +25,7 @@ export default function Sidebar({ currentView, setCurrentView, onLogout, activeR
     { id: 'recommend', label: isTa ? 'பயிர் பொருத்தம் (30/25/20/15/10)' : 'Crop Scoring Engine', icon: Sprout },
     { id: 'disease', label: isTa ? 'CNN நோய் கண்டறிதல்' : 'CNN Disease Detection', icon: Scan, badge: 'CNN' },
     { id: 'weather', label: isTa ? 'வானிலை விதிமுறைகள்' : 'Weather Rule Engine', icon: CloudSun },
-    { id: 'evaluation', label: isTa ? 'பரிசோதனை மதிப்பீடு' : 'Experimental Evaluation', icon: Activity, badge: 'TNSCST' },
+    { id: 'evaluation', label: isTa ? 'பரிசோதனை மதிப்பீடு' : 'Experimental Evaluation', icon: Activity, badge: 'Research' },
     { id: 'schemes', label: isTa ? 'அரசு திட்டங்கள்' : 'Government Schemes', icon: Award },
     { id: 'assistant', label: isTa ? 'அக்ரிபாட் AI' : 'Bilingual AgriBot', icon: Bot, badge: '24/7' },
     { id: 'profile', label: isTa ? 'பண்ணை விவரம்' : 'Farmer Profile', icon: User }

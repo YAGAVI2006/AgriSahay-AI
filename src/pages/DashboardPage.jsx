@@ -91,7 +91,7 @@ export default function DashboardPage({
     },
     {
       id: 'evaluation',
-      title: isTa ? 'பரிசோதனை மதிப்பீடு' : 'TNSCST Evaluation',
+      title: isTa ? 'பரிசோதனை மதிப்பீடு' : 'Model Evaluation',
       desc: isTa ? 'துல்லியம், F1-Score & குழப்ப அணி' : 'Model validation metrics & confusion matrix',
       icon: Activity,
       color: '#D97706',
