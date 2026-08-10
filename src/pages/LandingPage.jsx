@@ -49,31 +49,37 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
 
   const whyChooseCards = [
     {
+      id: 'recommend',
       icon: Sprout,
       title: t.cropRecTitle,
       desc: t.cropRecDesc
     },
     {
+      id: 'weather',
       icon: CloudSun,
       title: t.weatherTitle,
       desc: t.weatherDesc
     },
     {
+      id: 'disease',
       icon: Scan,
       title: t.diseaseTitle,
       desc: t.diseaseDesc
     },
     {
+      id: 'market',
       icon: ShoppingBag,
       title: t.marketTitle,
       desc: t.marketDesc
     },
     {
+      id: 'schemes',
       icon: Award,
       title: t.schemesTitle,
       desc: t.schemesDesc
     },
     {
+      id: 'assistant',
       icon: Bot,
       title: t.aiAssistantTitle,
       desc: t.aiAssistantDesc
@@ -341,6 +347,12 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
               return (
                 <div 
                   key={idx}
+                  onClick={() => {
+                    onLoginDemo();
+                    if (card.id) {
+                      setTimeout(() => onNavigate(card.id), 50);
+                    }
+                  }}
                   style={{
                     background: '#FFFFFF',
                     border: '1px solid #E5E7EB',
