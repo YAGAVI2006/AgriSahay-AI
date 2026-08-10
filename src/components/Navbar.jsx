@@ -59,8 +59,8 @@ export default function Navbar({
                 <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', fontFamily: 'var(--font-heading)' }}>
                   AgriSahay <span style={{ color: 'var(--primary-600)' }}>AI</span>
                 </h1>
-                <span className="badge badge-amber" style={{ fontSize: '0.625rem', padding: '1px 6px' }}>
-                  PRO
+                <span className="badge badge-green" style={{ fontSize: '0.625rem', padding: '1px 6px' }}>
+                  RESEARCH
                 </span>
               </div>
               <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
