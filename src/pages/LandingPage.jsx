@@ -124,13 +124,8 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
           >
             <span style={{ fontSize: '1.75rem' }}>🌾</span>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#14532D', letterSpacing: '-0.02em', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
-                  AgriSahay <span style={{ color: '#16A34A' }}>AI</span>
-                </span>
-                <span className="badge badge-green" style={{ fontSize: '0.65rem', padding: '1px 6px' }}>
-                  RESEARCH
-                </span>
+              <div style={{ fontSize: '1.35rem', fontWeight: 800, color: '#14532D', letterSpacing: '-0.02em', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                AgriSahay <span style={{ color: '#16A34A' }}>AI</span>
               </div>
               <div style={{ fontSize: '0.675rem', color: '#6B7280', fontWeight: 600, letterSpacing: '0.01em' }}>
                 AI-Powered Agriculture Decision Support System
