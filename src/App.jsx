@@ -13,7 +13,7 @@ import SchemesView from './views/SchemesView';
 import CalendarView from './views/CalendarView';
 import EvaluationView from './views/EvaluationView';
 import ProfilePage from './pages/ProfilePage';
-import CropRecommendPage from './pages/CropRecommendPage';
+import CropRecommendationView from './views/CropRecommendationView';
 import MarketIntelligencePage from './pages/MarketIntelligencePage';
 import IrrigationPlannerPage from './pages/IrrigationPlannerPage';
 import FertilizerPage from './pages/FertilizerPage';
@@ -252,8 +252,9 @@ export default function App() {
           )}
 
           {currentView === 'recommend' && (
-            <CropRecommendPage 
+            <CropRecommendationView 
               farmerProfile={farmerProfile}
+              selectedLanguage={selectedLanguage}
             />
           )}
 

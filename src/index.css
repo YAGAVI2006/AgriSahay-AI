@@ -123,7 +123,33 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
 }
 
+.app-sidebar {
+  width: 260px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-light);
+  padding: 1.25rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  z-index: 50;
+}
+
+.mobile-bottom-nav-wrapper {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  .app-sidebar {
+    display: none;
+  }
+  .mobile-bottom-nav-wrapper {
+    display: block;
+  }
   .view-container {
     padding: 1.25rem 1rem 5.5rem;
   }

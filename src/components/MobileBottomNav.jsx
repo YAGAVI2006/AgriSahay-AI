@@ -11,7 +11,7 @@ export default function MobileBottomNav({ currentView, setCurrentView }) {
   ];
 
   return (
-    <>
+    <div className="mobile-bottom-nav-wrapper">
       {/* Floating Action Button (FAB) for Mobile Quick Leaf Scan */}
       <button
         onClick={() => setCurrentView('disease')}
@@ -78,6 +78,6 @@ export default function MobileBottomNav({ currentView, setCurrentView }) {
           );
         })}
       </nav>
-    </>
+    </div>
   );
 }

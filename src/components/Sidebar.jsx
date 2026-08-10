@@ -38,20 +38,7 @@ export default function Sidebar({ currentView, setCurrentView, onLogout, activeR
   ];
 
   return (
-    <aside style={{
-      width: '260px',
-      background: 'var(--card-bg)',
-      borderRight: '1px solid var(--border-light)',
-      padding: '1.25rem 0.85rem',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      position: 'sticky',
-      top: 0,
-      height: '100vh',
-      overflowY: 'auto',
-      flexShrink: 0
-    }}>
+    <aside className="app-sidebar">
       <div>
         {/* Brand Header */}
         <div 
