@@ -112,9 +112,9 @@ export default function Navbar({
                 cursor: 'pointer'
               }}
             >
-              <span style={{ fontSize: '1rem' }}>{activeWeather.icon || '☀️'}</span>
+              <span style={{ fontSize: '1rem' }}>{activeWeather?.icon || '☀️'}</span>
               <div style={{ fontSize: '0.775rem', fontWeight: 700, color: 'var(--primary-800)' }}>
-                {activeWeather.district}: {activeWeather.temp}°C
+                {activeWeather?.district || 'Karur'}: {activeWeather?.temp || 33}°C
               </div>
             </div>
 

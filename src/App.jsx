@@ -32,7 +32,7 @@ import EmergencyPage from './pages/EmergencyPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 
-import { authService } from './services/authService';
+import { authService, DEFAULT_KARUR_PROFILE } from './services/authService';
 import { weatherService } from './services/weatherService';
 import { schemeService } from './services/schemeService';
 import { notificationService } from './services/notificationService';
@@ -51,21 +51,23 @@ export default function App() {
   const [currentView, setCurrentView] = useState('landing');
 
   // Farmer Profile State
-  const [farmerProfile, setFarmerProfile] = useState(() => authService.getCurrentProfile());
+  const [farmerProfile, setFarmerProfile] = useState(() => {
+    return authService.getCurrentProfile() || DEFAULT_KARUR_PROFILE;
+  });
 
   // Location State
   const [location, setLocation] = useState({
     latitude: 10.9601,
     longitude: 78.0766,
-    state: farmerProfile.state || 'Tamil Nadu',
-    district: farmerProfile.district || 'Karur',
-    taluk: farmerProfile.taluk || 'Kulithalai',
-    village: farmerProfile.village || 'Mayanur'
+    state: farmerProfile?.state || 'Tamil Nadu',
+    district: farmerProfile?.district || 'Karur',
+    taluk: farmerProfile?.taluk || 'Kulithalai',
+    village: farmerProfile?.village || 'Mayanur'
   });
 
   // Weather Telemetry State
   const [activeWeather, setActiveWeather] = useState({
-    district: farmerProfile.district || 'Karur',
+    district: farmerProfile?.district || 'Karur',
     temp: 33,
     condition: 'Tropical Warm & Sunny',
     icon: '☀️',
@@ -90,14 +92,21 @@ export default function App() {
 
   // Load location, weather, schemes & notifications on profile change
   useEffect(() => {
-    weatherService.getWeatherByDistrict(farmerProfile.district || 'Karur').then(setActiveWeather);
+    const prof = farmerProfile || DEFAULT_KARUR_PROFILE;
+    weatherService.getWeatherByDistrict(prof.district || 'Karur').then(data => {
+      if (data) setActiveWeather(data);
+    });
     schemeService.getRecommendedSchemes({
-      state: farmerProfile.state || 'Tamil Nadu',
-      crop: farmerProfile.primaryCrop || 'paddy',
-      landSizeAcres: farmerProfile.landSizeAcres || 4.5,
-      category: farmerProfile.farmerCategory || 'small'
-    }).then(setMatchedSchemes);
-    notificationService.getNotifications().then(setNotifications);
+      state: prof.state || 'Tamil Nadu',
+      crop: prof.primaryCrop || 'paddy',
+      landSizeAcres: prof.landSizeAcres || 4.5,
+      category: prof.farmerCategory || 'small'
+    }).then(schemes => {
+      if (schemes) setMatchedSchemes(schemes);
+    });
+    notificationService.getNotifications().then(notifs => {
+      if (notifs) setNotifications(notifs);
+    });
   }, [farmerProfile]);
 
   const handleLoginSuccess = (profile) => {
