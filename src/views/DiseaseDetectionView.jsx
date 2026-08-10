@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Upload, 
   Leaf, 
@@ -28,17 +28,15 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
   const handleSelectSample = (sample) => {
     setSelectedSample(sample);
     setCustomImage(null);
-    const cropId = sample.id.replace('sample-', '');
+    const cropId = sample.id ? sample.id.replace('sample-', '') : 'paddy';
     setSelectedCropTarget(cropId);
-    startDiagnosis(sample.id, cropId);
+    startDiagnosis(sample.id || 'sample-paddy', cropId);
   };
 
   const handleCropTargetChange = (cropId) => {
     setSelectedCropTarget(cropId);
-    const input = customImage || (selectedSample ? selectedSample.id : null);
-    if (input) {
-      startDiagnosis(input, cropId);
-    }
+    const input = customImage || (selectedSample ? selectedSample.id : 'sample-paddy');
+    startDiagnosis(input, cropId);
   };
 
   const handleFileUpload = (e) => {
@@ -65,8 +63,24 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
       if (onSaveScanToHistory) {
         onSaveScanToHistory(res);
       }
+    }).catch(err => {
+      console.error('Classification error:', err);
+      setIsScanning(false);
     });
   };
+
+  // Run initial diagnosis on default sample on view load
+  useEffect(() => {
+    const initialSample = (SAMPLE_DISEASE_GALLERY && SAMPLE_DISEASE_GALLERY.length > 0) 
+      ? SAMPLE_DISEASE_GALLERY[0] 
+      : null;
+    if (initialSample) {
+      setSelectedSample(initialSample);
+      const cropId = initialSample.id.replace('sample-', '');
+      setSelectedCropTarget(cropId);
+      startDiagnosis(initialSample.id, cropId);
+    }
+  }, []);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -146,11 +160,13 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
             ) : selectedSample ? (
               <div>
                 <img 
-                  src={selectedSample.image} 
-                  alt={selectedSample.title} 
+                  src={selectedSample.imageUrl || selectedSample.image} 
+                  alt={selectedSample.cropName || selectedSample.title} 
                   style={{ maxHeight: '180px', borderRadius: 'var(--radius-sm)', objectFit: 'cover', margin: '0 auto' }} 
                 />
-                <p style={{ fontSize: '0.8rem', fontWeight: 700, marginTop: '0.5rem' }}>{selectedSample.title}</p>
+                <p style={{ fontSize: '0.8rem', fontWeight: 700, marginTop: '0.5rem' }}>
+                  {selectedSample.cropName || selectedSample.title || selectedSample.diseaseName}
+                </p>
               </div>
             ) : (
               <div>
@@ -173,28 +189,36 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
               {isTa ? 'அல்லது மாதிரி இலைகளை சோதிக்கவும்' : 'Or Evaluate with Documented Pathology Samples'}
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem' }}>
-              {(SAMPLE_DISEASE_GALLERY || []).slice(0, 4).map((sample) => (
-                <button
-                  key={sample.id}
-                  onClick={() => handleSelectSample(sample)}
-                  style={{
-                    border: selectedSample?.id === sample.id ? '2px solid var(--primary-600)' : '1px solid var(--border-light)',
-                    borderRadius: 'var(--radius-sm)',
-                    padding: '0.35rem',
-                    background: 'var(--bg-main)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '0.25rem'
-                  }}
-                >
-                  <img src={sample.image} alt={sample.title} style={{ width: '100%', height: '48px', objectFit: 'cover', borderRadius: '4px' }} />
-                  <span style={{ fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-main)', textAlign: 'center', lineHeight: 1.1 }}>
-                    {sample.title.split(' ')[0]}
-                  </span>
-                </button>
-              ))}
+              {(SAMPLE_DISEASE_GALLERY || []).slice(0, 4).map((sample) => {
+                const sampleImg = sample.imageUrl || sample.image;
+                const sampleLabel = sample.cropName ? sample.cropName.split(' ')[0] : (sample.title ? sample.title.split(' ')[0] : 'Crop');
+                const isSelected = selectedSample?.id === sample.id;
+
+                return (
+                  <button
+                    key={sample.id}
+                    onClick={() => handleSelectSample(sample)}
+                    style={{
+                      border: isSelected ? '2px solid var(--primary-600)' : '1px solid var(--border-light)',
+                      borderRadius: 'var(--radius-sm)',
+                      padding: '0.35rem',
+                      background: isSelected ? 'var(--primary-50)' : 'var(--bg-main)',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '0.25rem'
+                    }}
+                  >
+                    {sampleImg && (
+                      <img src={sampleImg} alt={sampleLabel} style={{ width: '100%', height: '48px', objectFit: 'cover', borderRadius: '4px' }} />
+                    )}
+                    <span style={{ fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-main)', textAlign: 'center', lineHeight: 1.1 }}>
+                      {sample.cropIcon || '🌿'} {sampleLabel}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
