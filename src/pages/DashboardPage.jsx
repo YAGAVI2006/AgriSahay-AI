@@ -227,7 +227,7 @@ export default function DashboardPage({
             <span className="badge badge-green">92% {isTa ? 'சிறப்பானது' : 'Optimal'}</span>
           </div>
 
-          <FarmHealthGauge score={farmData.cropHealthScore} />
+          <FarmHealthGauge healthData={{ overallScore: farmData.cropHealthScore || 92, riskLevel: 'Optimal (Low Risk)' }} />
 
           {/* Micro-climate 7-Day Trend Chart */}
           <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1rem' }}>
