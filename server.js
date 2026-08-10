@@ -1,5 +1,11 @@
 import http from 'http';
 import url from 'url';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 8080;
 
@@ -364,6 +370,32 @@ const server = http.createServer(async (req, res) => {
         totalEndToEndMs: 68
       }
     });
+  }
+
+  // 12. Static Frontend Serving (if dist folder exists)
+  const distPath = path.join(__dirname, 'dist');
+  if (fs.existsSync(distPath)) {
+    let filePath = path.join(distPath, pathname === '/' ? 'index.html' : pathname);
+    if (!fs.existsSync(filePath)) {
+      filePath = path.join(distPath, 'index.html');
+    }
+    const ext = path.extname(filePath);
+    const mimeTypes = {
+      '.html': 'text/html',
+      '.js': 'text/javascript',
+      '.css': 'text/css',
+      '.json': 'application/json',
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.svg': 'image/svg+xml',
+      '.ico': 'image/x-icon'
+    };
+    const contentType = mimeTypes[ext] || 'application/octet-stream';
+    try {
+      const content = fs.readFileSync(filePath);
+      res.writeHead(200, { 'Content-Type': contentType });
+      return res.end(content);
+    } catch (e) {}
   }
 
   // 404 Fallback
