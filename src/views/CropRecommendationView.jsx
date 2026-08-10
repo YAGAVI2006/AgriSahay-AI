@@ -261,6 +261,30 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                   {isTa ? 'கணித மாதிரி கூறு மதிப்பெண்கள் (Mathematical Sub-Scores):' : 'Mathematical Component Sub-Scores (Sum = 100%):'}
                 </div>
 
+                {/* Direct Point Breakdown Pills */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '0.4rem', marginBottom: '0.85rem' }}>
+                  <div style={{ background: '#FFFFFF', padding: '0.45rem', borderRadius: '6px', textAlign: 'center', border: '1px solid var(--border-light)' }}>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', display: 'block', fontWeight: 700 }}>Soil (30%)</span>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 900, color: 'var(--primary-700)' }}>{selectedCropResult.breakdown.soil.weighted}/30</span>
+                  </div>
+                  <div style={{ background: '#FFFFFF', padding: '0.45rem', borderRadius: '6px', textAlign: 'center', border: '1px solid var(--border-light)' }}>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', display: 'block', fontWeight: 700 }}>Season (25%)</span>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#0284c7' }}>{selectedCropResult.breakdown.season.weighted}/25</span>
+                  </div>
+                  <div style={{ background: '#FFFFFF', padding: '0.45rem', borderRadius: '6px', textAlign: 'center', border: '1px solid var(--border-light)' }}>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', display: 'block', fontWeight: 700 }}>Water (20%)</span>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#2563EB' }}>{selectedCropResult.breakdown.water.weighted}/20</span>
+                  </div>
+                  <div style={{ background: '#FFFFFF', padding: '0.45rem', borderRadius: '6px', textAlign: 'center', border: '1px solid var(--border-light)' }}>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', display: 'block', fontWeight: 700 }}>NPK (15%)</span>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#d97706' }}>{selectedCropResult.breakdown.npk.weighted}/15</span>
+                  </div>
+                  <div style={{ background: '#FFFFFF', padding: '0.45rem', borderRadius: '6px', textAlign: 'center', border: '1px solid var(--border-light)' }}>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', display: 'block', fontWeight: 700 }}>Climate (10%)</span>
+                    <span style={{ fontSize: '0.95rem', fontWeight: 900, color: '#7c3aed' }}>{selectedCropResult.breakdown.climate.weighted}/10</span>
+                  </div>
+                </div>
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.8rem' }}>
                   
                   {/* Soil 30% */}
