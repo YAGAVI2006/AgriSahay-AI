@@ -22,14 +22,13 @@ export default function Sidebar({ currentView, setCurrentView, onLogout, activeR
 
   const primaryNavItems = [
     { id: 'dashboard', label: isTa ? 'டாஷ்போர்டு' : 'Dashboard', icon: LayoutDashboard },
-    { id: 'recommend', label: isTa ? 'பயிர் பரிந்துரை' : 'Crop Recommendation', icon: Sprout },
-    { id: 'disease', label: isTa ? 'நோய் கண்டறிதல்' : 'Disease Detection', icon: Scan, badge: 'AI' },
-    { id: 'weather', label: isTa ? 'வானிலை நுண்ணறிவு' : 'Weather Intelligence', icon: CloudSun },
-    { id: 'yield', label: isTa ? 'மகசூல் கணிப்பு' : 'Yield Prediction', icon: TrendingUp },
+    { id: 'recommend', label: isTa ? 'பயிர் பொருத்தம் (30/25/20/15/10)' : 'Crop Scoring Engine', icon: Sprout },
+    { id: 'disease', label: isTa ? 'CNN நோய் கண்டறிதல்' : 'CNN Disease Detection', icon: Scan, badge: 'CNN' },
+    { id: 'weather', label: isTa ? 'வானிலை விதிமுறைகள்' : 'Weather Rule Engine', icon: CloudSun },
+    { id: 'evaluation', label: isTa ? 'பரிசோதனை மதிப்பீடு' : 'Experimental Evaluation', icon: Activity, badge: 'TNSCST' },
     { id: 'schemes', label: isTa ? 'அரசு திட்டங்கள்' : 'Government Schemes', icon: Award },
-    { id: 'assistant', label: isTa ? 'அக்ரிபாட் AI' : 'AgriBot Assistant', icon: Bot, badge: '24/7' },
-    { id: 'community', label: isTa ? 'உழவர் மன்றம்' : 'Farmer Community', icon: Users },
-    { id: 'profile', label: isTa ? 'பண்ணை சுயவிவரம்' : 'Farmer Profile', icon: User }
+    { id: 'assistant', label: isTa ? 'அக்ரிபாட் AI' : 'Bilingual AgriBot', icon: Bot, badge: '24/7' },
+    { id: 'profile', label: isTa ? 'பண்ணை விவரம்' : 'Farmer Profile', icon: User }
   ];
 
   const secondaryNavItems = [

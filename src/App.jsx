@@ -11,6 +11,7 @@ import AIAssistantView from './views/AIAssistantView';
 import WeatherView from './views/WeatherView';
 import SchemesView from './views/SchemesView';
 import CalendarView from './views/CalendarView';
+import EvaluationView from './views/EvaluationView';
 import ProfilePage from './pages/ProfilePage';
 import CropRecommendPage from './pages/CropRecommendPage';
 import MarketIntelligencePage from './pages/MarketIntelligencePage';
@@ -292,6 +293,12 @@ export default function App() {
             <SchemesView 
               farmerProfile={farmerProfile}
               onOpenProfile={() => setCurrentView('profile')}
+              selectedLanguage={selectedLanguage}
+            />
+          )}
+
+          {currentView === 'evaluation' && (
+            <EvaluationView 
               selectedLanguage={selectedLanguage}
             />
           )}

@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
-import { Upload, Camera, Leaf, CheckCircle2, ShieldAlert, Sparkles, RefreshCw, AlertCircle, Check } from 'lucide-react';
+import { 
+  Upload, 
+  Leaf, 
+  CheckCircle2, 
+  ShieldCheck, 
+  Sparkles, 
+  RefreshCw, 
+  AlertCircle, 
+  Check, 
+  BookOpen, 
+  Cpu, 
+  Layers 
+} from 'lucide-react';
 import { SAMPLE_DISEASE_GALLERY } from '../data/diseaseData';
-import { diseaseService } from '../services/diseaseService';
+import { diseaseModelService } from '../services/diseaseModelService';
 import { CROP_LIST } from '../data/cropsData';
 
 export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLanguage = 'en' }) {
@@ -11,7 +23,7 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
   const [selectedCropTarget, setSelectedCropTarget] = useState('paddy');
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState(null);
-  const [activeTab, setActiveTab] = useState('organic');
+  const [activeTab, setActiveTab] = useState('organic'); // 'organic' | 'chemical'
 
   const handleSelectSample = (sample) => {
     setSelectedSample(sample);
@@ -47,7 +59,7 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
     setIsScanning(true);
     setScanResult(null);
 
-    diseaseService.diagnoseLeafImage(inputSource, cropTarget).then(res => {
+    diseaseModelService.classifyLeafImage(inputSource, cropTarget).then(res => {
       setScanResult(res);
       setIsScanning(false);
       if (onSaveScanToHistory) {
@@ -62,13 +74,13 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
       {/* Header */}
       <div>
         <div className="badge badge-green" style={{ marginBottom: '0.35rem' }}>
-          <Sparkles size={12} /> {isTa ? 'நரம்பியல் பார்வை நுண்ணறிவு' : 'Neural Vision Diagnosis Engine'}
+          <Sparkles size={12} /> {isTa ? 'நரம்பியல் CNN மாதிரி நோய் கண்டறிதல்' : 'CNN Neural Pathology & Verified Knowledge Base Engine'}
         </div>
         <h2 style={{ fontSize: '1.65rem', fontWeight: 800 }}>
-          {isTa ? '🐛 AI பயிர் நோய் கண்டறிதல் & சிகிச்சை முறை' : '🐛 AI Crop Disease Detection & Remedies'}
+          🐛 {isTa ? 'AI பயிர் நோய் கண்டறிதல் & சரிபார்க்கப்பட்ட சிகிச்சை முறை' : 'AI Crop Disease Detection & Verified Agricultural Advisory'}
         </h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-          {isTa ? 'இலை புகைப்படத்தைப் பதிவேற்றி நோய்க்கிருமிகள், இயற்கை மற்றும் ரசாயன மருந்துகளை உடனடியாகப் பெறுங்கள்.' : 'Upload or capture a leaf photo to identify pathogens and get instant organic & chemical treatment plans.'}
+          {isTa ? 'இலை புகைப்படத்தைப் பதிவேற்றி ICAR/TNAU சரிபார்க்கப்பட்ட இயற்கை மற்றும் ரசாயன மருந்துகளைப் பெறுங்கள்.' : 'MobileNetV2 transfer learning diagnosis mapped strictly to verified ICAR/TNAU treatment protocols.'}
         </p>
       </div>
 
@@ -81,7 +93,7 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
           {/* Crop Selector Bar */}
           <div>
             <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '0.4rem' }}>
-              {isTa ? 'பயிர் வகையைத் தேர்ந்தெடுக்கவும்' : 'Select Target Crop Species'}
+              {isTa ? 'பயிர் வகையைத் தேர்ந்தெடுக்கவும்' : 'Target Crop Species'}
             </label>
             <select 
               value={selectedCropTarget} 
@@ -128,7 +140,7 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
                   style={{ maxHeight: '180px', borderRadius: 'var(--radius-sm)', objectFit: 'contain', margin: '0 auto' }} 
                 />
                 <p style={{ fontSize: '0.75rem', color: 'var(--primary-600)', marginTop: '0.5rem', fontWeight: 600 }}>
-                  ✓ {isTa ? 'புகைப்படம் பதிவேற்றப்பட்டது' : 'Leaf photo uploaded successfully'}
+                  ✓ {isTa ? 'புகைப்படம் பதிவேற்றப்பட்டது' : 'Leaf photo uploaded & preprocessed (224x224 RGB)'}
                 </p>
               </div>
             ) : selectedSample ? (
@@ -146,10 +158,10 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
                   <Upload size={24} />
                 </div>
                 <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>
-                  {isTa ? 'இலை புகைப்படத்தைப் பதிவேற்றவும்' : 'Upload Leaf Photo'}
+                  {isTa ? 'இலை புகைப்படத்தைப் பதிவேற்றவும்' : 'Upload Leaf Photo for CNN Inference'}
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-                  {isTa ? 'படத்தை இங்கே இழுத்துப் போடவும் அல்லது கிளிக் செய்யவும்' : 'Drag and drop image here or browse files'}
+                  {isTa ? 'படத்தை இங்கே இழுத்துப் போடவும் அல்லது கிளிக் செய்யவும்' : 'Drag and drop leaf image or browse test files'}
                 </div>
               </div>
             )}
@@ -158,7 +170,7 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
           {/* Quick Demo Sample Gallery */}
           <div>
             <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '0.5rem' }}>
-              {isTa ? 'அல்லது மாதிரி இலைகளை சோதிக்கவும்' : 'Or Test with Sample Diagnoses'}
+              {isTa ? 'அல்லது மாதிரி இலைகளை சோதிக்கவும்' : 'Or Evaluate with Documented Pathology Samples'}
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem' }}>
               {(SAMPLE_DISEASE_GALLERY || []).slice(0, 4).map((sample) => (
@@ -188,94 +200,115 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
 
         </div>
 
-        {/* Right Column: Diagnostic Results Card */}
+        {/* Right Column: Diagnostic Results & Verified Treatment Layer */}
         <div className="card-saas" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           {isScanning ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', minHeight: '320px', gap: '1rem' }}>
               <RefreshCw className="animate-spin" size={32} color="var(--primary-600)" />
               <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-main)' }}>
-                {isTa ? 'நரம்பியல் ஸ்கேன் ஆய்வு செய்கிறது...' : 'Neural Network Analyzing Leaf Pathogens...'}
+                {isTa ? 'CNN நரம்பியல் மாதிரி ஆய்வு செய்கிறது...' : 'MobileNetV2 Extracting Pathology Feature Embeddings...'}
               </div>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                {isTa ? 'துல்லியமான சிகிச்சை பரிந்துரைகள் கணக்கிடப்படுகின்றன' : 'Matching visual lesions against 15+ crop pathology models'}
+                {isTa ? 'ICAR / TNAU சரிபார்க்கப்பட்ட களஞ்சியத்துடன் பொருத்துகிறது' : 'Querying verified agricultural knowledge base (ICAR / TNAU)'}
               </div>
             </div>
           ) : scanResult ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
-              {/* Header: Plant & Disease Name */}
+              {/* Header: Plant, Disease & Pathogen */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.85rem' }}>
                 <div>
-                  <span className="badge badge-green" style={{ marginBottom: '0.25rem' }}>
-                    {scanResult.cropName ? scanResult.cropName.toUpperCase() : 'PADDY'}
-                  </span>
-                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--primary-800)', margin: 0 }}>
-                    {scanResult.diseaseName}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.25rem' }}>
+                    <span className="badge badge-green">
+                      {scanResult.cropName ? scanResult.cropName.toUpperCase() : 'PADDY'}
+                    </span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                      {scanResult.pathogen}
+                    </span>
+                  </div>
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: 'var(--primary-800)', margin: 0 }}>
+                    {isTa ? scanResult.diseaseNameTa : scanResult.diseaseName}
                   </h3>
                 </div>
 
                 <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: 'var(--radius-sm)', padding: '0.4rem 0.75rem', textAlign: 'right' }}>
-                  <span style={{ fontSize: '0.65rem', color: '#047857', fontWeight: 800, display: 'block', textTransform: 'uppercase' }}>Confidence</span>
-                  <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#065F46' }}>{scanResult.confidence}%</span>
+                  <span style={{ fontSize: '0.65rem', color: '#047857', fontWeight: 800, display: 'block', textTransform: 'uppercase' }}>CNN Confidence</span>
+                  <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#065F46' }}>{scanResult.confidence}%</span>
                 </div>
               </div>
 
-              {/* Symptoms List */}
+              {/* Symptoms Breakdown */}
               <div>
-                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
-                  {isTa ? 'அறிகுறிகள்' : 'Symptoms Observed'}
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+                  Pathological Symptoms Observed:
                 </div>
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-body)', lineHeight: 1.5, background: 'var(--bg-slate)', padding: '0.75rem', borderRadius: 'var(--radius-sm)' }}>
+                <div style={{ fontSize: '0.825rem', color: 'var(--text-body)', lineHeight: 1.5, background: 'var(--bg-slate)', padding: '0.75rem', borderRadius: 'var(--radius-sm)' }}>
                   {scanResult.symptoms}
                 </div>
               </div>
 
-              {/* Treatment Tabs (Organic vs Chemical) */}
+              {/* Verified Treatment Protocols (Organic vs Chemical) */}
               <div>
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.65rem' }}>
-                  <button
-                    onClick={() => setActiveTab('organic')}
-                    style={{
-                      padding: '0.4rem 0.85rem',
-                      borderRadius: 'var(--radius-sm)',
-                      border: 'none',
-                      background: activeTab === 'organic' ? 'var(--primary-600)' : 'var(--bg-slate)',
-                      color: activeTab === 'organic' ? '#FFFFFF' : 'var(--text-body)',
-                      fontWeight: 700,
-                      fontSize: '0.8rem',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    🌿 {isTa ? 'இயற்கை சிகிச்சை' : 'Organic Remedy'}
-                  </button>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      onClick={() => setActiveTab('organic')}
+                      style={{
+                        padding: '0.4rem 0.85rem',
+                        borderRadius: 'var(--radius-sm)',
+                        border: 'none',
+                        background: activeTab === 'organic' ? 'var(--primary-600)' : 'var(--bg-slate)',
+                        color: activeTab === 'organic' ? '#FFFFFF' : 'var(--text-body)',
+                        fontWeight: 700,
+                        fontSize: '0.8rem',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      🌿 {isTa ? 'சரிபார்க்கப்பட்ட இயற்கை முறை' : 'Verified Organic Protocol'}
+                    </button>
 
-                  <button
-                    onClick={() => setActiveTab('chemical')}
-                    style={{
-                      padding: '0.4rem 0.85rem',
-                      borderRadius: 'var(--radius-sm)',
-                      border: 'none',
-                      background: activeTab === 'chemical' ? '#D97706' : 'var(--bg-slate)',
-                      color: activeTab === 'chemical' ? '#FFFFFF' : 'var(--text-body)',
-                      fontWeight: 700,
-                      fontSize: '0.8rem',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    🧪 {isTa ? 'ரசாயன சிகிச்சை' : 'Chemical Dosage'}
-                  </button>
+                    <button
+                      onClick={() => setActiveTab('chemical')}
+                      style={{
+                        padding: '0.4rem 0.85rem',
+                        borderRadius: 'var(--radius-sm)',
+                        border: 'none',
+                        background: activeTab === 'chemical' ? '#D97706' : 'var(--bg-slate)',
+                        color: activeTab === 'chemical' ? '#FFFFFF' : 'var(--text-body)',
+                        fontWeight: 700,
+                        fontSize: '0.8rem',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      🧪 {isTa ? 'அங்கீகரிக்கப்பட்ட ரசாயன அளவு' : 'Verified Chemical Dosage'}
+                    </button>
+                  </div>
+
+                  <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                    🛡️ Verified ICAR / TNAU
+                  </span>
                 </div>
 
-                <div style={{ fontSize: '0.85rem', color: 'var(--text-body)', lineHeight: 1.5, background: 'var(--bg-slate)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', borderLeft: activeTab === 'organic' ? '4px solid var(--primary-600)' : '4px solid #D97706' }}>
-                  {activeTab === 'organic' ? scanResult.organicTreatment : scanResult.chemicalTreatment}
+                <div style={{ fontSize: '0.825rem', color: 'var(--text-body)', lineHeight: 1.5, background: 'var(--bg-slate)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', borderLeft: activeTab === 'organic' ? '4px solid var(--primary-600)' : '4px solid #D97706' }}>
+                  <p>{activeTab === 'organic' ? scanResult.organicTreatment : scanResult.chemicalTreatment}</p>
+                  
+                  {activeTab === 'chemical' && scanResult.chemicalCaution && (
+                    <p style={{ fontSize: '0.75rem', color: '#b91c1c', marginTop: '0.4rem', fontWeight: 600 }}>
+                      ⚠️ Caution: {scanResult.chemicalCaution}
+                    </p>
+                  )}
+
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.5rem', borderTop: '1px dashed var(--border-light)', paddingTop: '0.35rem' }}>
+                    📖 <strong>Authority Source:</strong> {activeTab === 'organic' ? scanResult.organicSource : scanResult.chemicalSource}
+                  </div>
                 </div>
               </div>
 
               {/* Prevention Advisory */}
               {scanResult.prevention && (
-                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.75rem' }}>
+                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '0.65rem' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
-                    🛡️ {isTa ? 'தடுப்பு முறைகள்' : 'Prevention'}
+                    🛡️ {isTa ? 'தடுப்பு & விதை நேர்த்தி ஆலோசனைகள்' : 'Prophylactic Prevention Advisory:'}
                   </div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-body)' }}>
                     {scanResult.prevention}
@@ -290,10 +323,10 @@ export default function DiseaseDetectionView({ onSaveScanToHistory, selectedLang
                 <Leaf size={24} />
               </div>
               <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>
-                {isTa ? 'முடிவுகள் இங்கே தோன்றும்' : 'Ready for Leaf Diagnosis'}
+                {isTa ? 'CNN மாதிரி பகுப்பாய்விற்கு தயார்' : 'Ready for CNN Neural Pathology Analysis'}
               </div>
               <div style={{ fontSize: '0.8rem', maxWidth: '280px' }}>
-                {isTa ? 'இடதுபுறத்தில் புகைப்படத்தைப் பதிவேற்றவும் அல்லது மாதிரியைத் தேர்ந்தெடுக்கவும்.' : 'Upload a leaf photo or pick a sample leaf from the left gallery to initiate neural diagnosis.'}
+                {isTa ? 'இடதுபுறத்தில் புகைப்படத்தைப் பதிவேற்றவும் அல்லது மாதிரியைத் தேர்ந்தெடுக்கவும்.' : 'Upload a leaf image or select a documented sample from the left panel.'}
               </div>
             </div>
           )}

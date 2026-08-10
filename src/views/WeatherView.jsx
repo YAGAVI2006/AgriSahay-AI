@@ -3,17 +3,16 @@ import {
   CloudSun, 
   Droplet, 
   Wind, 
-  Sun, 
   Sparkles, 
   AlertTriangle, 
   CheckCircle2, 
   MapPin, 
-  Calendar,
-  Thermometer,
-  Compass
+  Thermometer, 
+  ShieldAlert, 
+  Activity 
 } from 'lucide-react';
 import { weatherService } from '../services/weatherService';
-import WeatherSummaryChart from '../components/WeatherSummaryChart';
+import { weatherRuleEngine } from '../services/weatherRuleEngine';
 
 export default function WeatherView({ farmerProfile = {}, selectedLanguage = 'en' }) {
   const isTa = selectedLanguage === 'ta';
@@ -26,6 +25,7 @@ export default function WeatherView({ farmerProfile = {}, selectedLanguage = 'en
     condition: 'Partly Sunny with Light Breeze',
     humidity: 64,
     windSpeed: '14 km/h NW',
+    windSpeedKmh: 14,
     rainProbability: 25,
     forecast7Days: [
       { day: 'Today', tempMax: 34, tempMin: 24, condition: 'Partly Sunny', rain: 25, icon: '☀️' },
@@ -35,19 +35,23 @@ export default function WeatherView({ farmerProfile = {}, selectedLanguage = 'en
       { day: 'Day 5', tempMax: 35, tempMin: 25, condition: 'Warm & Sunny', rain: 10, icon: '☀️' },
       { day: 'Day 6', tempMax: 34, tempMin: 24, condition: 'Cloudy Intervals', rain: 20, icon: '⛅' },
       { day: 'Day 7', tempMax: 33, tempMin: 24, condition: 'Pleasant', rain: 15, icon: '⛅' }
-    ],
-    farmingAdvice: [
-      'Delay heavy irrigation for next 48 hours as convective showers are likely.',
-      'Favorable window for biological foliar sprays (Panchagavya / Neem oil) in early morning.',
-      'Clear field drainage channels to prevent waterlogging in low-lying paddy plots.'
     ]
   });
 
+  const [actionableDirectives, setActionableDirectives] = useState([]);
+
   useEffect(() => {
     weatherService.getWeatherByDistrict(districtName).then(data => {
-      if (data) setWeather(prev => ({ ...prev, ...data }));
+      if (data) {
+        setWeather(prev => ({ ...prev, ...data }));
+        const rules = weatherRuleEngine.evaluateWeatherRules(data, farmerProfile);
+        setActionableDirectives(rules);
+      } else {
+        const rules = weatherRuleEngine.evaluateWeatherRules(weather, farmerProfile);
+        setActionableDirectives(rules);
+      }
     });
-  }, [districtName]);
+  }, [districtName, farmerProfile]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -56,13 +60,13 @@ export default function WeatherView({ farmerProfile = {}, selectedLanguage = 'en
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div className="badge badge-amber" style={{ marginBottom: '0.35rem' }}>
-            <Sparkles size={12} /> {isTa ? 'நுண்-காலநிலை முன்னறிவிப்பு' : 'Micro-Climate Telemetry'}
+            <Sparkles size={12} /> {isTa ? 'வானிலை அடிப்படையிலான வேளாண் விதிமுறை இன்ஜின்' : 'Weather-Aware Agricultural Rule Engine'}
           </div>
           <h2 style={{ fontSize: '1.65rem', fontWeight: 800 }}>
-            {isTa ? '🌦️ வானிலை நுண்ணறிவு & விவசாய வழிகாட்டுதல்' : '🌦️ Weather Intelligence & Farming Advisory'}
+            🌦️ {isTa ? 'வானிலை நுண்ணறிவு & நேரடி விவசாய வழிகாட்டுதல்கள்' : 'Micro-Climate Telemetry & Actionable Agronomic Directives'}
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            {isTa ? `${districtName} மாவட்டத்திற்கான 7-நாள் துல்லிய வானிலை மற்றும் பாசன ஆலோசனைகள்.` : `7-day micro-climate telemetry and actionable agronomic advisories for ${districtName}.`}
+            {isTa ? `${districtName} மாவட்டத்திற்கான நிகழ்நேர வானிலை கண்காணிப்பு மற்றும் உடனடி விவசாய முடிவுகள்.` : `Translating real-time meteorological observations into actionable farm management protocols for ${districtName}.`}
           </p>
         </div>
 
@@ -102,13 +106,13 @@ export default function WeatherView({ farmerProfile = {}, selectedLanguage = 'en
           </div>
           <div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
-              {isTa ? 'காற்றின் ஈரப்பதம்' : 'Humidity'}
+              {isTa ? 'காற்றின் ஈரப்பதம்' : 'Relative Humidity'}
             </div>
             <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)' }}>
               {weather.humidity}%
             </div>
             <div style={{ fontSize: '0.725rem', color: '#2563EB', fontWeight: 600 }}>
-              Optimal for transpiration
+              {weather.humidity > 70 ? 'High Fungal Spore Risk' : 'Optimal Leaf Transpiration'}
             </div>
           </div>
         </div>
@@ -123,10 +127,10 @@ export default function WeatherView({ farmerProfile = {}, selectedLanguage = 'en
               {isTa ? 'காற்றின் வேகம்' : 'Wind Speed'}
             </div>
             <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)' }}>
-              {weather.windSpeed}
+              {weather.windSpeed || `${weather.windSpeedKmh} km/h`}
             </div>
             <div style={{ fontSize: '0.725rem', color: '#059669', fontWeight: 600 }}>
-              Safe for foliar spraying
+              {weather.windSpeedKmh > 18 ? 'Caution: Chemical Drift' : 'Safe for Foliar Spray'}
             </div>
           </div>
         </div>
@@ -138,30 +142,54 @@ export default function WeatherView({ farmerProfile = {}, selectedLanguage = 'en
           </div>
           <div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
-              {isTa ? 'மழை வாய்ப்பு' : 'Rain Probability'}
+              {isTa ? 'மழை வாய்ப்பு' : 'Precipitation Probability'}
             </div>
             <div style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)' }}>
               {weather.rainProbability}%
             </div>
             <div style={{ fontSize: '0.725rem', color: '#7C3AED', fontWeight: 600 }}>
-              {weather.rainProbability > 50 ? 'Showers likely' : 'Low precipitation risk'}
+              {weather.rainProbability >= 50 ? 'Rain Likely • Delay Spraying' : 'Clear Sowing Window'}
             </div>
           </div>
         </div>
 
       </div>
 
-      {/* Agricultural Advisory Banners */}
+      {/* Actionable Rule Engine Decision Directives */}
       <div className="card-saas" style={{ borderLeft: '4px solid var(--primary-600)' }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <CheckCircle2 size={18} color="var(--primary-600)" />
-          {isTa ? 'வானிலை அடிப்படையிலான வேளாண் ஆலோசனைகள்' : 'Agronomic Action Plan for Current Weather'}
+        <h3 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Activity size={18} color="var(--primary-600)" />
+          {isTa ? 'வானிலை விதிமுறை இன்ஜின் முடிவுகள் (Actionable Directives)' : 'Actionable Agricultural Directives Derived from Rule Engine'}
         </h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {(weather.farmingAdvice || []).map((adv, idx) => (
-            <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-body)' }}>
-              <span style={{ color: 'var(--primary-600)', fontWeight: 800 }}>✓</span>
-              <span>{adv}</span>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {actionableDirectives.map((dir) => (
+            <div key={dir.id} style={{
+              background: 'var(--bg-slate)',
+              border: '1px solid var(--border-light)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '0.85rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 800, fontSize: '0.85rem', color: 'var(--text-main)' }}>
+                  <span>{dir.icon}</span>
+                  <span>{isTa ? dir.categoryTa : dir.category}</span>
+                </div>
+                <span className={`badge ${dir.severity === 'HIGH_ALERT' ? 'badge-amber' : 'badge-green'}`} style={{ fontSize: '0.65rem' }}>
+                  {dir.severity}
+                </span>
+              </div>
+
+              <p style={{ fontSize: '0.825rem', color: 'var(--text-body)', lineHeight: 1.4, margin: '0.2rem 0' }}>
+                {isTa ? dir.directiveTa : dir.directive}
+              </p>
+
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', borderTop: '1px dashed var(--border-light)', paddingTop: '0.3rem' }}>
+                📖 <strong>Scientific Rationale:</strong> {dir.scientificRationale}
+              </div>
             </div>
           ))}
         </div>
@@ -170,7 +198,7 @@ export default function WeatherView({ farmerProfile = {}, selectedLanguage = 'en
       {/* 7-Day Forecast Cards */}
       <div className="card-saas">
         <h3 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: '1rem' }}>
-          {isTa ? '7-நாள் வானிலை முன்னறிவிப்பு' : '7-Day Micro-Climate Forecast'}
+          {isTa ? '7-நாள் நுண்-காலநிலை முன்னறிவிப்பு' : '7-Day Micro-Climate Weather Telemetry'}
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
           {(weather.forecast7Days || []).map((day, idx) => (

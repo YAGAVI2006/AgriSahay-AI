@@ -242,37 +242,37 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
                 color: '#4ADE80',
                 padding: '0.45rem 1.25rem',
                 borderRadius: '9999px',
-                fontSize: '0.875rem',
+                fontSize: '0.825rem',
                 fontWeight: 800,
-                marginBottom: '1.75rem',
+                marginBottom: '1.5rem',
                 letterSpacing: '0.02em',
                 backdropFilter: 'blur(8px)'
               }}
             >
-              <Sparkles size={16} color="#F59E0B" /> AI-POWERED AGRICULTURE DECISION SUPPORT SYSTEM
+              <Sparkles size={16} color="#F59E0B" /> TNSCST RESEARCH PROJECT • LOCALIZED AGRO-DECISION SUPPORT
             </div>
 
             {/* Decision Support Headline */}
             <h1 
               style={{
-                fontSize: '3.5rem',
+                fontSize: '2.85rem',
                 fontWeight: 900,
-                lineHeight: 1.15,
+                lineHeight: 1.2,
                 letterSpacing: '-0.03em',
-                marginBottom: '1.5rem',
+                marginBottom: '1.25rem',
                 color: '#FFFFFF',
                 textShadow: '0 4px 20px rgba(0, 0, 0, 0.6)',
                 fontFamily: 'Plus Jakarta Sans, sans-serif'
               }}
             >
-              AI-Powered Agriculture Decision Support System
+              AI-Based Localized Agricultural Decision Support System for Crop Selection, Disease Detection and Weather-Aware Farm Management
             </h1>
 
             {/* Decision Support Subheading */}
-            <p style={{ fontSize: '1.2rem', color: '#F1F5F9', lineHeight: 1.6, marginBottom: '2.5rem', maxWidth: '780px', margin: '0 auto 2.5rem', textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)' }}>
+            <p style={{ fontSize: '1.1rem', color: '#F1F5F9', lineHeight: 1.6, marginBottom: '2.5rem', maxWidth: '820px', margin: '0 auto 2.5rem', textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)' }}>
               {selectedLanguage === 'ta' 
-                ? 'புத்திசாலித்தனமான பயிர் பரிந்துரைகள், நோய் கண்டறிதல், வானிலை தகவல்கள், சந்தை பகுப்பாய்வு மற்றும் தனிப்பயனாக்கப்பட்ட AI வழிகாட்டுதலுடன் சிறந்த விவசாய முடிவுகளை எடுங்கள்.'
-                : 'Make smarter farming decisions with intelligent crop recommendations, neural disease detection, micro-climate weather insights, market price analytics, and bilingual AI guidance.'}
+                ? 'அறிவியல் பூர்வ பல-காரணி பயிர் பொருத்தம் (30/25/20/15/10), CNN இலை நோய் கண்டறிதல் மற்றும் ICAR/TNAU சரிபார்க்கப்பட்ட வேளாண் வழிகாட்டுதல்கள்.'
+                : 'Driven by multi-criteria explainable crop scoring algorithms, CNN transfer learning pathology classification, actionable weather rule engines, and verified ICAR/TNAU agricultural knowledge bases.'}
             </p>
 
             {/* Main Action Button */}
