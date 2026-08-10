@@ -141,14 +141,24 @@ export default function App() {
     return (
       <div className="app-landing-wrapper">
         <LandingPage 
-          onNavigate={(view) => setCurrentView(view)} 
+          onNavigate={(view) => {
+            if (view === 'login' || view === 'register') {
+              setCurrentView(view);
+            } else {
+              const profile = authService.getCurrentProfile();
+              setFarmerProfile(profile);
+              setCurrentView(view || 'dashboard');
+            }
+          }} 
           selectedLanguage={selectedLanguage}
           setSelectedLanguage={setSelectedLanguage}
-          onLoginDemo={() => {
-            authService.login('farmer@agrisahay.in', 'password123').then(res => {
-              setFarmerProfile(res.profile);
-              setCurrentView('dashboard');
-            });
+          onLoginDemo={(targetView) => {
+            const profile = authService.getCurrentProfile();
+            setFarmerProfile(profile);
+            setCurrentView(typeof targetView === 'string' ? targetView : 'dashboard');
+            try {
+              authService.login('farmer@agrisahay.in', 'password123').catch(() => {});
+            } catch (e) {}
           }}
         />
       </div>

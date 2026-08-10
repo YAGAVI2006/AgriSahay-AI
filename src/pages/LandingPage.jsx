@@ -187,7 +187,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
             </button>
 
             <button 
-              onClick={onLoginDemo}
+              onClick={() => onLoginDemo('dashboard')}
               style={{
                 background: 'linear-gradient(135deg, #16A34A 0%, #14532D 100%)',
                 color: '#FFFFFF',
@@ -284,7 +284,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
             {/* Main Action Button */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <button 
-                onClick={onLoginDemo}
+                onClick={() => onLoginDemo('dashboard')}
                 style={{
                   background: '#16A34A',
                   color: '#FFFFFF',
@@ -448,7 +448,7 @@ export default function LandingPage({ onNavigate, onLoginDemo, selectedLanguage 
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
             <button 
-              onClick={onLoginDemo}
+              onClick={() => onLoginDemo('dashboard')}
               style={{
                 background: '#FFFFFF',
                 color: '#14532D',
