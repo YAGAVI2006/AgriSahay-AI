@@ -10,7 +10,8 @@ import {
   Info, 
   Layers, 
   Calculator, 
-  BookOpen 
+  BookOpen,
+  Check
 } from 'lucide-react';
 import { cropScoringEngine, WEIGHT_DISTRIBUTION } from '../services/cropScoringEngine';
 
@@ -33,26 +34,45 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
   const [rankedCrops, setRankedCrops] = useState([]);
   const [selectedCropResult, setSelectedCropResult] = useState(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [justCalculated, setJustCalculated] = useState(false);
 
-  const calculateSuitability = () => {
+  const calculateSuitability = (params = formData) => {
     setIsCalculating(true);
+    setJustCalculated(false);
+    
+    // Compute explainable MCDA rank
+    const results = cropScoringEngine.rankAllCrops(params);
+    
     setTimeout(() => {
-      const results = cropScoringEngine.rankAllCrops(formData);
       setRankedCrops(results);
       if (results.length > 0) {
         setSelectedCropResult(results[0]);
       }
       setIsCalculating(false);
-    }, 300);
+      setJustCalculated(true);
+      setTimeout(() => setJustCalculated(false), 2500);
+    }, 200);
   };
 
+  // Run initial calculation on load
   useEffect(() => {
-    calculateSuitability();
+    calculateSuitability(formData);
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    calculateSuitability();
+  const handleInputChange = (field, value) => {
+    const updated = { ...formData, [field]: value };
+    setFormData(updated);
+    // Real-time live recalculation
+    const results = cropScoringEngine.rankAllCrops(updated);
+    setRankedCrops(results);
+    if (results.length > 0) {
+      setSelectedCropResult(results[0]);
+    }
+  };
+
+  const handleFormSubmit = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    calculateSuitability(formData);
   };
 
   return (
@@ -81,7 +101,7 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
             {isTa ? 'பண்ணை அளவுருக்கள் & மண் ஆய்வு' : 'Farm Soil & Micro-Climate Parameters'}
           </h3>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
               <div>
@@ -90,7 +110,7 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                 </label>
                 <select 
                   value={formData.soilType} 
-                  onChange={(e) => setFormData({ ...formData, soilType: e.target.value })}
+                  onChange={(e) => handleInputChange('soilType', e.target.value)}
                   className="select-clean"
                   style={{ width: '100%' }}
                 >
@@ -103,15 +123,15 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
 
               <div>
                 <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
-                  {isTa ? 'மண்ணின் pH அளவு' : 'Soil pH Level'}
+                  {isTa ? 'மண் அமிலத்தன்மை (pH)' : 'Soil pH (1-14)'}
                 </label>
                 <input 
                   type="number" 
                   step="0.1" 
-                  min="4.5" 
-                  max="9.5"
+                  min="4" 
+                  max="9.5" 
                   value={formData.soilPh} 
-                  onChange={(e) => setFormData({ ...formData, soilPh: parseFloat(e.target.value) || 7.0 })}
+                  onChange={(e) => handleInputChange('soilPh', parseFloat(e.target.value) || 7.0)}
                   className="input-clean"
                 />
               </div>
@@ -120,33 +140,35 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
               <div>
                 <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
-                  {isTa ? 'பருவம்' : 'Agro-Climate Season'}
+                  {isTa ? 'நடப்பு பருவம்' : 'Agro Season'}
                 </label>
                 <select 
                   value={formData.season} 
-                  onChange={(e) => setFormData({ ...formData, season: e.target.value })}
+                  onChange={(e) => handleInputChange('season', e.target.value)}
                   className="select-clean"
                   style={{ width: '100%' }}
                 >
-                  <option value="Kuruvai">Kuruvai (Summer-Monsoon)</option>
-                  <option value="Samba">Samba (Late Monsoon / Thaladi)</option>
-                  <option value="Navarai">Navarai (Winter)</option>
-                  <option value="Year-Round">Year-Round (ஆண்டு முழுவதும்)</option>
+                  <option value="Kuruvai">Kuruvai (குறுவை - Jun-Sep)</option>
+                  <option value="Samba">Samba (சம்பா - Aug-Jan)</option>
+                  <option value="Thaladi">Thaladi (தாளடி - Sep-Feb)</option>
+                  <option value="Navarai">Navarai (நவரை - Dec-Apr)</option>
+                  <option value="Year-Round">Year-Round (வருடம் முழுவதும்)</option>
+                  <option value="Main Season (Jan-Feb)">Main Season (தைப்பட்டம் - Jan-Feb)</option>
                 </select>
               </div>
 
               <div>
                 <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: '0.35rem' }}>
-                  {isTa ? 'பாசன வசதி' : 'Water Availability'}
+                  {isTa ? 'நீர் பாசன வசதி' : 'Water Availability Source'}
                 </label>
                 <select 
                   value={formData.waterSource} 
-                  onChange={(e) => setFormData({ ...formData, waterSource: e.target.value })}
+                  onChange={(e) => handleInputChange('waterSource', e.target.value)}
                   className="select-clean"
                   style={{ width: '100%' }}
                 >
-                  <option value="canal">Canal (Amaravathi / Cauvery Basin)</option>
-                  <option value="borewell">Deep Borewell + Drip Fertigation</option>
+                  <option value="canal">Canal River Water (ஆற்றுப்பாசனம்)</option>
+                  <option value="borewell">Deep Borewell (ஆழ்துளை கிணறு)</option>
                   <option value="well">Open Irrigation Well</option>
                   <option value="rainfed">Rainfed (மானாவாரி)</option>
                 </select>
@@ -164,7 +186,7 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                   <input 
                     type="number" 
                     value={formData.nitrogen} 
-                    onChange={(e) => setFormData({ ...formData, nitrogen: parseInt(e.target.value) || 0 })}
+                    onChange={(e) => handleInputChange('nitrogen', parseInt(e.target.value) || 0)}
                     className="input-clean"
                   />
                 </div>
@@ -173,7 +195,7 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                   <input 
                     type="number" 
                     value={formData.phosphorus} 
-                    onChange={(e) => setFormData({ ...formData, phosphorus: parseInt(e.target.value) || 0 })}
+                    onChange={(e) => handleInputChange('phosphorus', parseInt(e.target.value) || 0)}
                     className="input-clean"
                   />
                 </div>
@@ -182,7 +204,7 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                   <input 
                     type="number" 
                     value={formData.potassium} 
-                    onChange={(e) => setFormData({ ...formData, potassium: parseInt(e.target.value) || 0 })}
+                    onChange={(e) => handleInputChange('potassium', parseInt(e.target.value) || 0)}
                     className="input-clean"
                   />
                 </div>
@@ -198,7 +220,7 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                   type="number" 
                   step="0.5" 
                   value={formData.farmSizeAcres} 
-                  onChange={(e) => setFormData({ ...formData, farmSizeAcres: parseFloat(e.target.value) || 1 })}
+                  onChange={(e) => handleInputChange('farmSizeAcres', parseFloat(e.target.value) || 1)}
                   className="input-clean"
                 />
               </div>
@@ -210,17 +232,27 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                 <input 
                   type="number" 
                   value={formData.temperature} 
-                  onChange={(e) => setFormData({ ...formData, temperature: parseInt(e.target.value) || 30 })}
+                  onChange={(e) => handleInputChange('temperature', parseInt(e.target.value) || 30)}
                   className="input-clean"
                 />
               </div>
             </div>
 
-            <button type="submit" className="btn-primary" style={{ marginTop: '0.5rem', justifyContent: 'center', width: '100%' }}>
+            <button 
+              type="button" 
+              onClick={() => calculateSuitability(formData)}
+              className="btn-primary" 
+              style={{ marginTop: '0.5rem', justifyContent: 'center', width: '100%', cursor: 'pointer' }}
+            >
               {isCalculating ? (
                 <>
                   <RefreshCw className="animate-spin" size={16} />
                   <span>{isTa ? 'மதிப்பீடு கணக்கிடுகிறது...' : 'Computing Mathematical Suitability...'}</span>
+                </>
+              ) : justCalculated ? (
+                <>
+                  <Check size={16} />
+                  <span>{isTa ? 'மதிப்பீடு புதுப்பிக்கப்பட்டது!' : 'Suitability Score Calculated!'}</span>
                 </>
               ) : (
                 <>
@@ -249,8 +281,8 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                 </div>
 
                 <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: 'var(--radius-sm)', padding: '0.5rem 0.85rem', textAlign: 'right' }}>
-                  <span style={{ fontSize: '0.65rem', color: '#047857', fontWeight: 800, display: 'block', textTransform: 'uppercase' }}>Total Suitability</span>
-                  <span style={{ fontSize: '1.45rem', fontWeight: 900, color: '#065F46' }}>{selectedCropResult.totalScore}%</span>
+                  <span style={{ fontSize: '0.65rem', color: '#047857', fontWeight: 800, display: 'block', textTransform: 'uppercase' }}>Final Suitability</span>
+                  <span style={{ fontSize: '1.45rem', fontWeight: 900, color: '#065F46' }}>{selectedCropResult.totalScore}/100</span>
                 </div>
               </div>
 
@@ -355,7 +387,7 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                 </div>
 
                 <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', marginTop: '0.75rem', borderTop: '1px dashed var(--border-light)', paddingTop: '0.4rem', fontFamily: 'monospace' }}>
-                  Score = ({selectedCropResult.breakdown.soil.weighted}) + ({selectedCropResult.breakdown.season.weighted}) + ({selectedCropResult.breakdown.water.weighted}) + ({selectedCropResult.breakdown.npk.weighted}) + ({selectedCropResult.breakdown.climate.weighted}) = {selectedCropResult.totalScore}%
+                  Score = ({selectedCropResult.breakdown.soil.weighted}) + ({selectedCropResult.breakdown.season.weighted}) + ({selectedCropResult.breakdown.water.weighted}) + ({selectedCropResult.breakdown.npk.weighted}) + ({selectedCropResult.breakdown.climate.weighted}) = {selectedCropResult.totalScore}/100
                 </div>
               </div>
 
@@ -386,15 +418,15 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
               {/* Agronomic Reasoning & Citation */}
               <div>
                 <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
-                  Agronomic Explanation & Research Citation:
+                  Why this crop was recommended (Agronomic Rationale):
                 </div>
                 <div style={{ fontSize: '0.825rem', color: 'var(--text-body)', lineHeight: 1.5, background: 'var(--bg-slate)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', borderLeft: '4px solid var(--primary-600)' }}>
-                  <p>{selectedCropResult.reasoning}</p>
+                  <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>{selectedCropResult.reasoning}</p>
                   <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>
                     📖 <strong>Source Citation:</strong> {selectedCropResult.citation}
                   </p>
                   <p style={{ fontSize: '0.75rem', color: 'var(--primary-700)', marginTop: '0.25rem' }}>
-                    🌱 <strong>TNAU Recommended Varieties:</strong> {selectedCropResult.recommendedVarieties.join(', ')}
+                    🌱 <strong>TNAU Recommended Cultivars:</strong> {selectedCropResult.recommendedVarieties.join(', ')}
                   </p>
                 </div>
               </div>
@@ -409,10 +441,11 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                     {rankedCrops.slice(1, 4).map((rc, idx) => (
                       <button
                         key={rc.cropId}
+                        type="button"
                         onClick={() => setSelectedCropResult(rc)}
                         style={{
-                          background: 'var(--bg-slate)',
-                          border: '1px solid var(--border-light)',
+                          background: selectedCropResult?.cropId === rc.cropId ? 'var(--primary-50)' : 'var(--bg-slate)',
+                          border: selectedCropResult?.cropId === rc.cropId ? '1px solid var(--primary-600)' : '1px solid var(--border-light)',
                           borderRadius: 'var(--radius-sm)',
                           padding: '0.4rem 0.65rem',
                           cursor: 'pointer',
@@ -423,7 +456,7 @@ export default function CropRecommendationView({ farmerProfile = {}, selectedLan
                         }}
                       >
                         <span style={{ fontWeight: 700 }}>#{idx + 2} {rc.cropName.split(' ')[0]}</span>
-                        <span style={{ color: 'var(--primary-600)', fontWeight: 800 }}>{rc.totalScore}%</span>
+                        <span style={{ color: 'var(--primary-600)', fontWeight: 800 }}>{rc.totalScore}/100</span>
                       </button>
                     ))}
                   </div>
