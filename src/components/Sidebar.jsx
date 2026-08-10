@@ -14,7 +14,8 @@ import {
   ChevronRight,
   Droplet,
   Compass,
-  FileText
+  FileText,
+  Activity
 } from 'lucide-react';
 
 export default function Sidebar({ currentView, setCurrentView, onLogout, activeRole = 'farmer', selectedLanguage = 'en' }) {
